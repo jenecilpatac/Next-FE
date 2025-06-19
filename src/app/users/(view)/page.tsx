@@ -107,7 +107,7 @@ const Users = () => {
   };
 
   return (
-    <div>
+    <div className="p-5">
       <div className="flex justify-between mb-3">
         <h1 className="text-2xl font-bold">All Users</h1>
         <button

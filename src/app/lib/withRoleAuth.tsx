@@ -5,7 +5,7 @@ import UnauthorizedPage from "../utils/UnauthorizedPage";
 import { useEffect } from "react";
 
 const withRoleAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+  function WithRoleAuthComponent(props: any) {
     const {
       isAuthenticated,
       loading,
@@ -31,7 +31,9 @@ const withRoleAuth = (WrappedComponent: any) => {
     }
 
     return <WrappedComponent {...props} />;
-  };
+  }
+  
+  return WithRoleAuthComponent;
 };
 
 export default withRoleAuth;
