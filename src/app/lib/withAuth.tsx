@@ -5,7 +5,7 @@ import UnauthorizedPage from "../utils/UnauthorizedPage";
 import { useEffect } from "react";
 
 const withAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+  function WithAuthComponent(props: any) {
     const { isAuthenticated, loading, isLogout }: any = useAuth();
     const router = useRouter();
 
@@ -23,7 +23,9 @@ const withAuth = (WrappedComponent: any) => {
     }
 
     return <WrappedComponent {...props} />;
-  };
+  }
+
+  return WithAuthComponent;
 };
 
 export default withAuth;

@@ -55,7 +55,7 @@ const Pending = () => {
     }
   };
   return (
-    <div className="w-full">
+    <div className="w-full p-5">
       <h2 className="text-2xl font-bold my-3">All Pending Todos</h2>
       <hr />
       {loading ? (
