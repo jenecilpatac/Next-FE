@@ -36,4 +36,4 @@ COPY --from=builder /app/public /app/public
 # Expose the application port
 EXPOSE 2001
 
-CMD ["pnpm", "start", "-p", "1003"]
+CMD ["pnpm", "start", "-p", "2001"]
