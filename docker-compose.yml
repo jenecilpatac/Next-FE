@@ -5,8 +5,6 @@ services:
     build: .
     container_name: client-blog
     restart: unless-stopped
-    volumes:
-      - ./public:/usr/share/nginx/html
     ports:
       - "2001:2001"
 
