@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "set PORT=2001 && next dev",
     "build": "next build && next-sitemap",
-    "start": "next start",
+    "start": "next start -p 2001",
     "lint": "next lint",
     "start:debug": "cross-env DEBUG=fastify:* pnpm start"
   },
