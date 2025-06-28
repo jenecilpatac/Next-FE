@@ -36,5 +36,4 @@ COPY --from=builder /app/public /app/public
 # Expose the application port
 EXPOSE 2001
 
-# Start the Next.js app
-CMD ["npm", "start"]
+CMD ["pnpm", "start", "-p", "1003"]
