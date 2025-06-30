@@ -200,7 +200,7 @@ export default function AddPost({
                   id="description"
                   rows={7}
                   placeholder={`What's on your mind, ${
-                    user?.name.split(" ")[0]
+                    user?.name?.split(" ")[0]
                   }?`}
                   value={formInput.description}
                 />
