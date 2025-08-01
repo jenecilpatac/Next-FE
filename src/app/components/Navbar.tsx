@@ -212,9 +212,16 @@ const Navbar = () => {
                 <ActiveLink href="/blog/posts">Posts</ActiveLink>
               </li>
               {isAuthenticated && (
-                <li onClick={toggleMenu}>
-                  <ActiveLink href="/todos">Todos</ActiveLink>
-                </li>
+                <>
+                  <li onClick={toggleMenu}>
+                    <ActiveLink href="/todos">Todos</ActiveLink>
+                  </li>
+                  <li onClick={toggleMenu}>
+                    <ActiveLink href="/chats" target="_blank">
+                      Chats
+                    </ActiveLink>
+                  </li>
+                </>
               )}
             </ul>
           </div>

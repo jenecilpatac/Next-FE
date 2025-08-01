@@ -3,9 +3,11 @@ import { usePathname } from "next/navigation";
 
 const ActiveLink = ({
   href,
+  target,
   children,
 }: {
   href: string;
+  target?: string;
   children: React.ReactNode;
 }) => {
   const pathname = usePathname();
@@ -20,6 +22,7 @@ const ActiveLink = ({
   return (
     <Link
       href={href}
+      target={target}
       className={`${
         isActive
           ? "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white"
