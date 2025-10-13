@@ -193,6 +193,21 @@ const SideBar = ({ children }: any) => {
               </ActiveLink>
             </li>
             <li onClick={toggleSideBar}>
+              <ActiveLink href="/chats" target="_blank">
+                <svg
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M18 10c0 3.866-3.582 7-8 7a8.915 8.915 0 0 1-3.945-.902L2 17l1.311-3.279A6.74 6.74 0 0 1 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7Z" />
+                </svg>
+
+                <span className="flex-1 ms-3 whitespace-nowrap">Chats</span>
+              </ActiveLink>
+            </li>
+            <li onClick={toggleSideBar}>
               <ActiveLink href="/tallies/schedules">
                 <i className="far fa-calendar flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
                 <span className="flex-1 ms-3 whitespace-nowrap">

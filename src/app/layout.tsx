@@ -37,6 +37,7 @@ export const metadata = {
     type: "website",
     siteName: "Blog App - Todos - NBA - Posts - Chats",
   },
+  manifest: "manifest.json",
 };
 
 export default function RootLayout({
