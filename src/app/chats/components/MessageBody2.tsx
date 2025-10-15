@@ -35,16 +35,20 @@ export default function MessageBody2({
               </p>
             </div>
             {link && (
-              <Link className="" href={link.url} target="_blank">
+              <Link
+                className="w-[200px] md:w-72"
+                href={link.url}
+                target="_blank"
+              >
                 <div className="border rounded-b-xl border-gray-300/80 shadow-md dark:border-gray-600/80 bg-gray-700/10 dark:bg-gray-200/10 hover:dark:bg-gray-200/20 hover:bg-gray-700/20">
                   {link?.images?.length > 0 && (
                     <img
                       src={link.images[0]}
                       alt={link.title}
-                      className="w-[200px] md:w-72 h-40 object-contain rounded-md"
+                      className="w-full h-40 object-contain rounded-md"
                     />
                   )}
-                  <div className="w-[200px] md:w-72 flex flex-col border-t bg-gray-100 dark:bg-gray-900/20">
+                  <div className="w-full flex flex-col border-t rounded-b-2xl bg-gray-100 dark:bg-gray-900/20">
                     <span
                       className="p-2 text-md font-bold truncate"
                       title={link.title === "Error" ? link.url : link.title}
