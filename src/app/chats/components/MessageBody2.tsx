@@ -1,3 +1,4 @@
+import Link from "next/link";
 import dateWithTime from "../utils/dateWithTime";
 import Image from "./images/Image";
 
@@ -8,6 +9,7 @@ export default function MessageBody2({
   isIcon,
   timeSent,
   message,
+  link,
 }: any) {
   return (
     <div className="flex justify-start gap-2 group">
@@ -17,15 +19,50 @@ export default function MessageBody2({
       <div>
         {isPublic && <p className="text-sm font-semibold">{name}</p>}
         <div className="flex">
-          <div
-            className={`xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] w-fit ${
-              !isIcon && "bg-gray-500/65 shadow-md"
-            } text-white p-3 rounded-2xl`}
-            title={timeSent && dateWithTime(timeSent)}
-          >
-            <p className="text-sm whitespace-break-spaces break-words">
-              {message}
-            </p>
+          <div className="flex flex-col">
+            <div
+              className={`xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] ${
+                !isIcon && "bg-gray-500/65 shadow-md"
+              } text-white p-3 ${link ? "rounded-t-2xl" : "rounded-2xl"}`}
+              title={timeSent && dateWithTime(timeSent)}
+            >
+              <p className="text-sm whitespace-break-spaces break-words">
+                {message}
+              </p>
+            </div>
+            {link && (
+              <Link className="" href={link.url} target="_blank">
+                <div className="border rounded-b-xl border-gray-300/80 shadow-md dark:border-gray-600/80 bg-gray-700/10 dark:bg-gray-200/10 hover:dark:bg-gray-200/20 hover:bg-gray-700/20">
+                  {link?.images?.length > 0 && (
+                    <img
+                      src={link.images[0]}
+                      alt={link.title}
+                      className="w-[200px] md:w-72 h-40 object-contain rounded-md"
+                    />
+                  )}
+                  <div className="w-[200px] md:w-72 flex flex-col border-t bg-gray-100 dark:bg-gray-900/20">
+                    <span
+                      className="p-2 text-md font-bold truncate"
+                      title={link.title === "Error" ? link.url : link.title}
+                    >
+                      {link.title === "Error" ? link.url : link.title}
+                    </span>
+                    <span
+                      className="p-2 text-sm font-semi-bold truncate"
+                      title={link.url}
+                    >
+                      {link.url}
+                    </span>
+                    <span
+                      className="p-2 text-xs font-thin truncate"
+                      title={link.description}
+                    >
+                      {link.description}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
           <div className="justify-center flex ml-1 items-center">
             <div className="group-hover:block hidden">
