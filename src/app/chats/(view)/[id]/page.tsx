@@ -21,7 +21,6 @@ import { useConversation } from "../../context/conversationContext";
 import useToastr from "../../hooks/Toastr";
 import DoubleRecentChat from "../../components/loaders/DoubleRecentChat";
 import { formatChatTimestamp } from "../../utils/formatChatTimestamp";
-import usePreviewLink from "../../hooks/usePreviewLink";
 
 const Chats = () => {
   const { id }: any = useParams();
@@ -63,10 +62,6 @@ const Chats = () => {
     setAddTakeMessages,
     loadingOnTakeMessages,
   }: any = useConversation();
-  const { setPreviewData, preview }: any = usePreviewLink(
-    "chat-messages/link-preview",
-    isSeenSentMessage
-  );
   const loadingOnTakeRef = useRef(loadingOnTake);
   const [backToBottom, setBackToBottom] = useState(false);
   const { showError }: any = useToastr();
@@ -664,8 +659,6 @@ const Chats = () => {
                     </div>
                   )}
                   <ChatContent
-                    setPreviewData={setPreviewData}
-                    preview={preview}
                     messageId={message?.id}
                     content={message?.content}
                     avatar={data?.user?.profile_pictures[0]?.avatar}
@@ -673,6 +666,7 @@ const Chats = () => {
                     name={data?.user?.name}
                     timeSent={message?.createdAt}
                     isNotSeen={message?.isSeen === false}
+                    link={message?.link}
                   />
                 </div>
               );
