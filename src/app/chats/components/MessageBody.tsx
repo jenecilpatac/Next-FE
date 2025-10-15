@@ -13,9 +13,13 @@ export default function MessageBody({ isIcon, timeSent, message, link }: any) {
       </div>
       <div className="flex flex-col">
         <div
-          className={`xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] ${
+          className={`${
             !isIcon && "dark:bg-blue-400/50 bg-blue-400/80 shadow-md"
-          } text-white p-3 ${link ? "rounded-t-2xl" : "rounded-2xl"}`}
+          } text-white p-3 ${
+            link
+              ? "rounded-t-2xl w-[200px] md:w-72"
+              : "rounded-2xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px]"
+          }`}
           title={timeSent && dateWithTime(timeSent)}
         >
           <p className="text-sm whitespace-break-spaces break-words">
