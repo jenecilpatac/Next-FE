@@ -616,7 +616,9 @@ const Chats = () => {
                   <div className="flex items-center -ml-2">
                     <Image
                       avatar={
-                        userTypingInfoPrivate?.profile_pictures[0]?.avatar
+                        userTypingInfoPrivate?.profile_pictures?.filter(
+                          (item: any) => item?.isSet
+                        )[0]?.avatar
                       }
                       alt={userTypingInfoPrivate?.name}
                       width={5}

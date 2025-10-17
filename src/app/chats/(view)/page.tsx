@@ -425,7 +425,11 @@ const Chats = () => {
                             className="flex items-center -ml-2"
                           >
                             <Image
-                              avatar={userType?.profile_pictures[0]?.avatar}
+                              avatar={
+                                userType?.profile_pictures?.filter(
+                                  (item: any) => item?.isSet
+                                )[0]?.avatar
+                              }
                               alt={userType?.name}
                               width={5}
                               height={5}

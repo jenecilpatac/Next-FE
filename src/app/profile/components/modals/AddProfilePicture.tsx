@@ -144,7 +144,8 @@ export default function AddProfileModal({
               "Invalid image type, only jpeg, jpg, png, gif, ico, webp are allowed."
             ) ||
               imageError?.includes("File too large") ||
-              imageError?.includes("File too large, only 1MB is allowed.")) && (
+              imageError?.includes("Only image files are allowed!") ||
+              imageError?.includes("File too large, only 5MB is allowed.")) && (
               <small className="text-red-500">{imageError}</small>
             )}
             <input
