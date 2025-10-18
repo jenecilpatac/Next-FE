@@ -71,8 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = (token: string, rememberToken: string) => {
     setIsAuthenticated(true);
-    Cookies.set("APP-TOKEN", token, { sameSite: "Lax" });
-    Cookies.set("APP-REMEMBER-TOKEN", rememberToken, { sameSite: "Lax" });
+    Cookies.set("APP-TOKEN", token, { sameSite: "Lax", expires: 7 });
+    Cookies.set("APP-REMEMBER-TOKEN", rememberToken, {
+      sameSite: "Lax",
+      expires: 7,
+    });
     fetchUserProfile();
     setIsLogout(false);
   };
