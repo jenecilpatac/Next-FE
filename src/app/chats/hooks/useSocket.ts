@@ -86,7 +86,7 @@ const useSocket = () => {
           delete updated[user.id];
           return updated;
         });
-      }, 500);
+      }, 1000);
     });
 
     socketInstance.on(
@@ -120,7 +120,7 @@ const useSocket = () => {
         typingTimeoutsPrivate.current = setTimeout(() => {
           setUserTypingInfoPrivate("");
           setPrivateChatIds(PrivateChatIds);
-        }, 500);
+        }, 1000);
       }
     );
 
