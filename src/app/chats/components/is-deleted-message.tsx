@@ -8,8 +8,23 @@ export default function IsDeletedMessage({
   name,
   isOwner,
 }: any) {
+  const unsentMessageRadius = isOwner
+    ? `${
+        isLast
+          ? "rounded-l-3xl rounded-tr-sm rounded-br-3xl"
+          : isFirst
+          ? "rounded-l-3xl rounded-tr-3xl rounded-br-sm"
+          : "rounded-l-3xl"
+      }`
+    : `${
+        isLast
+          ? "rounded-r-3xl rounded-tl-sm rounded-bl-3xl"
+          : isFirst
+          ? "rounded-r-3xl rounded-tl-3xl rounded-bl-sm"
+          : "rounded-r-3xl"
+      }`;
   return (
-    <div className={`flex gap-1 ${isOwner && "justify-end"}`}>
+    <div className={`flex gap-2 ${isOwner && "justify-end"}`}>
       {!isOwner && (
         <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
           <Image
@@ -27,13 +42,7 @@ export default function IsDeletedMessage({
         } shadow-md text-sm italic ${
           bubbleClass
             ? bubbleClass
-            : `${
-                isLast
-                  ? "rounded-l-3xl rounded-tr-sm rounded-br-3xl"
-                  : isFirst
-                  ? "rounded-l-3xl rounded-tr-3xl rounded-br-sm"
-                  : "rounded-l-3xl"
-              } xl:max-w-3xl 3xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-3xl max-w-[230px]`
+            : `${unsentMessageRadius} xl:max-w-3xl 3xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-3xl max-w-[230px]`
         }`}
       >
         {`${isOwner ? "You" : name ?? "Anonymous"} unsent a message`}
