@@ -82,6 +82,7 @@ const Chats = () => {
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const unreadMessageRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<any>(null);
+  const [userIdITyped, setUserIdITyped] = useState<string>("");
   const [messageDetails, setMessageDetails] = useState({
     chatId: 0,
     receiverId: "",
@@ -101,6 +102,7 @@ const Chats = () => {
   const totalUsersData = convos?.totalSearchedData || 0;
   const totalConvosData = privateMessages?.totalConvosData || 0;
   const totalConvos = convos?.conversations?.length || 0;
+  const messageDraft = localStorage.getItem(`private-${id}-${user?.id}`);
 
   useEffect(() => {
     if (!formInput.content || !user) return;
@@ -277,11 +279,21 @@ const Chats = () => {
     }
   }, [privateMessages]);
 
+  useEffect(() => {
+    if (user?.id && id && messageDraft) {
+      setFormInput((formInput) => ({
+        ...formInput,
+        content: messageDraft,
+      }));
+    }
+  }, [user?.id, id, messageDraft]);
+
   const handleInputChange = (title: any) => (e: any) => {
     setFormInput((formInput) => ({
       ...formInput,
       [title]: e.target.value,
     }));
+    setUserIdITyped(id);
   };
 
   const handleKeyDown = (e: any) => {
@@ -492,6 +504,8 @@ const Chats = () => {
                   }
                   isDeleted={convo?.messages[0]?.isDeleted}
                   lastMessageOwnerId={convo?.messages[0]?.userId}
+                  formInput={formInput}
+                  userIdITyped={userIdITyped}
                 />
               ))
             ) : (
