@@ -524,14 +524,14 @@ const Chats = () => {
               <RecentChat />
             ) : convos?.searchedData?.length > 0 ? (
               convos?.searchedData?.map((user: any, index: number) => (
-                <>
-                  <RecentChatContent
-                    key={index}
-                    user={user}
-                    setSearchTerm={setSearchTerm}
-                    searchTerm={searchTerm}
-                  />
-                </>
+                <RecentChatContent
+                  key={index}
+                  user={user}
+                  setSearchTerm={setSearchTerm}
+                  searchTerm={searchTerm}
+                  formInput={formInput}
+                  userIdITyped={userIdITyped}
+                />
               ))
             ) : (
               <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
