@@ -441,8 +441,8 @@ const Chats = () => {
                                 )[0]?.avatar
                               }
                               alt={userType?.name}
-                              width={5}
-                              height={5}
+                              width={4}
+                              height={4}
                               title={userType?.name}
                             />
                           </div>
@@ -454,10 +454,10 @@ const Chats = () => {
                         {typingUsers?.length - 5}+{" "}
                       </span>
                     )}
-                    <div className="flex gap-1 items-center py-3 px-2 rounded-xl bg-gray-600 dark:bg-gray-300 w-fit">
+                    <div className="flex gap-1 items-center py-2 px-2 rounded-xl bg-gray-600 dark:bg-gray-300 w-fit">
                       {Array.from(Array(3)).map((_, index) => (
                         <span
-                          className="rounded-full p-1 dark:bg-gray-800 bg-gray-200 animate-bounce"
+                          className="rounded-full p-0.5 dark:bg-gray-800 bg-gray-200 animate-bounce"
                           key={index}
                           style={{ animationDelay: 0.3 * index + "s" }}
                         ></span>
