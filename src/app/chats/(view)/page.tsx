@@ -72,6 +72,7 @@ const Chats = () => {
   const messageRef = useRef<any>(null);
   const [isOpenRecentChat, setIsOpenRecentChat] = useState(false);
   const isTyping = Object.keys(userTypingInfo || {}).length > 0;
+  const messageDraft = localStorage.getItem(user?.id);
 
   useEffect(() => {
     if (!userTyping || !formInput?.content || !user) return;
@@ -174,6 +175,17 @@ const Chats = () => {
     }
   }, [publicMessagesData]);
 
+  useEffect(() => {
+    if (messageDraft) {
+      if (user?.id) {
+        setFormInput((formInput: any) => ({
+          ...formInput,
+          content: messageDraft,
+        }));
+      }
+    }
+  }, [user?.id, messageDraft]);
+
   const handleBackToBottom = () => {
     if (chatContentRef.current) {
       chatContentRef.current.scrollTop = 0;
@@ -185,6 +197,7 @@ const Chats = () => {
       ...formInput,
       [title]: e.target.value,
     }));
+    localStorage.setItem(user?.id, e.target.value);
   };
 
   const handleKeyDown = (e: any) => {
@@ -241,12 +254,14 @@ const Chats = () => {
       const response = await api.post("chat-messages/send-public-message", {
         ...formInput,
       });
+
       if (response.status === 201) {
         setError("");
         setTimeout(() => {
           chatContentRef.current.scrollTop =
             chatContentRef.current.scrollHeight;
         }, 500);
+        localStorage.removeItem(user?.id);
       }
     } catch (error: any) {
       console.error(error);

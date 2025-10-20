@@ -14,20 +14,47 @@ export default function RecentChatContent({
   isActive,
   isDeleted,
   lastMessageOwnerId,
+  formInput,
+  userIdITyped,
 }: any) {
   const { user: authUser }: any = useAuth();
-  const message = isDeleted
-    ? `${
-        lastMessageOwnerId === authUser?.id ? "You" : user?.name ?? "Anonymous"
-      } deleted a message`
-    : formatRecentMessages(lastMessage, 4, 4);
+  const messageDraft = localStorage.getItem(
+    `private-${user?.id}-${authUser?.id}`
+  );
+  const message = messageDraft ? (
+    <>
+      <span className="text-blue-400 text-xs">Draft</span>{" "}
+      <span className="text-xs">•</span>{" "}
+      <span className="text-xs">{messageDraft}</span>
+    </>
+  ) : isDeleted ? (
+    `${
+      lastMessageOwnerId === authUser?.id ? "You" : user?.name ?? "Anonymous"
+    } deleted a message`
+  ) : (
+    formatRecentMessages(lastMessage, 4, 4)
+  );
 
-  const handleRemoveSearchTerm = () => setSearchTerm("");
+  const saveOnClick = (userId: string) => () => {
+    localStorage.setItem(
+      `private-${userId}-${authUser?.id}`,
+      formInput?.content
+    );
+  };
+
+  const handleRemoveSearchTerm = (userId: string) => () => {
+    setSearchTerm("");
+    saveOnClick(userId)();
+  };
 
   return (
     <Link
       href={`/chats/${user?.id}`}
-      onClick={searchTerm ? handleRemoveSearchTerm : undefined}
+      onClick={
+        searchTerm
+          ? handleRemoveSearchTerm(userIdITyped)
+          : saveOnClick(userIdITyped)
+      }
     >
       <div
         className={`flex items-center mt-2 p-2 rounded-lg cursor-pointer hover:dark:bg-gray-600 hover:bg-gray-100 md:mx-3 relative ${
