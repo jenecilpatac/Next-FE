@@ -21,6 +21,7 @@ import { useConversation } from "../../context/conversationContext";
 import useToastr from "../../hooks/Toastr";
 import DoubleRecentChat from "../../components/loaders/DoubleRecentChat";
 import { formatChatTimestamp } from "../../utils/formatChatTimestamp";
+import formatMessages from "../../utils/formatMessages";
 
 const Chats = () => {
   const { id }: any = useParams();
@@ -87,12 +88,6 @@ const Chats = () => {
   });
   const [isOpenRecentChat, setIsOpenRecentChat] = useState(false);
   let firstUnreadIndex: any = null;
-
-  const getDataPerUser = convos?.conversations?.filter(
-    (chat: any) =>
-      (chat.senderId === user?.id && chat.receiverId === data?.user?.id) ||
-      (chat.senderId === data?.user?.id && chat.receiverId === user?.id)
-  );
 
   const totalMessages =
     (!isLoadingPrivateMessages &&
@@ -276,6 +271,12 @@ const Chats = () => {
     }
   }, [data, id]);
 
+  useEffect(() => {
+    if (privateMessages) {
+      setIsSending(false);
+    }
+  }, [privateMessages]);
+
   const handleInputChange = (title: any) => (e: any) => {
     setFormInput((formInput) => ({
       ...formInput,
@@ -350,7 +351,6 @@ const Chats = () => {
         receiverId: "",
         isSeenForSentMessage: true,
       });
-      setIsSending(false);
       setIsRefresh(false);
       messageRef.current = null;
     }
@@ -383,7 +383,6 @@ const Chats = () => {
         receiverId: "",
         isSeenForSentMessage: true,
       });
-      setIsSending(false);
       setIsRefresh(false);
     }
   };
@@ -491,6 +490,8 @@ const Chats = () => {
                     (convo.senderId === data?.user?.id &&
                       convo.receiverId === user?.id)
                   }
+                  isDeleted={convo?.messages[0]?.isDeleted}
+                  lastMessageOwnerId={convo?.messages[0]?.userId}
                 />
               ))
             ) : (
@@ -581,10 +582,10 @@ const Chats = () => {
         {/* Message Container */}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse gap-4 p-4 overflow-y-auto bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse gap-1 p-4 overflow-y-auto bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
         >
           {isSending && messageRef?.current && (
-            <div className="relative">
+            <div className="relative opacity-60">
               <p className="text-end text-xs absolute right-0 -bottom-4">
                 Sending...
               </p>
@@ -597,10 +598,14 @@ const Chats = () => {
                   </div>
                 </div>
                 <div
-                  className={`xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl dark:bg-blue-400/50 bg-blue-400/80 shadow-md`}
+                  className={`${
+                    messageRef.current === "(y)"
+                      ? ""
+                      : "dark:bg-blue-400/50 bg-blue-400/80"
+                  } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
                 >
                   <p className="text-sm whitespace-break-spaces break-words">
-                    {messageRef?.current}
+                    {formatMessages(messageRef?.current.trim(), 16, 16)}
                   </p>
                 </div>
               </div>
@@ -645,19 +650,45 @@ const Chats = () => {
             privateMessages?.messages[0]?.messages?.map(
               (message: any, index: number) => {
                 const currentTime = new Date(message.createdAt);
-                const nextTime =
-                  index < privateMessages?.messages[0]?.messages?.length - 1
-                    ? new Date(
-                        privateMessages?.messages[0]?.messages[
-                          index + 1
-                        ].createdAt
-                      )
+
+                const prevMessage =
+                  index > 0
+                    ? privateMessages.messages[0]?.messages[index - 1]
                     : null;
 
-                const isFirstInGroup =
-                  !nextTime ||
-                  currentTime.getMinutes() !== nextTime.getMinutes() ||
-                  currentTime.toDateString() !== nextTime.toDateString();
+                const nextMessage =
+                  index < privateMessages.messages[0]?.messages.length - 1
+                    ? privateMessages.messages[0]?.messages[index + 1]
+                    : null;
+
+                const getUserMinuteKey = (msg: any) => {
+                  const time = new Date(msg.createdAt);
+                  return `${
+                    msg.userId
+                  }-${time.getFullYear()}-${time.getMonth()}-${time.getDate()}-${time.getHours()}-${time.getMinutes()}`;
+                };
+
+                const currentKey = getUserMinuteKey(message);
+
+                const prevKey = prevMessage
+                  ? getUserMinuteKey(prevMessage)
+                  : null;
+
+                const nextKey = nextMessage
+                  ? getUserMinuteKey(nextMessage)
+                  : null;
+
+                const isFirstInGroup = currentKey !== nextKey;
+                const isLastInGroup = currentKey !== prevKey;
+
+                const sameMinuteUserMessages =
+                  privateMessages.messages[0]?.messages.filter(
+                    (m: any) => getUserMinuteKey(m) === currentKey
+                  );
+
+                const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
+
+                const bubbleClass = isOnlyInMinuteUser && "rounded-3xl";
 
                 return (
                   <div key={index}>
@@ -669,7 +700,7 @@ const Chats = () => {
                         >
                           <div className="w-full flex justify-center items-center gap-2">
                             <div className="border-b w-2/6 border-gray-400"></div>
-                            <div className="text-gray-400 text-xs">
+                            <div className="text-gray-600 dark:text-gray-400 text-xs">
                               Unread messages
                             </div>
                             <div className="border-b w-2/6 border-gray-400"></div>
@@ -677,7 +708,7 @@ const Chats = () => {
                         </div>
                       )}
                     {isFirstInGroup && (
-                      <div className="flex justify-center text-gray-300 text-xs my-2">
+                      <div className="flex justify-center text-gray-500 dark:text-gray-300 text-xs my-2">
                         {formatChatTimestamp(currentTime)}
                       </div>
                     )}
@@ -690,6 +721,11 @@ const Chats = () => {
                       timeSent={message?.createdAt}
                       isNotSeen={message?.isSeen === false}
                       link={message?.link}
+                      isLast={isLastInGroup}
+                      isFirst={isFirstInGroup}
+                      bubbleClass={bubbleClass}
+                      sendMessageRealtime={sendMessage}
+                      isDeleted={message?.isDeleted}
                     />
                   </div>
                 );
