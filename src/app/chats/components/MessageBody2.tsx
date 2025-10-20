@@ -10,14 +10,21 @@ export default function MessageBody2({
   timeSent,
   message,
   link,
+  isLast,
+  isFirst,
+  bubbleClass,
 }: any) {
   return (
     <div className="flex justify-start gap-2 group">
-      <div className="flex flex-col justify-end">
+      <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
         <Image avatar={avatar} alt={name} width={10} height={10} title={name} />
       </div>
       <div>
-        {isPublic && <p className="text-sm font-semibold">{name}</p>}
+        {isPublic && (
+          <p className={`text-sm font-semibold ${!isFirst && "hidden"}`}>
+            {name ?? "Anonymous"}
+          </p>
+        )}
         <div className="flex">
           <div className="flex flex-col">
             <div
@@ -25,8 +32,16 @@ export default function MessageBody2({
                 !isIcon && "bg-gray-500/65 shadow-md"
               } text-white p-3 ${
                 link
-                  ? "rounded-t-2xl w-[200px] md:w-72"
-                  : "rounded-2xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px]"
+                  ? "rounded-t-3xl w-[200px] md:w-72"
+                  : bubbleClass
+                  ? bubbleClass
+                  : `${
+                      isLast
+                        ? "rounded-r-3xl rounded-tl-sm rounded-bl-3xl"
+                        : isFirst
+                        ? "rounded-r-3xl rounded-tl-3xl rounded-bl-sm"
+                        : "rounded-r-3xl rounded-l-sm"
+                    } xl:max-w-4xl 3xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-3xl max-w-[230px]`
               }`}
               title={timeSent && dateWithTime(timeSent)}
             >
@@ -48,7 +63,7 @@ export default function MessageBody2({
                       className="w-full h-40 object-contain rounded-md"
                     />
                   )}
-                  <div className="w-full flex flex-col border-t rounded-b-2xl bg-gray-100 dark:bg-gray-900/20">
+                  <div className="w-full flex flex-col border-t rounded-b-3xl bg-gray-100 dark:bg-gray-900/20">
                     <span
                       className="p-2 text-md font-bold truncate"
                       title={link.title === "Error" ? link.url : link.title}
@@ -74,7 +89,10 @@ export default function MessageBody2({
           </div>
           <div className="justify-center flex ml-1 items-center">
             <div className="group-hover:block hidden">
-              <button className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full">
+              <button
+                type="button"
+                className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+              >
                 <i className="far fa-ellipsis-vertical"></i>
               </button>
             </div>

@@ -18,6 +18,7 @@ import DoubleRecentChat from "../components/loaders/DoubleRecentChat";
 import useToastr from "../hooks/Toastr";
 import { formatChatTimestamp } from "../utils/formatChatTimestamp";
 import Image from "../components/images/Image";
+import formatMessages from "../utils/formatMessages";
 
 const Chats = () => {
   const { user }: any = useAuth();
@@ -166,6 +167,13 @@ const Chats = () => {
     };
   }, [totalUsers, totalUsersData, chatContentRef]);
 
+  useEffect(() => {
+    if (publicMessagesData) {
+      setIsSending(false);
+      messageRef.current = null;
+    }
+  }, [publicMessagesData]);
+
   const handleBackToBottom = () => {
     if (chatContentRef.current) {
       chatContentRef.current.scrollTop = 0;
@@ -249,14 +257,13 @@ const Chats = () => {
       setError(error.response.data);
     } finally {
       sendPublicMessage(false, user?.id);
-      setIsSending(false);
-      messageRef.current = null;
     }
   };
 
   const handleSendLike = async () => {
     sendPublicMessage(true, user?.id);
     setIsSending(true);
+    messageRef.current = "(y)";
     try {
       const response = await api.post("chat-messages/send-public-message", {
         content: "(y)",
@@ -272,7 +279,6 @@ const Chats = () => {
       console.error(error);
     } finally {
       sendPublicMessage(false, user?.id);
-      setIsSending(false);
     }
   };
   const handleSearchTerm = (e: any) => {
@@ -383,10 +389,10 @@ const Chats = () => {
         {/* Message Container */}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse p-4 overflow-y-auto bg-white dark:bg-gray-700 gap-4 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse p-4 overflow-y-auto bg-white dark:bg-gray-700 gap-1 border-b border-gray-200 dark:border-gray-600"
         >
           {isSending && messageRef?.current && (
-            <div className="relative">
+            <div className="relative opacity-60">
               <p className="text-end text-xs absolute right-0 -bottom-4">
                 Sending...
               </p>
@@ -399,10 +405,14 @@ const Chats = () => {
                   </div>
                 </div>
                 <div
-                  className={`xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl dark:bg-blue-400/50 bg-blue-400/80 shadow-md`}
+                  className={`${
+                    messageRef.current === "(y)"
+                      ? ""
+                      : "dark:bg-blue-400/50 bg-blue-400/80"
+                  } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
                 >
                   <p className="text-sm whitespace-break-spaces break-words">
-                    {messageRef?.current}
+                    {formatMessages(messageRef?.current.trim(), 16, 16)}
                   </p>
                 </div>
               </div>
@@ -462,20 +472,47 @@ const Chats = () => {
           ) : publicMessagesData && publicMessagesData?.messages?.length > 0 ? (
             publicMessagesData?.messages?.map((message: any, index: number) => {
               const currentTime = new Date(message.createdAt);
-              const nextTime =
-                index < publicMessagesData?.messages.length - 1
-                  ? new Date(publicMessagesData?.messages[index + 1].createdAt)
+
+              const prevMessage =
+                index > 0 ? publicMessagesData.messages[index - 1] : null;
+
+              const nextMessage =
+                index < publicMessagesData.messages.length - 1
+                  ? publicMessagesData.messages[index + 1]
                   : null;
 
-              const isFirstInGroup =
-                !nextTime ||
-                currentTime.getMinutes() !== nextTime.getMinutes() ||
-                currentTime.toDateString() !== nextTime.toDateString();
+              const getUserMinuteKey = (msg: any) => {
+                const time = new Date(msg.createdAt);
+                return `${
+                  msg.userId
+                }-${time.getFullYear()}-${time.getMonth()}-${time.getDate()}-${time.getHours()}-${time.getMinutes()}`;
+              };
+
+              const currentKey = getUserMinuteKey(message);
+
+              const prevKey = prevMessage
+                ? getUserMinuteKey(prevMessage)
+                : null;
+
+              const nextKey = nextMessage
+                ? getUserMinuteKey(nextMessage)
+                : null;
+
+              const isFirstInGroup = currentKey !== nextKey;
+              const isLastInGroup = currentKey !== prevKey;
+
+              const sameMinuteUserMessages = publicMessagesData.messages.filter(
+                (m: any) => getUserMinuteKey(m) === currentKey
+              );
+
+              const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
+
+              const bubbleClass = isOnlyInMinuteUser && "rounded-3xl";
 
               return (
                 <div key={index}>
                   {isFirstInGroup && (
-                    <div className="flex justify-center text-gray-300 text-xs my-2">
+                    <div className="flex justify-center text-gray-500 dark:text-gray-300 text-xs my-2">
                       {formatChatTimestamp(currentTime)}
                     </div>
                   )}
@@ -487,6 +524,12 @@ const Chats = () => {
                     avatar={message?.sentBy?.profile_pictures[0]?.avatar}
                     timeSent={message?.createdAt}
                     link={message?.link}
+                    isLast={isLastInGroup}
+                    isFirst={isFirstInGroup}
+                    bubbleClass={bubbleClass}
+                    sendMessageRealtime={sendPublicMessage}
+                    userId={user?.id}
+                    isDeleted={message?.isDeleted}
                   />
                 </div>
               );

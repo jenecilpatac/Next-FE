@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "./images/Image";
 import dateFormat from "../utils/dateFormat";
 import formatRecentMessages from "../utils/formatRecentMessages";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function RecentChatContent({
   user,
@@ -11,8 +12,15 @@ export default function RecentChatContent({
   searchTerm,
   unreadMessages,
   isActive,
+  isDeleted,
+  lastMessageOwnerId,
 }: any) {
-  const message = formatRecentMessages(lastMessage, 4, 4);
+  const { user: authUser }: any = useAuth();
+  const message = isDeleted
+    ? `${
+        lastMessageOwnerId === authUser?.id ? "You" : user?.name ?? "Anonymous"
+      } deleted a message`
+    : formatRecentMessages(lastMessage, 4, 4);
 
   const handleRemoveSearchTerm = () => setSearchTerm("");
 
@@ -21,7 +29,11 @@ export default function RecentChatContent({
       href={`/chats/${user?.id}`}
       onClick={searchTerm ? handleRemoveSearchTerm : undefined}
     >
-      <div className={`flex items-center mt-2 p-2 rounded-lg cursor-pointer hover:dark:bg-gray-600 hover:bg-gray-100 md:mx-3 relative ${isActive && "bg-gray-100 dark:bg-gray-600"}`}>
+      <div
+        className={`flex items-center mt-2 p-2 rounded-lg cursor-pointer hover:dark:bg-gray-600 hover:bg-gray-100 md:mx-3 relative ${
+          isActive && "bg-gray-100 dark:bg-gray-600"
+        }`}
+      >
         <Image
           avatar={user?.profile_pictures[0]?.avatar}
           alt={user?.name || "Anonymous"}

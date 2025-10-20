@@ -64,7 +64,7 @@ const useSocket = () => {
       setSentPublicMessage(toRefresh);
     });
 
-    socketInstance.on("publicSenderId", (publicSenderId: boolean) => {
+    socketInstance.on("publicSenderId", (publicSenderId: string) => {
       setSenderId(publicSenderId);
     });
 
