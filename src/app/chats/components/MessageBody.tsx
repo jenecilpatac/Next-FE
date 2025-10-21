@@ -79,8 +79,8 @@ export default function MessageBody({
                     : isFirst
                     ? "rounded-l-3xl rounded-tr-3xl rounded-br-sm"
                     : "rounded-l-3xl rounded-r-sm"
-                } xl:max-w-3xl 3xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-3xl max-w-[230px]`
-          }`}
+                }`
+          } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px]`}
           title={timeSent && dateWithTime(timeSent)}
         >
           <p className="text-sm whitespace-break-spaces break-words">
