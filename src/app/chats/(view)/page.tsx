@@ -424,7 +424,7 @@ const Chats = () => {
                     messageRef.current === "(y)"
                       ? ""
                       : "dark:bg-blue-400/50 bg-blue-400/80"
-                  } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:mx-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
+                  } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
                 >
                   <p className="text-sm whitespace-break-spaces break-words">
                     {formatMessages(messageRef?.current.trim(), 16, 16)}
