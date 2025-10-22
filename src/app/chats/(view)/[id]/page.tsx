@@ -74,6 +74,7 @@ const Chats = () => {
     true,
     false
   );
+  const displayPrivateMessages = privateMessages?.messages[0]?.messages ?? [];
   const loadingOnTakeRef = useRef(loadingOnTake);
   const [backToBottom, setBackToBottom] = useState(false);
   const { showError }: any = useToastr();
@@ -88,21 +89,17 @@ const Chats = () => {
     receiverId: "",
   });
   const [isOpenRecentChat, setIsOpenRecentChat] = useState(false);
-  let firstUnreadIndex: any = null;
-
   const totalMessages =
-    (!isLoadingPrivateMessages &&
-      privateMessages?.messages[0]?.messages?.length) ||
-    0;
+    (!isLoadingPrivateMessages && displayPrivateMessages?.length) || 0;
   const totalData =
     (!isLoadingPrivateMessages &&
       privateMessages?.messages[0]?._count?.messages) ||
     0;
-
   const totalUsersData = convos?.totalSearchedData || 0;
-  const totalConvosData = privateMessages?.totalConvosData || 0;
+  const totalConvosData = convos?.totalConvosData || 0;
   const totalConvos = convos?.conversations?.length || 0;
   const messageDraft = localStorage.getItem(`private-${id}-${user?.id}`);
+  let firstUnreadIndex: any = null;
 
   useEffect(() => {
     if (!formInput.content || !user) return;
@@ -225,38 +222,52 @@ const Chats = () => {
   }, [unreadMessageRef, firstUnreadIndex, messageDetails, handleSeenMessage]);
 
   useEffect(() => {
-    const handleInfiniteScroll = () => {
+    if (!recentChatRef.current) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (
+        entries[0].isIntersecting &&
+        !loadingConvos &&
+        totalConvos < totalConvosData &&
+        !searchTerm
+      ) {
+        setAddTake((prev: any) => prev + 5);
+      }
+    });
+
+    observer.observe(recentChatRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    recentChatRef.current,
+    totalConvos,
+    totalConvosData,
+    searchTerm,
+    loadingConvos,
+  ]);
+
+  useEffect(() => {
+    const handleBackToBottomOnScroll = () => {
       if (chatContentRef.current) {
         const { scrollTop } = chatContentRef.current;
 
         setBackToBottom(scrollTop < -200);
       }
-
-      if (recentChatRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = recentChatRef.current;
-        if (
-          scrollHeight - scrollTop <= clientHeight &&
-          !loadingOnTakeRef.current &&
-          totalConvos < totalConvosData
-        ) {
-          setAddTake((prev: any) => prev + 2);
-        }
-      }
     };
 
-    recentChatRef?.current?.addEventListener("scroll", handleInfiniteScroll);
-    chatContentRef?.current?.addEventListener("scroll", handleInfiniteScroll);
+    chatContentRef?.current?.addEventListener(
+      "scroll",
+      handleBackToBottomOnScroll
+    );
     return () => {
-      recentChatRef?.current?.removeEventListener(
-        "scroll",
-        handleInfiniteScroll
-      );
       chatContentRef?.current?.removeEventListener(
         "scroll",
-        handleInfiniteScroll
+        handleBackToBottomOnScroll
       );
     };
-  }, [totalMessages, totalData, totalConvosData, totalConvos, chatContentRef]);
+  }, [chatContentRef]);
 
   const handleBackToBottom = () => {
     if (chatContentRef.current) {
@@ -265,7 +276,7 @@ const Chats = () => {
   };
 
   useEffect(() => {
-    if (data.statusCode === 404) {
+    if (data?.statusCode === 404) {
       navigate.back();
     }
     if (id) {
@@ -400,12 +411,6 @@ const Chats = () => {
     }
   };
 
-  const messages = convos?.conversations?.filter(
-    (chat: any) =>
-      (chat.senderId === user?.id && chat.receiverId === data?.user?.id) ||
-      (chat.senderId === data?.user?.id && chat.receiverId === user?.id)
-  );
-
   const handleEmojiSelect = (emoji: any) => {
     const currentValue = textareaRef.current.value;
     const newValue = currentValue + emoji;
@@ -429,16 +434,13 @@ const Chats = () => {
     }, 500);
   };
 
-  const allMessages = messages
-    ? messages.flatMap((content: any) => content.messages)
-    : [];
-  firstUnreadIndex = allMessages.findLastIndex(
+  firstUnreadIndex = displayPrivateMessages.findLastIndex(
     (msg: any) => msg.userId !== user.id && !msg.isSeen
   );
 
   useEffect(() => {
     if (firstUnreadIndex !== -1) {
-      const unreadMessage = allMessages[firstUnreadIndex];
+      const unreadMessage = displayPrivateMessages[firstUnreadIndex];
       setMessageDetails({
         chatId: unreadMessage.chatId,
         receiverId: unreadMessage.userId,
@@ -483,68 +485,54 @@ const Chats = () => {
           </div>
         </div>
         {/* Recent Chats */}
-        {!searchTerm ? (
-          <div className="overflow-y-auto" ref={recentChatRef}>
-            {loadingConvos || loadingOnSearch ? (
-              <RecentChat />
-            ) : convos?.conversations && convos?.conversations.length > 0 ? (
-              convos?.conversations.map((convo: any, index: number) => (
-                <RecentChatContent
-                  key={index}
-                  user={
-                    convo.senderId === user?.id ? convo.receiver : convo.sender
-                  }
-                  lastMessage={convo?.messages[0]?.content}
-                  unreadMessages={convo?.messages[0]?.chat?._count?.messages}
-                  timeSent={convo?.messages[0]?.createdAt}
-                  isActive={
-                    (convo.senderId === user?.id &&
-                      convo.receiverId === data?.user?.id) ||
-                    (convo.senderId === data?.user?.id &&
-                      convo.receiverId === user?.id)
-                  }
-                  isDeleted={convo?.messages[0]?.isDeleted}
-                  lastMessageOwnerId={convo?.messages[0]?.userId}
-                  formInput={formInput}
-                  userIdITyped={userIdITyped}
-                />
-              ))
-            ) : (
-              <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
-                {searchTerm
-                  ? `No "${searchTerm}" found`
-                  : "No conversations yet"}
-              </p>
-            )}
 
-            {loadingOnTake && <DoubleRecentChat />}
-          </div>
-        ) : (
-          <div className="overflow-y-auto" ref={recentChatRef}>
-            {loadingConvos || loadingOnSearch ? (
-              <RecentChat />
-            ) : convos?.searchedData?.length > 0 ? (
-              convos?.searchedData?.map((user: any, index: number) => (
-                <RecentChatContent
-                  key={index}
-                  user={user}
-                  setSearchTerm={setSearchTerm}
-                  searchTerm={searchTerm}
-                  formInput={formInput}
-                  userIdITyped={userIdITyped}
-                />
-              ))
-            ) : (
-              <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
-                {searchTerm
-                  ? `No "${searchTerm}" found`
-                  : "No conversations yet"}
-              </p>
-            )}
+        <div className="overflow-y-auto h-[calc(100vh-80px)]">
+          {loadingConvos || loadingOnSearch ? (
+            <RecentChat />
+          ) : !searchTerm &&
+            convos?.conversations &&
+            convos?.conversations.length > 0 ? (
+            convos?.conversations.map((convo: any, index: number) => (
+              <RecentChatContent
+                key={index}
+                user={
+                  convo.senderId === user?.id ? convo.receiver : convo.sender
+                }
+                lastMessage={convo?.messages[0]?.content}
+                unreadMessages={convo?.messages[0]?.chat?._count?.messages}
+                timeSent={convo?.messages[0]?.createdAt}
+                isActive={
+                  (convo.senderId === user?.id &&
+                    convo.receiverId === data?.user?.id) ||
+                  (convo.senderId === data?.user?.id &&
+                    convo.receiverId === user?.id)
+                }
+                isDeleted={convo?.messages[0]?.isDeleted}
+                lastMessageOwnerId={convo?.messages[0]?.userId}
+                formInput={formInput}
+                userIdITyped={userIdITyped}
+              />
+            ))
+          ) : convos?.searchedData?.length > 0 ? (
+            convos?.searchedData?.map((user: any, index: number) => (
+              <RecentChatContent
+                key={index}
+                user={user}
+                setSearchTerm={setSearchTerm}
+                searchTerm={searchTerm}
+                formInput={formInput}
+                userIdITyped={userIdITyped}
+              />
+            ))
+          ) : (
+            <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
+              {searchTerm ? `No "${searchTerm}" found` : "No conversations yet"}
+            </p>
+          )}
 
-            {loadingOnTake && <DoubleRecentChat />}
-          </div>
-        )}
+          {loadingOnTake && <DoubleRecentChat />}
+          <span ref={recentChatRef} className="p-2"></span>
+        </div>
       </div>
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
@@ -661,91 +649,85 @@ const Chats = () => {
           )}
           {loading || privateMessagesLoading ? (
             <Content />
-          ) : privateMessages.messages[0]?.messages?.length > 0 ? (
-            privateMessages?.messages[0]?.messages?.map(
-              (message: any, index: number) => {
-                const currentTime = new Date(message.createdAt);
+          ) : displayPrivateMessages?.length > 0 ? (
+            displayPrivateMessages?.map((message: any, index: number) => {
+              const currentTime = new Date(message.createdAt);
 
-                const prevMessage =
-                  index > 0
-                    ? privateMessages.messages[0]?.messages[index - 1]
-                    : null;
+              const prevMessage =
+                index > 0 ? displayPrivateMessages[index - 1] : null;
 
-                const nextMessage =
-                  index < privateMessages.messages[0]?.messages.length - 1
-                    ? privateMessages.messages[0]?.messages[index + 1]
-                    : null;
-
-                const getUserMinuteKey = (msg: any) => {
-                  const time = new Date(msg.createdAt);
-                  return `${
-                    msg.userId
-                  }-${time.getFullYear()}-${time.getMonth()}-${time.getDate()}-${time.getHours()}-${time.getMinutes()}`;
-                };
-
-                const currentKey = getUserMinuteKey(message);
-
-                const prevKey = prevMessage
-                  ? getUserMinuteKey(prevMessage)
+              const nextMessage =
+                index < displayPrivateMessages.length - 1
+                  ? displayPrivateMessages[index + 1]
                   : null;
 
-                const nextKey = nextMessage
-                  ? getUserMinuteKey(nextMessage)
-                  : null;
+              const getUserMinuteKey = (msg: any) => {
+                const time = new Date(msg.createdAt);
+                return `${
+                  msg.userId
+                }-${time.getFullYear()}-${time.getMonth()}-${time.getDate()}-${time.getHours()}-${time.getMinutes()}`;
+              };
 
-                const isFirstInGroup = currentKey !== nextKey;
-                const isLastInGroup = currentKey !== prevKey;
+              const currentKey = getUserMinuteKey(message);
 
-                const sameMinuteUserMessages =
-                  privateMessages.messages[0]?.messages.filter(
-                    (m: any) => getUserMinuteKey(m) === currentKey
-                  );
+              const prevKey = prevMessage
+                ? getUserMinuteKey(prevMessage)
+                : null;
 
-                const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
+              const nextKey = nextMessage
+                ? getUserMinuteKey(nextMessage)
+                : null;
 
-                const bubbleClass = isOnlyInMinuteUser && "rounded-3xl";
+              const isFirstInGroup = currentKey !== nextKey;
+              const isLastInGroup = currentKey !== prevKey;
 
-                return (
-                  <div key={index}>
-                    {index === firstUnreadIndex &&
-                      message.userId !== user.id && (
-                        <div
-                          className="flex justify-center mb-2"
-                          ref={unreadMessageRef}
-                        >
-                          <div className="w-full flex justify-center items-center gap-2">
-                            <div className="border-b w-2/6 border-gray-400"></div>
-                            <div className="text-gray-600 dark:text-gray-400 text-xs">
-                              Unread messages
-                            </div>
-                            <div className="border-b w-2/6 border-gray-400"></div>
-                          </div>
+              const sameMinuteUserMessages = displayPrivateMessages.filter(
+                (m: any) => getUserMinuteKey(m) === currentKey
+              );
+
+              const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
+
+              const bubbleClass = isOnlyInMinuteUser && "rounded-3xl";
+
+              return (
+                <div key={index}>
+                  {index === firstUnreadIndex && message.userId !== user.id && (
+                    <div
+                      className="flex justify-center mb-2"
+                      ref={unreadMessageRef}
+                    >
+                      <div className="w-full flex justify-center items-center gap-2">
+                        <div className="border-b w-2/6 border-gray-400"></div>
+                        <div className="text-gray-600 dark:text-gray-400 text-xs">
+                          Unread messages
                         </div>
-                      )}
-                    {isFirstInGroup && (
-                      <div className="flex justify-center text-gray-500 dark:text-gray-300 text-xs my-2">
-                        {formatChatTimestamp(currentTime)}
+                        <div className="border-b w-2/6 border-gray-400"></div>
                       </div>
-                    )}
-                    <ChatContent
-                      messageId={message?.id}
-                      content={message?.content}
-                      avatar={data?.user?.profile_pictures[0]?.avatar}
-                      sender={message?.userId === user?.id}
-                      name={data?.user?.name}
-                      timeSent={message?.createdAt}
-                      isNotSeen={message?.isSeen === false}
-                      link={message?.link}
-                      isLast={isLastInGroup}
-                      isFirst={isFirstInGroup}
-                      bubbleClass={bubbleClass}
-                      sendMessageRealtime={sendMessage}
-                      isDeleted={message?.isDeleted}
-                    />
-                  </div>
-                );
-              }
-            )
+                    </div>
+                  )}
+                  {isFirstInGroup && (
+                    <div className="flex justify-center text-gray-500 dark:text-gray-300 text-xs my-2">
+                      {formatChatTimestamp(currentTime)}
+                    </div>
+                  )}
+                  <ChatContent
+                    messageId={message?.id}
+                    content={message?.content}
+                    avatar={data?.user?.profile_pictures[0]?.avatar}
+                    sender={message?.userId === user?.id}
+                    name={data?.user?.name}
+                    timeSent={message?.createdAt}
+                    isNotSeen={message?.isSeen === false}
+                    link={message?.link}
+                    isLast={isLastInGroup}
+                    isFirst={isFirstInGroup}
+                    bubbleClass={bubbleClass}
+                    sendMessageRealtime={sendMessage}
+                    isDeleted={message?.isDeleted}
+                  />
+                </div>
+              );
+            })
           ) : (
             <p className="text-center mb-20 items-center">
               Start an conversation with <strong>{data?.user?.name}</strong>.{" "}

@@ -60,7 +60,7 @@ const Chats = () => {
   const emojiPickerRef = useRef<any>(null);
   const loadingOnTakeRef = useRef(loadingOnTake);
   const loadingOnTakeUsersRef = useRef(loadingOnTakeUsers);
-  const recentChatRef = useRef<any>(null);
+  const recentChatRef = useRef<HTMLSpanElement>(null);
   const totalMessages = publicMessagesData?.messages?.length;
   const totalData = publicMessagesData?.totalData;
   const totalUsers = data?.users?.length;
@@ -119,7 +119,7 @@ const Chats = () => {
           !loadingOnTake &&
           totalMessages < totalData
         ) {
-          setAddTake((prev: any) => prev + 10);
+          setAddTake((prev: any) => prev + 20);
         }
       },
       {
@@ -135,38 +135,50 @@ const Chats = () => {
   }, [sentinelRef, loadingOnTake, totalMessages, totalData]);
 
   useEffect(() => {
-    const handleInfiniteScroll = () => {
+    if (!recentChatRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !loadingOnTakeUsers &&
+          totalUsers < totalUsersData
+        ) {
+          setAddTakeUsers((prev: any) => prev + 5);
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
+
+    observer.observe(recentChatRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [recentChatRef.current, loadingOnTakeUsers, totalUsers, totalUsersData]);
+
+  useEffect(() => {
+    const handleBackToBottomOnScroll = () => {
       if (chatContentRef.current) {
         const { scrollTop } = chatContentRef.current;
 
         setBackToBottom(scrollTop < -200);
       }
-
-      if (recentChatRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = recentChatRef.current;
-        if (
-          scrollHeight - scrollTop <= clientHeight &&
-          !loadingOnTakeUsersRef.current &&
-          totalUsers < totalUsersData
-        ) {
-          setAddTakeUsers((prev: any) => prev + 2);
-        }
-      }
     };
 
-    recentChatRef?.current?.addEventListener("scroll", handleInfiniteScroll);
-    chatContentRef?.current?.addEventListener("scroll", handleInfiniteScroll);
+    chatContentRef?.current?.addEventListener(
+      "scroll",
+      handleBackToBottomOnScroll
+    );
     return () => {
-      recentChatRef?.current?.removeEventListener(
-        "scroll",
-        handleInfiniteScroll
-      );
       chatContentRef?.current?.removeEventListener(
         "scroll",
-        handleInfiniteScroll
+        handleBackToBottomOnScroll
       );
     };
-  }, [totalUsers, totalUsersData, chatContentRef]);
+  }, [chatContentRef]);
 
   useEffect(() => {
     if (publicMessagesData) {
@@ -342,7 +354,7 @@ const Chats = () => {
             <i className="far fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
           </div>
         </div>
-        <div className="overflow-y-auto" ref={recentChatRef}>
+        <div className="overflow-y-auto h-[calc(100vh-80px)]">
           {/* Recent Chats */}
           {loading || loadingOnSearch ? (
             <RecentChat />
@@ -364,6 +376,7 @@ const Chats = () => {
           )}
 
           {loadingOnTakeUsers && <DoubleRecentChat />}
+          <span ref={recentChatRef} className="p-2"></span>
         </div>
       </div>
       {/* Chat Area */}

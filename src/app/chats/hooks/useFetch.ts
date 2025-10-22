@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../../lib/axiosCall";
 
 const useFetch = (
@@ -7,7 +7,7 @@ const useFetch = (
   isPaginated: boolean,
   isSearched: boolean
 ) => {
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [loadingOnTake, setLoadingOnTake] = useState(false);
   const [loadingOnTakeMessages, setLoadingOnTakeMessages] = useState(false);
@@ -21,10 +21,10 @@ const useFetch = (
   useEffect(() => {
     if (!url) return;
     setError(null);
-    if (addTake && !isRefresh) {
+    if (addTake) {
       setLoadingOnTake(true);
     }
-    if (addTakeMessages && !isRefresh) {
+    if (addTakeMessages) {
       setLoadingOnTakeMessages(true);
     }
     if (searchTerm) {
