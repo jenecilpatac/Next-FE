@@ -627,7 +627,7 @@ const Chats = () => {
                   key={userTypingInfoPrivate?.id}
                   className="flex items-center gap-1"
                 >
-                  <div className="flex items-center -ml-2">
+                  <div className="flex items-center -ml-2 w-4 h-4">
                     <Image
                       avatar={
                         userTypingInfoPrivate?.profile_pictures?.filter(
@@ -735,6 +735,8 @@ const Chats = () => {
                     toSelectMessage={message}
                     setSelectedMessage={setSelectedMessage}
                     parent={message?.parent}
+                    index={index}
+                    textareaRef={textareaRef}
                   />
                 </div>
               );

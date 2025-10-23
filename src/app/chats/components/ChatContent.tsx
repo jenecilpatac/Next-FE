@@ -9,6 +9,7 @@ import useToastr from "../hooks/Toastr";
 import IsDeletedMessage from "./is-deleted-message";
 import reactionsData from "@/data/reactions.json";
 import { Storage } from "@/app/utils/StorageUtils";
+import Image from "./images/Image";
 
 export default function ChatContent({
   content,
@@ -28,6 +29,9 @@ export default function ChatContent({
   setSelectedMessage,
   toSelectMessage,
   parent,
+  index,
+  textareaRef,
+  seenbies,
 }: any) {
   const pathname = usePathname();
   const message = formatMessages(content.trim(), 16, 16);
@@ -83,6 +87,7 @@ export default function ChatContent({
 
   const handleOpenModal = (index: number, type: string) => () => {
     setIsOpenModal({ [index]: !isOpenModal[index] });
+    setIsOpen({ [index]: false });
     setModalType(type);
     setMessageContent(content);
   };
@@ -214,6 +219,22 @@ export default function ChatContent({
 
   const handleIsReplying = () => {
     setSelectedMessage(toSelectMessage);
+    textareaRef.current.focus();
+    setIsOpen({ [0]: false });
+  };
+
+  const handleScrollToChat = () => {
+    const el = document.getElementById(parent?.id);
+
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("animate-pulse");
+      el.classList.add("scale-90");
+      setTimeout(() => {
+        el.classList.remove("animate-pulse");
+        el.classList.remove("scale-90");
+      }, 1500);
+    }
   };
 
   return (
@@ -248,7 +269,39 @@ export default function ChatContent({
               handleOpenUsersReactions={handleOpenUsersReactions}
               handleIsReplying={handleIsReplying}
               parent={parent}
+              handleScrollToChat={handleScrollToChat}
             />
+          )}
+          {index === 0 && !isPublic && (
+            <>
+              <span className="float-end flex items-center gap-1">
+                {toSelectMessage?.isSeen ? (
+                  <>
+                    <i className="far fa-eye text-[10px]"></i>
+                    <span className="text-[10px]">Seen</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="far fa-check text-[10px]"></i>
+                    <span className="text-[10px]">Delivered</span>
+                  </>
+                )}
+              </span>
+            </>
+          )}
+          {index === 0 && isPublic && seenbies?.length > 0 && (
+            <div className="flex gap-1 float-end">
+              {seenbies?.map((seener: any, index: number) => (
+                <Image
+                  key={index}
+                  avatar={seener?.user?.profile_pictures[0]?.avatar}
+                  width={4}
+                  height={4}
+                  alt={seener?.user?.name}
+                  title={seener?.user?.name ?? "Anonymous"}
+                />
+              ))}
+            </div>
           )}
         </div>
       ) : (
@@ -286,7 +339,22 @@ export default function ChatContent({
               handleIsReplying={handleIsReplying}
               parent={parent}
               senderId={toSelectMessage?.userId}
+              handleScrollToChat={handleScrollToChat}
             />
+          )}
+          {index === 0 && isPublic && seenbies?.length > 0 && (
+            <div className="flex gap-1 ml-12">
+              {seenbies?.map((seener: any, index: number) => (
+                <Image
+                  key={index}
+                  avatar={seener?.user?.profile_pictures[0]?.avatar}
+                  width={4}
+                  height={4}
+                  alt={seener?.user?.name}
+                  title={seener?.user?.name ?? "Anonymous"}
+                />
+              ))}
+            </div>
           )}
         </div>
       )}
@@ -396,10 +464,11 @@ export default function ChatContent({
                 key={index}
               >
                 <span className="text-3xl">{reaction.value}</span>
-                <img
-                  src={Storage(reaction?.user?.profile_pictures[0]?.avatar)}
+                <Image
+                  avatar={reaction?.user?.profile_pictures[0]?.avatar}
                   alt={reaction?.user?.name ?? "Anonymous"}
-                  className="h-12 w-12 rounded-full"
+                  width={12}
+                  height={12}
                 />
                 <span className="text-lg font-bold text-gray-700 dark:text-gray-300 break-words w-80 text-start">
                   {reaction?.user?.name ?? "Anonymous"}

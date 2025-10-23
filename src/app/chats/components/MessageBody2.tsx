@@ -26,6 +26,7 @@ export default function MessageBody2({
   handleIsReplying,
   parent,
   senderId,
+  handleScrollToChat,
 }: any) {
   const { user }: any = useAuth();
   return (
@@ -52,17 +53,20 @@ export default function MessageBody2({
                     ? "him/her self"
                     : parent?.sentBy?.name ?? "Anonymous"}
                 </div>
-                <div
-                  className={`px-2 pt-2 pb-4 rounded-xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit whitespace-break-spaces break-words ${
+                <button
+                  type="button"
+                  onClick={handleScrollToChat}
+                  className={`px-2 pt-2 pb-4 rounded-xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit whitespace-break-spaces break-words text-start ${
                     parent?.content !== "(y)" && "bg-black/20"
                   }`}
                 >
                   {formatMessages(parent?.content, 14, 14)}
-                </div>
+                </button>
               </div>
             )}
             <div
-              className={`${
+              id={messageId}
+              className={`transition-all duration-300 ease-in-out ${
                 !isIcon && "bg-gray-500/65 shadow-md"
               } text-white p-3 ${
                 link
@@ -85,30 +89,22 @@ export default function MessageBody2({
             </div>
             {link && (
               <Link
-                className="w-[200px] md:w-72"
+                className="w-[230px] md:w-72"
                 href={link.url}
                 target="_blank"
               >
                 <div className="border rounded-b-xl border-gray-300/80 shadow-md dark:border-gray-600/80 bg-gray-700/10 dark:bg-gray-200/10 hover:dark:bg-gray-200/20 hover:bg-gray-700/20">
-                  {link?.images?.length > 0 && (
-                    <img
-                      src={link.images[0]}
-                      alt={link.title}
-                      className="w-full h-40 object-contain rounded-md"
-                    />
-                  )}
+                  <img
+                    src={link?.images?.length > 0 ? link?.images[0] : link?.url}
+                    alt={link.title}
+                    className="w-full h-40 object-contain rounded-md"
+                  />
                   <div className="w-full flex flex-col border-t rounded-b-3xl bg-gray-100 dark:bg-gray-900/20">
                     <span
                       className="p-2 text-md font-bold truncate"
                       title={link.title === "Error" ? link.url : link.title}
                     >
                       {link.title === "Error" ? link.url : link.title}
-                    </span>
-                    <span
-                      className="p-2 text-sm font-semi-bold truncate"
-                      title={link.url}
-                    >
-                      {link.url}
                     </span>
                     <span
                       className="p-2 text-xs font-thin truncate"

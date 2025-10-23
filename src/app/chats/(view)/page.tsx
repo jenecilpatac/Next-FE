@@ -29,18 +29,21 @@ const Chats = () => {
     attachment: "",
   });
   const textareaRef = useRef<any>("");
+  const seenSentinelRef = useRef<HTMLDivElement>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const {
     sentPublicMessage,
     sendPublicMessage,
     userTyping,
     userTypingInfo,
+    sendMessage,
   }: any = useSocket();
   const {
     data: publicMessagesData,
     loading: publicMessagesDataLoading,
     loadingOnTake,
     setAddTake,
+    setIsRefreshed,
   }: any = useFetch(
     "chat-messages/public-messages",
     sentPublicMessage,
@@ -75,6 +78,7 @@ const Chats = () => {
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const isTyping = Object.keys(userTypingInfo || {}).length > 0;
   const messageDraft = localStorage.getItem(user?.id);
+  const seenbies = publicMessagesData?.messages[0]?.seenbies || null;
 
   useEffect(() => {
     if (!userTyping || !formInput?.content || !user) return;
@@ -199,6 +203,44 @@ const Chats = () => {
       }
     }
   }, [user?.id, messageDraft]);
+
+  useEffect(() => {
+    if (!seenSentinelRef?.current || !seenbies) return;
+
+    const observer = new IntersectionObserver(async (entries) => {
+      if (
+        entries[0].isIntersecting &&
+        !seenbies?.some((seenBy: any) => seenBy?.user?.id === user?.id)
+      ) {
+        setIsRefreshed(true);
+        sendMessage({
+          toRefresh: true,
+          receiverId: "",
+          isSeenForSentMessage: true,
+        });
+        try {
+          await api.post(`chat-messages/seen-public-message`, {
+            messageId: publicMessagesData?.messages[0]?.id,
+          });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsRefreshed(false);
+          sendMessage({
+            toRefresh: false,
+            receiverId: "",
+            isSeenForSentMessage: false,
+          });
+        }
+      }
+    });
+
+    observer.observe(seenSentinelRef?.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [seenSentinelRef, seenbies, user?.id]);
 
   const handleBackToBottom = () => {
     if (chatContentRef.current) {
@@ -425,6 +467,7 @@ const Chats = () => {
           ref={chatContentRef}
           className="flex-1 flex flex-col-reverse px-4 py-10 overflow-y-auto bg-white dark:bg-gray-700 gap-1 border-b border-gray-200 dark:border-gray-600"
         >
+          <div ref={seenSentinelRef}></div>
           {isSending && messageRef?.current && (
             <div className="relative opacity-60">
               <p className="text-end text-xs absolute right-0 -bottom-4">
@@ -466,7 +509,7 @@ const Chats = () => {
                         userType?.id !== user?.id && (
                           <div
                             key={userType?.id}
-                            className="flex items-center -ml-2"
+                            className="flex items-center -ml-2 w-4 h-4"
                           >
                             <Image
                               avatar={
@@ -568,6 +611,9 @@ const Chats = () => {
                     setSelectedMessage={setSelectedMessage}
                     toSelectMessage={message}
                     parent={message?.parent}
+                    index={index}
+                    textareaRef={textareaRef}
+                    seenbies={seenbies}
                   />
                 </div>
               );

@@ -16,6 +16,7 @@ const useFetch = (
   const [addTake, setAddTake] = useState(0);
   const [addTakeMessages, setAddTakeMessages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isRefreshed, setIsRefreshed] = useState<boolean>(false);
   const defaultTake = 20;
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const useFetch = (
     };
 
     fetchData();
-  }, [url, isRefresh, addTake, searchTerm, addTakeMessages]);
+  }, [url, isRefresh, addTake, searchTerm, addTakeMessages, isRefreshed]);
 
   return {
     data,
@@ -77,6 +78,7 @@ const useFetch = (
     loadingOnSearch,
     setAddTakeMessages,
     loadingOnTakeMessages,
+    setIsRefreshed,
   };
 };
 
