@@ -191,11 +191,7 @@ export default function ChatContent({
       if (!acc[value]) {
         acc[value] = [];
       }
-      acc[value].push([
-        {
-          ...user,
-        },
-      ]);
+      acc[value].push([user]);
       return acc;
     }, {})
   ).map(([label, users]) => ({

@@ -135,11 +135,11 @@ export default function MessageBody2({
                         key={index}
                         className="relative flex gap-1 items-center hover:scale-125 transition-all duration-300 ease-in-out"
                         onClick={handleOpenUsersReactions(messageId)}
-                        title={users
+                        title={users[0]
                           ?.map((us: any) =>
-                            us[0]?.id === user?.id
+                            us?.id === user?.id
                               ? "You"
-                              : user[0]?.name ?? "Anonymous"
+                              : us?.name ?? "Anonymous"
                           )
                           ?.join("\n")}
                       >
