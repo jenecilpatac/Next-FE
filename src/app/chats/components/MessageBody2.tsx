@@ -139,7 +139,7 @@ export default function MessageBody2({
                           ?.map((us: any) =>
                             us[0]?.id === user?.id
                               ? "You"
-                              : user[0].name ?? "Anonymous"
+                              : user[0]?.name ?? "Anonymous"
                           )
                           ?.join("\n")}
                       >
