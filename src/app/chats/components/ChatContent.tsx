@@ -191,7 +191,7 @@ export default function ChatContent({
       if (!acc[value]) {
         acc[value] = [];
       }
-      acc[value].push([user]);
+      acc[value].push(user);
       return acc;
     }, {})
   ).map(([label, users]) => ({
@@ -371,7 +371,7 @@ export default function ChatContent({
               onClick={handleOpenReactions(messageId)}
               className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
             >
-              Cancel
+              Close
             </button>
           </ModalButton>
         </Modal>
@@ -415,7 +415,7 @@ export default function ChatContent({
               onClick={handleOpenUsersReactions(messageId)}
               className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
             >
-              Cancel
+              Close
             </button>
           </ModalButton>
         </Modal>
