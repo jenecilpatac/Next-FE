@@ -10,7 +10,7 @@ export default function formatMessages(
   const urlPattern =
     /\b(https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(?:\/[^\s]*)?|https?:\/\/(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?(?:\/[^\s]*)?|(?<!@)\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b(?!@))\b/g;
 
-  return content.split(urlPattern).map((part, index) => {
+  return content?.split(urlPattern).map((part, index) => {
     if (urlPattern.test(part)) {
       const link = part.startsWith("http") ? part : `https://${part}`;
 

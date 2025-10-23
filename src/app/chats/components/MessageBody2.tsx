@@ -1,6 +1,8 @@
 import Link from "next/link";
 import dateWithTime from "../utils/dateWithTime";
 import Image from "./images/Image";
+import { useAuth } from "@/app/context/AuthContext";
+import formatMessages from "../utils/formatMessages";
 
 export default function MessageBody2({
   avatar,
@@ -13,7 +15,19 @@ export default function MessageBody2({
   isLast,
   isFirst,
   bubbleClass,
+  messageId,
+  handleOpenReactions,
+  groupedReactions,
+  handleOpenUsersReactions,
+  buttonRef,
+  dropdownRef,
+  isOpen,
+  handleOpen,
+  handleIsReplying,
+  parent,
+  senderId,
 }: any) {
+  const { user }: any = useAuth();
   return (
     <div className="flex justify-start gap-2 group">
       <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
@@ -27,6 +41,26 @@ export default function MessageBody2({
         )}
         <div className="flex">
           <div className="flex flex-col">
+            {parent && (
+              <div className="flex py-2 flex-col -mb-5">
+                <div className="text-sm">
+                  <i className="far fa-reply"></i> {name ?? "Anonymous"} replied
+                  to{" "}
+                  {parent?.userId === user?.id
+                    ? "you"
+                    : senderId === parent?.userId
+                    ? "him/her self"
+                    : parent?.name ?? "Anonymous"}
+                </div>
+                <div
+                  className={`px-2 pt-2 pb-4 rounded-xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit whitespace-break-spaces break-words ${
+                    parent?.content !== "(y)" && "bg-black/20"
+                  }`}
+                >
+                  {formatMessages(parent?.content, 14, 14)}
+                </div>
+              </div>
+            )}
             <div
               className={`${
                 !isIcon && "bg-gray-500/65 shadow-md"
@@ -42,7 +76,7 @@ export default function MessageBody2({
                         ? "rounded-r-3xl rounded-tl-3xl rounded-bl-sm"
                         : "rounded-r-3xl rounded-l-sm"
                     }`
-              } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px]`}
+              } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit`}
               title={timeSent && dateWithTime(timeSent)}
             >
               <p className="text-sm whitespace-break-spaces break-words">
@@ -86,15 +120,74 @@ export default function MessageBody2({
                 </div>
               </Link>
             )}
+
+            {groupedReactions?.length > 0 && (
+              <div className="rounded-2xl bg-gray-700 text-white dark:border dark:border-gray-400 xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit -mt-2">
+                <div className="flex flex-wrap">
+                  {groupedReactions?.map(
+                    (
+                      { label, users }: { label: any; users: any },
+                      index: number
+                    ) => (
+                      <button
+                        type="button"
+                        key={index}
+                        className="relative flex gap-1 items-center hover:scale-125 transition-all duration-300 ease-in-out"
+                        onClick={handleOpenUsersReactions(messageId)}
+                        title={users
+                          ?.map((user: any) => user.name ?? "Anonymous")
+                          ?.join("\n")}
+                      >
+                        <span className="text-md">{label}</span>
+                        {users?.length > 1 && (
+                          <span className="text-md">{users?.length}</span>
+                        )}
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <div className="justify-center flex ml-1 items-center">
-            <div className="group-hover:block hidden">
+            <div
+              className={`${
+                isOpen[messageId] && "group-first:block"
+              } group-hover:block hidden relative`}
+            >
               <button
                 type="button"
                 className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+                onClick={handleOpen(messageId)}
+                ref={buttonRef}
               >
                 <i className="far fa-ellipsis-vertical"></i>
               </button>
+              <button
+                type="button"
+                className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+                onClick={handleOpenReactions(messageId)}
+              >
+                <i className="far fa-smile"></i>
+              </button>
+              {isOpen[messageId] && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute bottom-7 left-4 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
+                >
+                  <ul>
+                    <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
+                      <button
+                        onClick={handleIsReplying}
+                        type="button"
+                        className="w-full text-start"
+                      >
+                        <i className="far fa-reply"></i> Reply
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
