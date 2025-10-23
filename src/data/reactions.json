@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Like",
+    "value": "👍"
+  },
+  {
+    "label": "Love",
+    "value": "❤️"
+  },
+  {
+    "label": "Haha",
+    "value": "😂"
+  },
+  {
+    "label": "Wow",
+    "value": "😮"
+  },
+  {
+    "label": "Sad",
+    "value": "😢"
+  },
+  {
+    "label": "Angry",
+    "value": "😡"
+  },
+  {
+    "label": "Clap",
+    "value": "👏"
+  },
+  {
+    "label": "Fire",
+    "value": "🔥"
+  },
+  {
+    "label": "100%",
+    "value": "💯"
+  },
+  {
+    "label": "Think",
+    "value": "🤔"
+  },
+  {
+    "label": "Angel",
+    "value": "😇"
+  },
+  {
+    "label": "Hahaha",
+    "value": "🤣"
+  },
+  {
+    "label": "Beaming",
+    "value": "😁"
+  },
+  {
+    "label": "Unamused",
+    "value": "😒"
+  },
+  {
+    "label": "Ok",
+    "value": "👌"
+  }
+]

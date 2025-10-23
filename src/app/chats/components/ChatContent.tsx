@@ -2,11 +2,13 @@ import { usePathname } from "next/navigation";
 import formatMessages from "../utils/formatMessages";
 import MessageBody from "./MessageBody";
 import MessageBody2 from "./MessageBody2";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, ModalButton } from "@/app/components/ui/modal";
 import api from "@/app/lib/axiosCall";
 import useToastr from "../hooks/Toastr";
 import IsDeletedMessage from "./is-deleted-message";
+import reactionsData from "@/data/reactions.json";
+import { Storage } from "@/app/utils/StorageUtils";
 
 export default function ChatContent({
   content,
@@ -22,6 +24,10 @@ export default function ChatContent({
   sendMessageRealtime,
   userId,
   isDeleted,
+  reactions,
+  setSelectedMessage,
+  toSelectMessage,
+  parent,
 }: any) {
   const pathname = usePathname();
   const message = formatMessages(content.trim(), 16, 16);
@@ -39,6 +45,17 @@ export default function ChatContent({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string>("");
+  const [isReacting, setIsReacting] = useState<boolean>(false);
+  const [isOpenReactions, setIsOpenReactions] = useState<{
+    [key: number]: boolean;
+  }>({
+    [0]: false,
+  });
+  const [isOpenUserReactions, setIsOpenUserReactions] = useState<{
+    [key: number]: boolean;
+  }>({
+    [0]: false,
+  });
   const { showSuccess } = useToastr();
 
   useEffect(() => {
@@ -96,7 +113,7 @@ export default function ChatContent({
       }
       setMessageContent("");
       setError("");
-      setIsOpenModal({ [0]: false });
+      setIsOpenModal({ [messageId]: false });
     } catch (error: any) {
       console.error(error);
       if (error.response.status === 400) {
@@ -114,6 +131,93 @@ export default function ChatContent({
         });
       }
     }
+  };
+
+  const handleOpenReactions = (messageId: number) => () => {
+    setIsOpenReactions({ [messageId]: !isOpenReactions[messageId] });
+  };
+
+  const handleReactToAMessage =
+    ({
+      messageId,
+      value,
+      label,
+    }: {
+      messageId: number;
+      value: string;
+      label: string;
+    }) =>
+    async () => {
+      setIsReacting(true);
+      if (isPublic) {
+        sendMessageRealtime(true, userId);
+      } else {
+        sendMessageRealtime({
+          toRefresh: true,
+          receiverId: "",
+          isSeenForSentMessage: true,
+        });
+      }
+      try {
+        const response = await api.post(`/chat-messages/react`, {
+          messageId,
+          value,
+          label,
+        });
+        if (response.status === 201) {
+          showSuccess(response.data.message, "Success");
+          setIsOpenReactions({ [messageId]: false });
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsReacting(false);
+        if (isPublic) {
+          sendMessageRealtime(false, userId);
+        } else {
+          sendMessageRealtime({
+            toRefresh: false,
+            receiverId: "",
+            isSeenForSentMessage: true,
+          });
+        }
+      }
+    };
+
+  const groupedReactions = Object.entries(
+    reactions?.reduce((acc: any, reaction: any) => {
+      const { value, user } = reaction;
+
+      if (!acc[value]) {
+        acc[value] = [];
+      }
+      acc[value].push([
+        {
+          ...user,
+        },
+      ]);
+      return acc;
+    }, {})
+  ).map(([label, users]) => ({
+    label,
+    users,
+  }));
+
+  const isReacted = (label: any) => {
+    return reactions?.some(
+      (reaction: any) =>
+        reaction.userId === userId &&
+        reaction.messageId === messageId &&
+        reaction.label === label
+    );
+  };
+
+  const handleOpenUsersReactions = (messageId: number) => () => {
+    setIsOpenUserReactions({ [messageId]: !isOpenUserReactions[messageId] });
+  };
+
+  const handleIsReplying = () => {
+    setSelectedMessage(toSelectMessage);
   };
 
   return (
@@ -143,6 +247,11 @@ export default function ChatContent({
               buttonRef={buttonRef}
               dropdownRef={dropdownRef}
               handleOpenModal={handleOpenModal}
+              handleOpenReactions={handleOpenReactions}
+              groupedReactions={groupedReactions}
+              handleOpenUsersReactions={handleOpenUsersReactions}
+              handleIsReplying={handleIsReplying}
+              parent={parent}
             />
           )}
         </div>
@@ -170,6 +279,17 @@ export default function ChatContent({
               isLast={isLast}
               isFirst={isFirst}
               bubbleClass={bubbleClass}
+              messageId={messageId}
+              handleOpenReactions={handleOpenReactions}
+              groupedReactions={groupedReactions}
+              handleOpenUsersReactions={handleOpenUsersReactions}
+              isOpen={isOpen}
+              handleOpen={handleOpen}
+              dropdownRef={dropdownRef}
+              buttonRef={buttonRef}
+              handleIsReplying={handleIsReplying}
+              parent={parent}
+              senderId={toSelectMessage?.userId}
             />
           )}
         </div>
@@ -199,7 +319,7 @@ export default function ChatContent({
               type="button"
               disabled={isLoading}
               onClick={handleOpenModal(messageId, "")}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
             >
               Cancel
             </button>
@@ -216,6 +336,90 @@ export default function ChatContent({
                 : modalType === "edit"
                 ? "Update"
                 : "Remove"}
+            </button>
+          </ModalButton>
+        </Modal>
+      )}
+
+      {isOpenReactions[messageId] && (
+        <Modal title={`Add reactions`}>
+          <div className="grid grid-cols-5 gap-1 mb-6">
+            {reactionsData?.map((reaction: any, index: number) => (
+              <button
+                key={index}
+                type="button"
+                className={`flex flex-col items-center space-y-1 rounded-md p-2 hover:scale-110 transition-all duration-300 ease-in-out ${
+                  isReacted(reaction.label)
+                    ? "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                    : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+                onClick={handleReactToAMessage({
+                  messageId,
+                  value: reaction.value,
+                  label: reaction.label,
+                })}
+                disabled={isReacting}
+              >
+                <span className="text-3xl">{reaction.value}</span>
+                <span className="text-[10px] dark:text-gray-200 text-gray-600">
+                  {reaction.label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <ModalButton>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleOpenReactions(messageId)}
+              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
+            >
+              Cancel
+            </button>
+          </ModalButton>
+        </Modal>
+      )}
+
+      {isOpenUserReactions[messageId] && reactions?.length > 0 && (
+        <Modal title={`All reactions`}>
+          <div className="flex flex-col gap-2 mb-6 max-h-96 overflow-y-auto">
+            {reactions?.map((reaction: any, index: number) => (
+              <button
+                onClick={
+                  reaction?.user?.id === userId
+                    ? handleReactToAMessage({
+                        messageId,
+                        value: reaction.value,
+                        label: reaction.label,
+                      })
+                    : undefined
+                }
+                type="button"
+                className="flex gap-5 items-center p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-3xl"
+                key={index}
+              >
+                <span className="text-3xl">{reaction.value}</span>
+                <img
+                  src={Storage(reaction?.user?.profile_pictures[0]?.avatar)}
+                  alt={reaction?.user?.name ?? "Anonymous"}
+                  className="h-12 w-12 rounded-full"
+                />
+                <span className="text-lg font-bold text-gray-700 dark:text-gray-300 break-words w-80 text-start">
+                  {reaction?.user?.name ?? "Anonymous"}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <ModalButton>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleOpenUsersReactions(messageId)}
+              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
+            >
+              Cancel
             </button>
           </ModalButton>
         </Modal>

@@ -19,6 +19,7 @@ import useToastr from "../hooks/Toastr";
 import { formatChatTimestamp } from "../utils/formatChatTimestamp";
 import Image from "../components/images/Image";
 import formatMessages from "../utils/formatMessages";
+import IsReplying from "../components/is-replying";
 
 const Chats = () => {
   const { user }: any = useAuth();
@@ -60,7 +61,7 @@ const Chats = () => {
   const emojiPickerRef = useRef<any>(null);
   const loadingOnTakeRef = useRef(loadingOnTake);
   const loadingOnTakeUsersRef = useRef(loadingOnTakeUsers);
-  const recentChatRef = useRef<any>(null);
+  const recentChatRef = useRef<HTMLSpanElement>(null);
   const totalMessages = publicMessagesData?.messages?.length;
   const totalData = publicMessagesData?.totalData;
   const totalUsers = data?.users?.length;
@@ -71,6 +72,7 @@ const Chats = () => {
   const { showError }: any = useToastr();
   const messageRef = useRef<any>(null);
   const [isOpenRecentChat, setIsOpenRecentChat] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const isTyping = Object.keys(userTypingInfo || {}).length > 0;
   const messageDraft = localStorage.getItem(user?.id);
 
@@ -119,7 +121,7 @@ const Chats = () => {
           !loadingOnTake &&
           totalMessages < totalData
         ) {
-          setAddTake((prev: any) => prev + 10);
+          setAddTake((prev: any) => prev + 20);
         }
       },
       {
@@ -135,38 +137,50 @@ const Chats = () => {
   }, [sentinelRef, loadingOnTake, totalMessages, totalData]);
 
   useEffect(() => {
-    const handleInfiniteScroll = () => {
+    if (!recentChatRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !loadingOnTakeUsers &&
+          totalUsers < totalUsersData
+        ) {
+          setAddTakeUsers((prev: any) => prev + 5);
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
+
+    observer.observe(recentChatRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [recentChatRef.current, loadingOnTakeUsers, totalUsers, totalUsersData]);
+
+  useEffect(() => {
+    const handleBackToBottomOnScroll = () => {
       if (chatContentRef.current) {
         const { scrollTop } = chatContentRef.current;
 
         setBackToBottom(scrollTop < -200);
       }
-
-      if (recentChatRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = recentChatRef.current;
-        if (
-          scrollHeight - scrollTop <= clientHeight &&
-          !loadingOnTakeUsersRef.current &&
-          totalUsers < totalUsersData
-        ) {
-          setAddTakeUsers((prev: any) => prev + 2);
-        }
-      }
     };
 
-    recentChatRef?.current?.addEventListener("scroll", handleInfiniteScroll);
-    chatContentRef?.current?.addEventListener("scroll", handleInfiniteScroll);
+    chatContentRef?.current?.addEventListener(
+      "scroll",
+      handleBackToBottomOnScroll
+    );
     return () => {
-      recentChatRef?.current?.removeEventListener(
-        "scroll",
-        handleInfiniteScroll
-      );
       chatContentRef?.current?.removeEventListener(
         "scroll",
-        handleInfiniteScroll
+        handleBackToBottomOnScroll
       );
     };
-  }, [totalUsers, totalUsersData, chatContentRef]);
+  }, [chatContentRef]);
 
   useEffect(() => {
     if (publicMessagesData) {
@@ -253,6 +267,7 @@ const Chats = () => {
     try {
       const response = await api.post("chat-messages/send-public-message", {
         ...formInput,
+        parentId: selectedMessage?.id,
       });
 
       if (response.status === 201) {
@@ -262,6 +277,7 @@ const Chats = () => {
             chatContentRef.current.scrollHeight;
         }, 500);
         localStorage.removeItem(user?.id);
+        setSelectedMessage(null);
       }
     } catch (error: any) {
       console.error(error);
@@ -282,6 +298,7 @@ const Chats = () => {
     try {
       const response = await api.post("chat-messages/send-public-message", {
         content: "(y)",
+        parentId: selectedMessage?.id,
       });
 
       if (response.status === 201) {
@@ -289,6 +306,7 @@ const Chats = () => {
           chatContentRef.current.scrollTop =
             chatContentRef.current.scrollHeight;
         }, 500);
+        setSelectedMessage(null);
       }
     } catch (error: any) {
       console.error(error);
@@ -342,7 +360,7 @@ const Chats = () => {
             <i className="far fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
           </div>
         </div>
-        <div className="overflow-y-auto" ref={recentChatRef}>
+        <div className="overflow-y-auto h-[calc(100vh-80px)]">
           {/* Recent Chats */}
           {loading || loadingOnSearch ? (
             <RecentChat />
@@ -364,10 +382,11 @@ const Chats = () => {
           )}
 
           {loadingOnTakeUsers && <DoubleRecentChat />}
+          <span ref={recentChatRef} className="p-2"></span>
         </div>
       </div>
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Chat Header */}
         <div className="bg-sky-700 text-white p-4 flex items-center justify-between">
           <div className="flex items-center">
@@ -404,7 +423,7 @@ const Chats = () => {
         {/* Message Container */}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse p-4 overflow-y-auto bg-white dark:bg-gray-700 gap-1 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse px-4 py-10 overflow-y-auto bg-white dark:bg-gray-700 gap-1 border-b border-gray-200 dark:border-gray-600"
         >
           {isSending && messageRef?.current && (
             <div className="relative opacity-60">
@@ -545,6 +564,10 @@ const Chats = () => {
                     sendMessageRealtime={sendPublicMessage}
                     userId={user?.id}
                     isDeleted={message?.isDeleted}
+                    reactions={message?.reactions}
+                    setSelectedMessage={setSelectedMessage}
+                    toSelectMessage={message}
+                    parent={message?.parent}
                   />
                 </div>
               );
@@ -564,6 +587,10 @@ const Chats = () => {
           <span ref={sentinelRef}></span>
         </div>
         {/* Message Input Area */}
+        <IsReplying
+          selectedMessage={selectedMessage}
+          setSelectedMessage={setSelectedMessage}
+        />
         <div className="bg-white dark:bg-gray-700 px-4 py-2 gap-2 flex items-center relative">
           <div
             className={`absolute left-1/2 bottom-4 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
