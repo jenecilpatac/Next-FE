@@ -8,7 +8,7 @@ export default function Image({ avatar, width, height, ...props }: any) {
           ? Storage(avatar)
           : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
       }
-      className={`w-${width} h-${height} rounded-full mx-auto md:mx-0`}
+      className={`w-${width} h-${height} object-cover rounded-full mx-auto md:mx-0`}
       {...props}
     />
   );

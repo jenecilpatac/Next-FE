@@ -6,10 +6,11 @@ export default function IsReplying({
   setSelectedMessage,
 }: any) {
   const { user }: any = useAuth();
+  if (!selectedMessage) return;
   return (
     <div
       className={`p-4 bg-gray-100 dark:bg-gray-600 transition-all duration-300 ease-in-out ${
-        selectedMessage ? "" : "-mb-24"
+        selectedMessage ? "" : "-mb-28"
       }`}
     >
       <div className="flex justify-between items-center">
