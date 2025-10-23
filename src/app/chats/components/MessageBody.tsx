@@ -175,7 +175,11 @@ export default function MessageBody({
                     className="relative flex gap-1 items-center hover:scale-125 transition-all duration-300 ease-in-out"
                     onClick={handleOpenUsersReactions(messageId)}
                     title={users
-                      ?.map((user: any) => user.name ?? "Anonymous")
+                      ?.map((us: any) =>
+                        us[0]?.id === user?.id
+                          ? "You"
+                          : user[0].name ?? "Anonymous"
+                      )
                       ?.join("\n")}
                   >
                     <span className="text-md">{label}</span>
