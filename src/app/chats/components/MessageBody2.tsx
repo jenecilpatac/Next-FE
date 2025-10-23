@@ -50,7 +50,7 @@ export default function MessageBody2({
                     ? "you"
                     : senderId === parent?.userId
                     ? "him/her self"
-                    : parent?.name ?? "Anonymous"}
+                    : parent?.sentBy?.name ?? "Anonymous"}
                 </div>
                 <div
                   className={`px-2 pt-2 pb-4 rounded-xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit whitespace-break-spaces break-words ${
