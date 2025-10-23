@@ -95,7 +95,7 @@ export default function MessageBody({
               <i className="far fa-reply"></i> You replied to{" "}
               {parent?.userId === user?.id
                 ? "Yourself"
-                : parent?.name ?? "Anonymous"}
+                : parent?.sentBy?.name ?? "Anonymous"}
             </div>
             <div
               className={`px-2 pt-2 pb-4 rounded-xl xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit self-end whitespace-break-spaces break-words ${
