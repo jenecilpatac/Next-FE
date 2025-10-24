@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 
-const Video = () => {
+const Video = ({ url }: any) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -215,7 +215,7 @@ const Video = () => {
           <video
             ref={videoRef}
             className="w-full h-auto rounded-lg shadow-lg"
-            src={"/video/video.mp4"}
+            src={url}
             controls={false}
             onClick={togglePlayPause}
             autoPlay

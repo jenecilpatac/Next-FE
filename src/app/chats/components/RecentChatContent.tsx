@@ -16,6 +16,7 @@ export default function RecentChatContent({
   lastMessageOwnerId,
   formInput,
   userIdITyped,
+  isAttached,
 }: any) {
   const { user: authUser }: any = useAuth();
   const messageDraft = localStorage.getItem(
@@ -47,6 +48,8 @@ export default function RecentChatContent({
     saveOnClick(userId)();
   };
 
+  console.log(isAttached)
+
   return (
     <Link
       href={`/chats/${user?.id}`}
@@ -73,7 +76,9 @@ export default function RecentChatContent({
           </p>
           <div className="flex gap-1 max-w-44">
             <div className="text-gray-500 dark:text-gray-100 sm:max-w-40">
-              <p className="text-xs truncate">{message}</p>
+              <p className="text-xs truncate">
+                {isAttached ? "Sent attachment" : message}
+              </p>
             </div>
             {timeSent && (
               <span className="text-xs">
