@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import ChatContent from "../components/ChatContent";
 import RecentChatContent from "../components/RecentChatContent";
 import Button from "../components/buttons/Button";
@@ -21,6 +21,10 @@ import Image from "../components/images/Image";
 import formatMessages from "../utils/formatMessages";
 import IsReplying from "../components/is-replying";
 import MessageFileUpload from "../components/message-file-upload";
+import MessageFilePreview from "../components/message-file-preview";
+import MessageFileSending from "../components/message-file-sending";
+const MessageFilePreviewPage = memo(MessageFilePreview);
+const MessageFileSendingPreview = memo(MessageFileSending);
 
 const Chats = () => {
   const { user }: any = useAuth();
@@ -80,6 +84,7 @@ const Chats = () => {
   const isTyping = Object.keys(userTypingInfo || {}).length > 0;
   const messageDraft = localStorage.getItem(user?.id);
   const seenbies = publicMessagesData?.messages[0]?.seenbies || null;
+  const [attachments, setAttachments] = useState<any>([]);
 
   useEffect(() => {
     if (!userTyping || !formInput?.content || !user) return;
@@ -191,6 +196,7 @@ const Chats = () => {
     if (publicMessagesData) {
       setIsSending(false);
       messageRef.current = null;
+      setAttachments([]);
     }
   }, [publicMessagesData]);
 
@@ -307,11 +313,28 @@ const Chats = () => {
     if (isEmojiPickerOpen) {
       handleEmojiPickerOpen();
     }
-    try {
-      const response = await api.post("chat-messages/send-public-message", {
-        ...formInput,
-        parentId: selectedMessage?.id,
+    const formData = new FormData();
+
+    formData.append("content", formInput?.content?.trim());
+    formData.append("attachment", attachments?.length > 0 ? "true" : "false");
+    if (attachments?.length > 0) {
+      attachments.forEach((file: any) => {
+        formData.append("attachments", file);
       });
+    }
+    if (selectedMessage?.id) {
+      formData.append("parentId", selectedMessage?.id);
+    }
+    try {
+      const response = await api.post(
+        "chat-messages/send-public-message",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 201) {
         setError("");
@@ -469,7 +492,7 @@ const Chats = () => {
           className="flex-1 flex flex-col-reverse px-4 py-10 overflow-y-auto bg-white dark:bg-gray-700 gap-1 border-b border-gray-200 dark:border-gray-600"
         >
           <div ref={seenSentinelRef}></div>
-          {isSending && messageRef?.current && (
+          {isSending && (messageRef?.current || attachments?.length > 0) && (
             <div className="relative opacity-60">
               <p className="text-end text-xs absolute right-0 -bottom-4">
                 Sending...
@@ -484,16 +507,20 @@ const Chats = () => {
                 </div>
                 <div
                   className={`${
-                    messageRef.current === "(y)"
+                    messageRef?.current === "(y)"
                       ? ""
                       : "dark:bg-blue-400/50 bg-blue-400/80"
                   } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
                 >
                   <p className="text-sm whitespace-break-spaces break-words">
-                    {formatMessages(messageRef?.current.trim(), 16, 16)}
+                    {formatMessages(messageRef?.current?.trim(), 16, 16)}
                   </p>
                 </div>
               </div>
+
+              {attachments?.length > 0 && (
+                <MessageFileSendingPreview attachments={attachments} />
+              )}
             </div>
           )}
           {isTyping &&
@@ -615,6 +642,7 @@ const Chats = () => {
                     index={index}
                     textareaRef={textareaRef}
                     seenbies={seenbies}
+                    attachments={message?.message_attachments}
                   />
                 </div>
               );
@@ -652,8 +680,17 @@ const Chats = () => {
               <i className="far fa-arrow-down"></i>
             </button>
           </div>
-          <MessageFileUpload />
-          <div className="relative w-full py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
+          <MessageFileUpload
+            setAttachments={setAttachments}
+            isLoading={publicMessagesDataLoading}
+          />
+          <div className="relative w-full max-w-[calc(100%-60px)] py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
+            {attachments?.length > 0 && (
+              <MessageFilePreviewPage
+                attachments={attachments}
+                setAttachments={setAttachments}
+              />
+            )}
             <TextArea
               textareaRef={textareaRef}
               value={formInput.content}
@@ -683,8 +720,9 @@ const Chats = () => {
             </div>
           </div>
           <div className="bottom-4 absolute right-4">
-            {formInput.content ? (
+            {formInput.content || attachments?.length > 0 ? (
               <Button
+                disabled={publicMessagesDataLoading}
                 onClick={handleSendMessage}
                 type="button"
                 icon="paper-plane-top"
@@ -693,6 +731,7 @@ const Chats = () => {
               />
             ) : (
               <Button
+                disabled={publicMessagesDataLoading}
                 type="button"
                 onClick={handleSendLike}
                 icon="thumbs-up"

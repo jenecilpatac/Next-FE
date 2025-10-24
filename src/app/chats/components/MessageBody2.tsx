@@ -4,6 +4,7 @@ import Image from "./images/Image";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
 import { useEffect, useRef, useState } from "react";
+import { Storage } from "@/app/utils/StorageUtils";
 
 export default function MessageBody2({
   avatar,
@@ -28,6 +29,11 @@ export default function MessageBody2({
   parent,
   senderId,
   handleScrollToChat,
+  images,
+  isDisplayedIfNotAttachment,
+  files,
+  videos,
+  audios,
 }: any) {
   const { user }: any = useAuth();
   const touchRef = useRef(false);
@@ -119,29 +125,31 @@ export default function MessageBody2({
                 </button>
               </div>
             )}
-            <div
-              id={messageId}
-              className={`transition-all duration-300 ease-in-out ${
-                !isIcon && "bg-gray-500/65 shadow-md"
-              } text-white p-3 ${
-                link
-                  ? "rounded-t-3xl w-[200px] md:w-72"
-                  : bubbleClass
-                  ? bubbleClass
-                  : `${
-                      isLast
-                        ? "rounded-r-3xl rounded-tl-sm rounded-bl-3xl"
-                        : isFirst
-                        ? "rounded-r-3xl rounded-tl-3xl rounded-bl-sm"
-                        : "rounded-r-3xl rounded-l-sm"
-                    }`
-              } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit`}
-              title={timeSent && dateWithTime(timeSent)}
-            >
-              <p className="text-sm whitespace-break-spaces break-words">
-                {message}
-              </p>
-            </div>
+            {!isDisplayedIfNotAttachment && (
+              <div
+                id={messageId}
+                className={`transition-all duration-300 ease-in-out ${
+                  !isIcon && "bg-gray-500/65 shadow-md"
+                } text-white p-3 ${
+                  link
+                    ? "rounded-t-3xl w-[200px] md:w-72"
+                    : bubbleClass
+                    ? bubbleClass
+                    : `${
+                        isLast
+                          ? "rounded-r-3xl rounded-tl-sm rounded-bl-3xl"
+                          : isFirst
+                          ? "rounded-r-3xl rounded-tl-3xl rounded-bl-sm"
+                          : "rounded-r-3xl rounded-l-sm"
+                      }`
+                } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit`}
+                title={timeSent && dateWithTime(timeSent)}
+              >
+                <p className="text-sm whitespace-break-spaces break-words">
+                  {message}
+                </p>
+              </div>
+            )}
             {link && (
               <Link
                 className="w-[230px] md:w-72"
@@ -170,6 +178,71 @@ export default function MessageBody2({
                   </div>
                 </div>
               </Link>
+            )}
+
+            {images?.length > 0 && (
+              <div
+                className={`grid ${
+                  images.length > 1 ? "grid-cols-2" : "grid-cols-1"
+                } gap-2`}
+              >
+                {images?.map((item: any, index: number) => (
+                  <Image
+                    key={index}
+                    alt={item?.value}
+                    rounded="md"
+                    avatar={item?.value}
+                    width={"32 md:w-64"}
+                    height={"32 md:h-64"}
+                  />
+                ))}
+              </div>
+            )}
+
+            {files?.length > 0 && (
+              <div className="flex flex-col p-2 underline gap-2">
+                {files?.map((item: any, index: number) => (
+                  <Link
+                    href={Storage(item?.value)}
+                    key={index}
+                    className="flex gap-2 items-center"
+                  >
+                    <i className="far fa-file text-2xl"></i>
+                    <span className="text-md">
+                      {item?.value?.split("/")?.pop()}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {videos?.length > 0 && (
+              <div className="flex flex-col p-2 gap-2">
+                {videos?.map((item: any, index: number) => (
+                  <video
+                    className="w-64 md:w-96 h-auto md:h-auto rounded-3xl"
+                    key={index}
+                    src={Storage(item?.value)}
+                    controls
+                  ></video>
+                ))}
+              </div>
+            )}
+
+            {audios?.length > 0 && (
+              <div className="flex flex-col p-2 gap-2">
+                {audios?.map((item: any, index: number) => (
+                  <div key={index}>
+                    <audio controls>
+                      <source
+                        src={Storage(item?.value)}
+                        type={`audio/${item.value.split(".").pop()}`}
+                      />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                ))}
+              </div>
             )}
 
             {groupedReactions?.length > 0 && (

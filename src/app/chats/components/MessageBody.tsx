@@ -3,6 +3,8 @@ import dateWithTime from "../utils/dateWithTime";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
 import { useEffect, useRef, useState } from "react";
+import Image from "./images/Image";
+import { Storage } from "@/app/utils/StorageUtils";
 
 export default function MessageBody({
   isIcon,
@@ -24,6 +26,11 @@ export default function MessageBody({
   handleIsReplying,
   parent,
   handleScrollToChat,
+  images,
+  isDisplayedIfNotAttachment,
+  files,
+  videos,
+  audios,
 }: any) {
   const { user }: any = useAuth();
   const touchRef = useRef(false);
@@ -163,29 +170,31 @@ export default function MessageBody({
             </button>
           </div>
         )}
-        <div
-          id={messageId}
-          className={`transition-all duration-300 ease-in-out ${
-            !isIcon && "dark:bg-blue-400/50 bg-blue-400/80 shadow-md"
-          } text-white p-3 ${
-            link
-              ? "rounded-t-3xl w-[200px] md:w-72"
-              : bubbleClass
-              ? bubbleClass
-              : `${
-                  isLast
-                    ? "rounded-l-3xl rounded-tr-sm rounded-br-3xl"
-                    : isFirst
-                    ? "rounded-l-3xl rounded-tr-3xl rounded-br-sm"
-                    : "rounded-l-3xl rounded-r-sm"
-                }`
-          } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit self-end`}
-          title={timeSent && dateWithTime(timeSent)}
-        >
-          <p className="text-sm whitespace-break-spaces break-words">
-            {message}
-          </p>
-        </div>
+        {!isDisplayedIfNotAttachment && (
+          <div
+            id={messageId}
+            className={`transition-all duration-300 ease-in-out ${
+              !isIcon && "dark:bg-blue-400/50 bg-blue-400/80 shadow-md"
+            } text-white p-3 ${
+              link
+                ? "rounded-t-3xl w-[200px] md:w-72"
+                : bubbleClass
+                ? bubbleClass
+                : `${
+                    isLast
+                      ? "rounded-l-3xl rounded-tr-sm rounded-br-3xl"
+                      : isFirst
+                      ? "rounded-l-3xl rounded-tr-3xl rounded-br-sm"
+                      : "rounded-l-3xl rounded-r-sm"
+                  }`
+            } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit self-end`}
+            title={timeSent && dateWithTime(timeSent)}
+          >
+            <p className="text-sm whitespace-break-spaces break-words">
+              {message}
+            </p>
+          </div>
+        )}
         {link && (
           <Link className="w-[230px] md:w-72" href={link.url} target="_blank">
             <div className="border rounded-b-xl border-gray-300/80 shadow-md dark:border-gray-600/80 bg-gray-700/10 dark:bg-gray-200/10 hover:dark:bg-gray-200/20 hover:bg-gray-700/20">
@@ -210,6 +219,68 @@ export default function MessageBody({
               </div>
             </div>
           </Link>
+        )}
+        {images?.length > 0 && (
+          <div
+            className={`grid ${
+              images.length > 1 ? "grid-cols-2" : "grid-cols-1"
+            } justify-items-end gap-2`}
+          >
+            {images?.map((item: any, index: number) => (
+              <Image
+                key={index}
+                alt={item?.value}
+                rounded="md"
+                avatar={item?.value}
+                width={"32 md:w-64"}
+                height={"32 md:h-64"}
+              />
+            ))}
+          </div>
+        )}
+        {files?.length > 0 && (
+          <div className="flex flex-col p-2 underline gap-2">
+            {files?.map((item: any, index: number) => (
+              <Link
+                href={Storage(item?.value)}
+                key={index}
+                className="flex gap-2 items-center self-end"
+              >
+                <i className="far fa-file text-2xl"></i>
+                <span className="text-md">
+                  {item?.value?.split("/")?.pop()}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+        {videos?.length > 0 && (
+          <div className="flex flex-col p-2 gap-2">
+            {videos?.map((item: any, index: number) => (
+              <video
+                className="w-64 md:w-96 h-auto md:h-auto rounded-3xl self-end"
+                key={index}
+                src={Storage(item?.value)}
+                controls
+              ></video>
+            ))}
+          </div>
+        )}
+
+        {audios?.length > 0 && (
+          <div className="flex flex-col p-2 gap-2">
+            {audios?.map((item: any, index: number) => (
+              <div key={index} className="self-end">
+                <audio controls>
+                  <source
+                    src={Storage(item?.value)}
+                    type={`audio/${item.value.split(".").pop()}`}
+                  />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            ))}
+          </div>
         )}
         {groupedReactions?.length > 0 && (
           <div className="rounded-2xl bg-gray-700 text-white dark:border dark:border-gray-400 xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit -mt-2 self-end">

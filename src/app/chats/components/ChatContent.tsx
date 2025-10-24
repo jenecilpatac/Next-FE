@@ -10,6 +10,9 @@ import IsDeletedMessage from "./is-deleted-message";
 import reactionsData from "@/data/reactions.json";
 import { Storage } from "@/app/utils/StorageUtils";
 import Image from "./images/Image";
+import isImage from "../utils/is-image";
+import isVideo from "../utils/is-video";
+import isAudio from "../utils/is-audio";
 
 export default function ChatContent({
   content,
@@ -32,6 +35,7 @@ export default function ChatContent({
   index,
   textareaRef,
   seenbies,
+  attachments,
 }: any) {
   const pathname = usePathname();
   const message = formatMessages(content.trim(), 16, 16);
@@ -237,6 +241,30 @@ export default function ChatContent({
     }
   };
 
+  const isAttached =
+    !message[0]?.props?.children &&
+    toSelectMessage?.attachment &&
+    attachments?.length > 0;
+
+  const images = attachments?.filter((file: any) =>
+    isImage(file?.value?.split(".")?.pop())
+  );
+
+  const files = attachments?.filter(
+    (file: any) =>
+      !isVideo(file?.value?.split(".")?.pop()) &&
+      !isImage(file?.value?.split(".")?.pop()) &&
+      !isAudio(file?.value?.split(".")?.pop())
+  );
+
+  const videos = attachments?.filter((file: any) =>
+    isVideo(file?.value?.split(".")?.pop())
+  );
+
+  const audios = attachments?.filter((file: any) =>
+    isAudio(file?.value?.split(".")?.pop())
+  );
+
   return (
     <div>
       {sender ? (
@@ -270,6 +298,11 @@ export default function ChatContent({
               handleIsReplying={handleIsReplying}
               parent={parent}
               handleScrollToChat={handleScrollToChat}
+              images={images}
+              isDisplayedIfNotAttachment={isAttached}
+              files={files}
+              videos={videos}
+              audios={audios}
             />
           )}
           {index === 0 && !isPublic && (
@@ -340,6 +373,11 @@ export default function ChatContent({
               parent={parent}
               senderId={toSelectMessage?.userId}
               handleScrollToChat={handleScrollToChat}
+              images={images}
+              isDisplayedIfNotAttachment={isAttached}
+              files={files}
+              videos={videos}
+              audios={audios}
             />
           )}
           {index === 0 && isPublic && seenbies?.length > 0 && (
