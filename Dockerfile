@@ -18,7 +18,7 @@ COPY . .
 RUN pnpm run build
 
 # Step 2: Create the production image
-FROM node:20 AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
