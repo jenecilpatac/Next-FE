@@ -3,6 +3,7 @@ import dateWithTime from "../utils/dateWithTime";
 import Image from "./images/Image";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
+import { useEffect, useRef, useState } from "react";
 
 export default function MessageBody2({
   avatar,
@@ -29,6 +30,53 @@ export default function MessageBody2({
   handleScrollToChat,
 }: any) {
   const { user }: any = useAuth();
+  const touchRef = useRef(false);
+  const [timer, setTimer] = useState<any>(null);
+  const [swipe, setSwipe] = useState<number>(1);
+  const [isSwiped, setIsSwiped] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (swipe <= 0 && !isSwiped) {
+      handleIsReplying();
+    }
+  }, [swipe, isSwiped]);
+
+  const handleTouchStart = (e: any) => {
+    setSwipe(1);
+    touchRef.current = false;
+    const time = setTimeout(() => {
+      if (swipe > 1) return;
+      touchRef.current = true;
+    }, 400);
+
+    setTimer(time);
+  };
+
+  const handleTouchEnd = (e: any) => {
+    if (timer) clearTimeout(timer);
+
+    if (touchRef.current) {
+      setSwipe(1);
+      handleOpenReactions(messageId)();
+    }
+
+    if (isSwiped) {
+      setSwipe(0);
+      setIsSwiped(false);
+    }
+  };
+
+  const handleTouchMove = (e: any) => {
+    const { clientX } = e.touches[0];
+    setSwipe(clientX);
+    setIsSwiped(true);
+
+    if (Math.abs(clientX) > 10) {
+      if (timer) clearTimeout(timer);
+      touchRef.current = false;
+    }
+  };
+
   return (
     <div className="flex justify-start gap-2 group">
       <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
@@ -41,7 +89,14 @@ export default function MessageBody2({
           </p>
         )}
         <div className="flex">
-          <div className="flex flex-col">
+          <div
+            className={`flex flex-col transition-all duration-100 ease-in-out ${
+              isSwiped && "ml-10"
+            }`}
+            onTouchEnd={handleTouchEnd}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+          >
             {parent && (
               <div className="flex py-2 flex-col -mb-5">
                 <div className="text-sm">
@@ -153,15 +208,22 @@ export default function MessageBody2({
             <div
               className={`${
                 isOpen[messageId] && "group-first:block"
-              } group-hover:block hidden relative`}
+              } group-hover:md:block hidden relative`}
             >
-              <button
+              {/* <button
                 type="button"
                 className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
                 onClick={handleOpen(messageId)}
                 ref={buttonRef}
               >
                 <i className="far fa-ellipsis-vertical"></i>
+              </button> */}
+              <button
+                onClick={handleIsReplying}
+                type="button"
+                className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+              >
+                <i className="far fa-reply"></i>
               </button>
               <button
                 type="button"
@@ -170,7 +232,7 @@ export default function MessageBody2({
               >
                 <i className="far fa-smile"></i>
               </button>
-              {isOpen[messageId] && (
+              {/* {isOpen[messageId] && (
                 <div
                   ref={dropdownRef}
                   className="absolute bottom-7 left-4 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
@@ -187,7 +249,7 @@ export default function MessageBody2({
                     </li>
                   </ul>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

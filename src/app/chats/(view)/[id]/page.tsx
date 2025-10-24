@@ -23,6 +23,7 @@ import DoubleRecentChat from "../../components/loaders/DoubleRecentChat";
 import { formatChatTimestamp } from "../../utils/formatChatTimestamp";
 import formatMessages from "../../utils/formatMessages";
 import IsReplying from "../../components/is-replying";
+import MessageFileUpload from "../../components/message-file-upload";
 
 const Chats = () => {
   const { id }: any = useParams();
@@ -44,7 +45,7 @@ const Chats = () => {
   const [error, setError] = useState<any>("");
   const [formInput, setFormInput] = useState({
     content: "",
-    attachment: "",
+    attachment: false,
   });
   const textareaRef = useRef<any>("");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -339,7 +340,7 @@ const Chats = () => {
     }
     setFormInput({
       content: "",
-      attachment: "",
+      attachment: false,
     });
     messageRef.current = formInput?.content;
     sendMessage({
@@ -775,11 +776,7 @@ const Chats = () => {
               <i className="far fa-arrow-down"></i>
             </button>
           </div>
-          <div className="bottom-3 absolute">
-            <button type="button">
-              <i className="far fa-image text-2xl"></i>
-            </button>
-          </div>
+          <MessageFileUpload />
           <div className="relative w-full py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
             <div className="relative">
               <TextArea

@@ -227,7 +227,7 @@ export default function ChatContent({
     const el = document.getElementById(parent?.id);
 
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.scrollIntoView({ behavior: "smooth", block: "end" });
       el.classList.add("animate-pulse");
       el.classList.add("scale-90");
       setTimeout(() => {
