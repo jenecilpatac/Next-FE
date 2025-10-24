@@ -2,6 +2,7 @@ import Link from "next/link";
 import dateWithTime from "../utils/dateWithTime";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
+import { useEffect, useRef, useState } from "react";
 
 export default function MessageBody({
   isIcon,
@@ -25,23 +26,78 @@ export default function MessageBody({
   handleScrollToChat,
 }: any) {
   const { user }: any = useAuth();
+  const touchRef = useRef(false);
+  const [timer, setTimer] = useState<any>(null);
+  const [swipe, setSwipe] = useState<number>(1);
+  const [isSwiped, setIsSwiped] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (swipe <= 0 && !isSwiped) {
+      handleIsReplying();
+    }
+  }, [swipe, isSwiped]);
+
+  const handleTouchStart = () => {
+    setSwipe(1);
+    touchRef.current = false;
+    const time = setTimeout(() => {
+      if (swipe > 1) return;
+      touchRef.current = true;
+    }, 400);
+
+    setTimer(time);
+  };
+
+  const handleTouchEnd = (e: any) => {
+    e.preventDefault();
+    if (timer) clearTimeout(timer);
+
+    if (touchRef.current) {
+      setSwipe(1);
+      handleOpenReactions(messageId)();
+    }
+
+    if (isSwiped) {
+      setSwipe(0);
+      setIsSwiped(false);
+    }
+  };
+
+  const handleTouchMove = (e: any) => {
+    const { clientX } = e.touches[0];
+    setSwipe(clientX);
+    setIsSwiped(true);
+
+    if (Math.abs(clientX) > 10) {
+      if (timer) clearTimeout(timer);
+      touchRef.current = false;
+    }
+  };
+
   return (
     <div className="flex justify-end group">
       <div className="justify-center flex mr-1 items-center">
         <div
           className={`${
             isOpen[messageId] && "group-first:block"
-          } group-hover:block hidden relative`}
+          } group-hover:md:block hidden relative`}
         >
           <button
             type="button"
-            className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
             onClick={handleOpenReactions(messageId)}
           >
             <i className="far fa-smile"></i>
           </button>
           <button
-            className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+            onClick={handleIsReplying}
+            type="button"
+            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+          >
+            <i className="far fa-reply"></i>
+          </button>
+          <button
+            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
             type="button"
             onClick={handleOpen(messageId)}
             ref={buttonRef}
@@ -51,18 +107,9 @@ export default function MessageBody({
           {isOpen[messageId] && (
             <div
               ref={dropdownRef}
-              className="absolute bottom-7 right-4 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
+              className="absolute bottom-9 md:right-4 right-0 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
             >
               <ul>
-                <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
-                  <button
-                    onClick={handleIsReplying}
-                    type="button"
-                    className="w-full text-start"
-                  >
-                    <i className="far fa-reply"></i> Reply
-                  </button>
-                </li>
                 {message[0]?.props?.children?.props?.src !==
                   "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f44d.png" && (
                   <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
@@ -89,7 +136,14 @@ export default function MessageBody({
           )}
         </div>
       </div>
-      <div className="flex flex-col">
+      <div
+        className={`flex flex-col transition-all duration-200 ease-in-out ${
+          isSwiped && "mr-14"
+        }`}
+        onTouchEnd={handleTouchEnd}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+      >
         {parent && (
           <div className="flex py-2 flex-col -mb-5">
             <div className="text-sm self-end">
@@ -133,11 +187,7 @@ export default function MessageBody({
           </p>
         </div>
         {link && (
-          <Link
-            className="w-[230px] md:w-72"
-            href={link.url}
-            target="_blank"
-          >
+          <Link className="w-[230px] md:w-72" href={link.url} target="_blank">
             <div className="border rounded-b-xl border-gray-300/80 shadow-md dark:border-gray-600/80 bg-gray-700/10 dark:bg-gray-200/10 hover:dark:bg-gray-200/20 hover:bg-gray-700/20">
               <img
                 src={link?.images?.length > 0 ? link?.images[0] : link?.url}

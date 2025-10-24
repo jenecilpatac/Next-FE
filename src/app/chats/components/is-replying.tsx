@@ -6,14 +6,17 @@ export default function IsReplying({
   setSelectedMessage,
 }: any) {
   const { user }: any = useAuth();
-  if (!selectedMessage) return;
   return (
     <div
-      className={`p-4 bg-gray-100 dark:bg-gray-600 transition-all duration-300 ease-in-out ${
-        selectedMessage ? "" : "-mb-28"
+      className={`p-4 bg-gray-100 dark:bg-gray-600 transition-all duration-500 ease-in-out ${
+        selectedMessage ? "" : "-mb-24"
       }`}
     >
-      <div className="flex justify-between items-center">
+      <div
+        className={`${
+          selectedMessage ? "visible" : "invisible"
+        } flex justify-between items-center`}
+      >
         <div className="flex flex-col gap-2 w-1/2 flex-1">
           <span className="text-lg font-bold dark:text-gray-300 text-gray-600">
             Replying to{" "}
@@ -22,8 +25,9 @@ export default function IsReplying({
               : selectedMessage?.sentBy?.name ?? "Anonymous"}
           </span>
           <span className="text-gray-500 dark:text-gray-400 line-clamp-2 whitespace-break-spaces break-words">
-            {formatMessages(selectedMessage?.content?.trim(), 8, 8) ??
-              "Attachment"}
+            {selectedMessage?.attachment
+              ? "Attachment"
+              : formatMessages(selectedMessage?.content?.trim(), 8, 8) ?? " "}
           </span>
         </div>
         <button
