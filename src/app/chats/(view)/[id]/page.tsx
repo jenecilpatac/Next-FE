@@ -137,7 +137,7 @@ const Chats = () => {
     };
 
     privateAttachments();
-  }, []);
+  }, [sentMessage]);
 
   useEffect(() => {
     if (!formInput.content || !user) return;

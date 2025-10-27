@@ -114,7 +114,7 @@ const Chats = () => {
     };
 
     publicAttachments();
-  }, []);
+  }, [sentPublicMessage]);
 
   useEffect(() => {
     if (!userTyping || !formInput?.content || !user) return;
