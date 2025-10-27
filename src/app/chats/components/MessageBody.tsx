@@ -2,7 +2,7 @@ import Link from "next/link";
 import dateWithTime from "../utils/dateWithTime";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "./images/Image";
 import { Storage } from "@/app/utils/StorageUtils";
 
@@ -31,6 +31,7 @@ export default function MessageBody({
   files,
   videos,
   audios,
+  handleOpenViewImages,
 }: any) {
   const { user }: any = useAuth();
   const touchRef = useRef(false);
@@ -185,7 +186,7 @@ export default function MessageBody({
               !isIcon && "dark:bg-blue-400/50 bg-blue-400/80 shadow-md"
             } text-white p-3 ${
               link
-                ? "rounded-t-3xl w-[200px] md:w-72"
+                ? "rounded-t-3xl w-full md:w-72"
                 : bubbleClass
                 ? bubbleClass
                 : `${
@@ -198,7 +199,7 @@ export default function MessageBody({
             } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit self-end`}
             title={timeSent && dateWithTime(timeSent)}
           >
-            <p className="text-sm whitespace-break-spaces break-words">
+            <p className="text-sm whitespace-break-spaces break-words select-none">
               {message}
             </p>
           </div>
@@ -235,14 +236,19 @@ export default function MessageBody({
             } self-end gap-2`}
           >
             {images?.map((item: any, index: number) => (
-              <Image
+              <div
+                className="w-44 h-44 md:w-64 md:h-64 cursor-pointer"
                 key={index}
-                alt={item?.value}
-                rounded="md"
-                avatar={item?.value}
-                width={"44 md:w-64"}
-                height={"44 md:h-64"}
-              />
+              >
+                <Image
+                  alt={item?.value}
+                  rounded="md"
+                  avatar={item?.value}
+                  width={"44 md:w-64"}
+                  height={"44 md:h-64"}
+                  onClick={handleOpenViewImages(item?.id)}
+                />
+              </div>
             ))}
           </div>
         )}
@@ -263,13 +269,14 @@ export default function MessageBody({
           </div>
         )}
         {videos?.length > 0 && (
-          <div className="flex flex-col p-2 gap-2">
+          <div className="flex flex-col p-2 gap-2 cursor-pointer">
             {videos?.map((item: any, index: number) => (
               <video
                 className="w-64 md:w-96 h-auto md:h-auto rounded-3xl self-end"
                 key={index}
                 src={Storage(item?.value)}
                 controls
+                onClick={handleOpenViewImages(item?.id)}
               ></video>
             ))}
           </div>

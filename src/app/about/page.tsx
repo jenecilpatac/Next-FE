@@ -195,6 +195,6 @@ const About = () => {
       </section>
     </div>
   );
-}
+};
 
 export default publicAuth(About);

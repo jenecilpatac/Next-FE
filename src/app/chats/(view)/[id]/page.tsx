@@ -27,6 +27,10 @@ import IsReplying from "../../components/is-replying";
 import MessageFileUpload from "../../components/message-file-upload";
 import MessageFilePreview from "../../components/message-file-preview";
 import MessageFileSending from "../../components/message-file-sending";
+import isImage from "../../utils/is-image";
+import isVideo from "../../utils/is-video";
+import { getAllPrivateAttachments } from "@/services/message-attachments-service";
+import ViewImages from "../../components/view-images";
 const MessageFilePreviewPage = memo(MessageFilePreview);
 const MessageFileSendingPreview = memo(MessageFileSending);
 
@@ -109,7 +113,31 @@ const Chats = () => {
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [attachments, setAttachments] = useState<any>([]);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [privateAttachments, setPrivateAttachments] = useState<any>([]);
+  const [isOpenImage, setIsOpenImage] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   let firstUnreadIndex: any = null;
+
+  useEffect(() => {
+    const privateAttachments = async () => {
+      try {
+        const response = await getAllPrivateAttachments(user?.id, id);
+        if (response?.status === 201) {
+          setPrivateAttachments(
+            response?.data?.attachments?.filter(
+              (pa: any) =>
+                isImage(pa?.value?.split(".")?.pop()) ||
+                isVideo(pa?.value?.split(".")?.pop())
+            )
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    privateAttachments();
+  }, []);
 
   useEffect(() => {
     if (!formInput.content || !user) return;
@@ -514,6 +542,11 @@ const Chats = () => {
     }
   };
 
+  const handleOpenViewImages = (id: number) => () => {
+    setCurrentIndex(id);
+    setIsOpenImage(true);
+  };
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -813,6 +846,7 @@ const Chats = () => {
                     index={index}
                     textareaRef={textareaRef}
                     attachments={message?.message_attachments}
+                    handleOpenViewImages={handleOpenViewImages}
                   />
                 </div>
               );
@@ -900,7 +934,7 @@ const Chats = () => {
           <div className="bottom-4 absolute right-4">
             {formInput.content || attachments?.length > 0 ? (
               <Button
-                isLoading={isLoadingPrivateMessages}
+                disabled={isLoadingPrivateMessages}
                 type="button"
                 onClick={handleSendMessage}
                 icon="paper-plane-top"
@@ -909,7 +943,7 @@ const Chats = () => {
               />
             ) : (
               <Button
-                isLoading={isLoadingPrivateMessages}
+                disabled={isLoadingPrivateMessages}
                 type="button"
                 onClick={handleSendLike}
                 icon="thumbs-up"
@@ -920,6 +954,13 @@ const Chats = () => {
           </div>
         </div>
       </div>
+      {isOpenImage && (
+        <ViewImages
+          images={privateAttachments}
+          currentItem={currentIndex}
+          setIsOpenImage={setIsOpenImage}
+        />
+      )}
     </div>
   );
 };

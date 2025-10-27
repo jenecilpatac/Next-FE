@@ -8,7 +8,7 @@ export default function IsReplying({
   const { user }: any = useAuth();
   return (
     <div
-      className={`p-4 bg-gray-100 dark:bg-gray-600 transition-all duration-300 ease-in-out ${
+      className={`p-4 bg-gray-100 dark:bg-gray-600 transition-all duration-300 ease-in-out border-t ${
         selectedMessage ? "" : "-mb-24"
       }`}
     >
