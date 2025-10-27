@@ -2,6 +2,7 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import ChatContent from "../../components/ChatContent";
+const ChatContentM = memo(ChatContent);
 import RecentChatContent from "../../components/RecentChatContent";
 import Button from "../../components/buttons/Button";
 import TextArea from "../../components/inputs/TextArea";
@@ -107,6 +108,7 @@ const Chats = () => {
   const messageDraft = localStorage.getItem(`private-${id}-${user?.id}`);
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [attachments, setAttachments] = useState<any>([]);
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
   let firstUnreadIndex: any = null;
 
   useEffect(() => {
@@ -321,7 +323,7 @@ const Chats = () => {
     if (window.innerWidth > 640) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        if (formInput.content) {
+        if (formInput.content || attachments?.length > 0) {
           handleSendMessage();
         }
       }
@@ -482,6 +484,36 @@ const Chats = () => {
   const isPrivateChatting =
     privateChatIds?.receiverId === user?.id && privateChatIds?.senderId === id;
 
+  const handleDragOver = (e: any) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDrop = (e: any) => {
+    e.preventDefault();
+    const droppedFiles = e.dataTransfer.files;
+
+    if (droppedFiles) {
+      const files = Array.from(droppedFiles);
+      setAttachments((prev: any) => [...prev, ...files]);
+    }
+    setIsDragOver(false);
+  };
+
+  const onDragLeave = (e: any) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handlePaste = (e: any) => {
+    const files = e.clipboardData.files;
+
+    if (files) {
+      const droppedFiles = Array.from(files);
+      setAttachments((prev: any) => [...prev, ...droppedFiles]);
+    }
+  };
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -567,7 +599,12 @@ const Chats = () => {
         </div>
       </div>
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div
+        className="flex-1 flex flex-col overflow-hidden relative"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragLeave={onDragLeave}
+      >
         {/* Chat Header */}
         <div className="bg-blue-600 text-white p-4 flex items-center justify-between shadow-md">
           <div className="flex items-center">
@@ -615,9 +652,17 @@ const Chats = () => {
           </div>
         </div>
         {/* Message Container */}
+        {isDragOver && (
+          <div className="absolute inset-0 bg-black/70 z-50 grid place-items-center">
+            <div className="text-center">
+              <p className="text-xl font-bold">Drop files here</p>
+              <p className="text-sm">max of 100mb</p>
+            </div>
+          </div>
+        )}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse gap-1 p-4 overflow-y-auto bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse gap-1 p-4 overflow-y-auto bg-white dark:bg-gray-600 border-b border-gray-200 dark:border-gray-600"
         >
           {isSending && (messageRef?.current || attachments?.length > 0) && (
             <div className="relative opacity-60">
@@ -746,7 +791,7 @@ const Chats = () => {
                       {formatChatTimestamp(currentTime)}
                     </div>
                   )}
-                  <ChatContent
+                  <ChatContentM
                     messageId={message?.id}
                     content={message?.content}
                     avatar={data?.user?.profile_pictures[0]?.avatar}
@@ -827,6 +872,7 @@ const Chats = () => {
                 onInput={handleInput}
                 disabled={loading}
                 maxLength={85000}
+                onPaste={handlePaste}
               />
 
               {loading && (

@@ -15,7 +15,7 @@ export default function MessageFileUpload({ setAttachments, isLoading }: any) {
       <button
         type="button"
         disabled={isLoading}
-        onClick={() => console.log(inputRef?.current?.click())}
+        onClick={() => inputRef?.current?.click()}
         className="hover:scale-105"
       >
         <i className="far fa-image text-2xl"></i>

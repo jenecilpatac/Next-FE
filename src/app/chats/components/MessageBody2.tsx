@@ -38,20 +38,16 @@ export default function MessageBody2({
   const { user }: any = useAuth();
   const touchRef = useRef(false);
   const [timer, setTimer] = useState<any>(null);
-  const [swipe, setSwipe] = useState<number>(1);
-  const [isSwiped, setIsSwiped] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (swipe <= 0 && !isSwiped) {
-      handleIsReplying();
-    }
-  }, [swipe, isSwiped]);
+  const [offset, setOffset] = useState(0);
+  const startXRef = useRef<number | null>(null);
+  const MAX_OFFSET = 56;
+  const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleTouchStart = (e: any) => {
-    setSwipe(1);
+    startXRef.current = e.touches[0].clientX;
     touchRef.current = false;
+
     const time = setTimeout(() => {
-      if (swipe > 1) return;
       touchRef.current = true;
     }, 400);
 
@@ -59,32 +55,42 @@ export default function MessageBody2({
   };
 
   const handleTouchEnd = (e: any) => {
+    e.preventDefault();
     if (timer) clearTimeout(timer);
 
-    if (touchRef.current) {
-      setSwipe(1);
-      handleOpenReactions(messageId)();
+    if (offset === MAX_OFFSET) {
+      handleIsReplying();
     }
 
-    if (isSwiped) {
-      setSwipe(0);
-      setIsSwiped(false);
+    setOffset(0);
+    startXRef.current = null;
+
+    if (touchRef.current) {
+      if (offset > 1) return;
+      handleOpenReactions(messageId)();
     }
   };
 
   const handleTouchMove = (e: any) => {
-    const { clientX } = e.touches[0];
-    setSwipe(clientX);
-    setIsSwiped(true);
+    if (startXRef.current === null) return;
 
-    if (Math.abs(clientX) > 10) {
-      if (timer) clearTimeout(timer);
-      touchRef.current = false;
-    }
+    const currentX = e.touches[0].clientX;
+    const diff = startXRef.current + currentX;
+
+    let newOffset = Math.min(Math.max(diff, 0), MAX_OFFSET);
+    setOffset(newOffset);
+    touchRef.current = false;
   };
 
   return (
-    <div className="flex justify-start gap-2 group">
+    <div className="flex justify-start gap-2 group relative">
+      <div
+        className={`absolute left-16 top-0 bottom-0 transition-all duration-300 ease-in-out translate-y-1/2 ${
+          offset > 40 ? "opacity-100" : "opacity-0 -ml-8"
+        }`}
+      >
+        <i className="far fa-reply text-xl"></i>
+      </div>
       <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
         <Image avatar={avatar} alt={name} width={10} height={10} title={name} />
       </div>
@@ -96,9 +102,10 @@ export default function MessageBody2({
         )}
         <div className="flex">
           <div
-            className={`flex flex-col transition-all duration-100 ease-in-out ${
-              isSwiped && "ml-10"
-            }`}
+            className={`flex flex-col transition-all duration-200 ease-in-out`}
+            style={{
+              marginLeft: `${offset}px`,
+            }}
             onTouchEnd={handleTouchEnd}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -184,7 +191,7 @@ export default function MessageBody2({
               <div
                 className={`grid ${
                   images.length > 1 ? "grid-cols-2" : "grid-cols-1"
-                } gap-2`}
+                } gap-2 self-start`}
               >
                 {images?.map((item: any, index: number) => (
                   <Image
@@ -192,8 +199,8 @@ export default function MessageBody2({
                     alt={item?.value}
                     rounded="md"
                     avatar={item?.value}
-                    width={"32 md:w-64"}
-                    height={"32 md:h-64"}
+                    width={"44 md:w-64"}
+                    height={"44 md:h-64"}
                   />
                 ))}
               </div>
@@ -277,13 +284,14 @@ export default function MessageBody2({
               </div>
             )}
           </div>
-          <div className="justify-center flex ml-1 items-center">
-            <div
-              className={`${
-                isOpen[messageId] && "group-first:block"
-              } group-hover:md:block hidden relative`}
-            >
-              {/* <button
+          {!IS_MOBILE && (
+            <div className="justify-center flex ml-1 items-center">
+              <div
+                className={`${
+                  isOpen[messageId] && "group-first:block"
+                } group-hover:block hidden relative`}
+              >
+                {/* <button
                 type="button"
                 className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
                 onClick={handleOpen(messageId)}
@@ -291,21 +299,21 @@ export default function MessageBody2({
               >
                 <i className="far fa-ellipsis-vertical"></i>
               </button> */}
-              <button
-                onClick={handleIsReplying}
-                type="button"
-                className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
-              >
-                <i className="far fa-reply"></i>
-              </button>
-              <button
-                type="button"
-                className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
-                onClick={handleOpenReactions(messageId)}
-              >
-                <i className="far fa-smile"></i>
-              </button>
-              {/* {isOpen[messageId] && (
+                <button
+                  onClick={handleIsReplying}
+                  type="button"
+                  className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+                >
+                  <i className="far fa-reply"></i>
+                </button>
+                <button
+                  type="button"
+                  className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+                  onClick={handleOpenReactions(messageId)}
+                >
+                  <i className="far fa-smile"></i>
+                </button>
+                {/* {isOpen[messageId] && (
                 <div
                   ref={dropdownRef}
                   className="absolute bottom-7 left-4 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
@@ -323,8 +331,9 @@ export default function MessageBody2({
                   </ul>
                 </div>
               )} */}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
