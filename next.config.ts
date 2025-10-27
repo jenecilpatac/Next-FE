@@ -16,10 +16,7 @@ const nextConfig: NextConfig = {
   //     },
   //   ];
   // },
-
-  eslint: {
-    ignoreDuringBuilds: true, // Ignores all ESLint warnings/errors during the build
-  },
+  output: "standalone",
 };
 
 export default nextConfig;

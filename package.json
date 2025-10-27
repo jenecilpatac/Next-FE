@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set PORT=2001 && next dev",
-    "build": "next build && next-sitemap",
-    "start": "next start -p 2001",
+    "dev": "set PORT=5005 && next dev",
+    "build": "next build && next-sitemap --no-lint",
+    "start": "next start",
     "lint": "next lint",
     "start:debug": "cross-env DEBUG=fastify:* pnpm start"
   },

@@ -48,8 +48,6 @@ export default function RecentChatContent({
     saveOnClick(userId)();
   };
 
-  console.log(isAttached)
-
   return (
     <Link
       href={`/chats/${user?.id}`}

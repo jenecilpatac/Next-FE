@@ -35,20 +35,16 @@ export default function MessageBody({
   const { user }: any = useAuth();
   const touchRef = useRef(false);
   const [timer, setTimer] = useState<any>(null);
-  const [swipe, setSwipe] = useState<number>(1);
-  const [isSwiped, setIsSwiped] = useState<boolean>(false);
+  const [offset, setOffset] = useState(0);
+  const startXRef = useRef<number | null>(null);
+  const MAX_OFFSET = 56;
+  const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  useEffect(() => {
-    if (swipe <= 0 && !isSwiped) {
-      handleIsReplying();
-    }
-  }, [swipe, isSwiped]);
-
-  const handleTouchStart = () => {
-    setSwipe(1);
+  const handleTouchStart = (e: any) => {
+    startXRef.current = e.touches[0].clientX;
     touchRef.current = false;
+
     const time = setTimeout(() => {
-      if (swipe > 1) return;
       touchRef.current = true;
     }, 400);
 
@@ -59,94 +55,106 @@ export default function MessageBody({
     e.preventDefault();
     if (timer) clearTimeout(timer);
 
-    if (touchRef.current) {
-      setSwipe(1);
-      handleOpenReactions(messageId)();
+    if (offset === MAX_OFFSET) {
+      handleIsReplying();
     }
 
-    if (isSwiped) {
-      setSwipe(0);
-      setIsSwiped(false);
+    setOffset(0);
+    startXRef.current = null;
+
+    if (touchRef.current) {
+      if (offset > 1) return;
+      handleOpenReactions(messageId)();
     }
   };
 
   const handleTouchMove = (e: any) => {
-    const { clientX } = e.touches[0];
-    setSwipe(clientX);
-    setIsSwiped(true);
+    if (startXRef.current === null) return;
 
-    if (Math.abs(clientX) > 10) {
-      if (timer) clearTimeout(timer);
-      touchRef.current = false;
-    }
+    const currentX = e.touches[0].clientX;
+    const diff = startXRef.current - currentX;
+
+    let newOffset = Math.min(Math.max(diff, 0), MAX_OFFSET);
+    setOffset(newOffset);
+    touchRef.current = false;
   };
 
   return (
-    <div className="flex justify-end group">
-      <div className="justify-center flex mr-1 items-center">
-        <div
-          className={`${
-            isOpen[messageId] && "group-first:block"
-          } group-hover:md:block hidden relative`}
-        >
-          <button
-            type="button"
-            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
-            onClick={handleOpenReactions(messageId)}
+    <div className="flex justify-end group relative">
+      <div
+        className={`absolute right-5 top-0 bottom-0 transition-all duration-300 ease-in-out translate-y-1/2 ${
+          offset > 40 ? "opacity-100" : "opacity-0 -mr-8"
+        }`}
+      >
+        <i className="far fa-reply text-xl"></i>
+      </div>
+      {!IS_MOBILE && (
+        <div className="justify-center flex mr-1 items-center">
+          <div
+            className={`${
+              isOpen[messageId] && "group-first:block"
+            } group-hover:block hidden relative`}
           >
-            <i className="far fa-smile"></i>
-          </button>
-          <button
-            onClick={handleIsReplying}
-            type="button"
-            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
-          >
-            <i className="far fa-reply"></i>
-          </button>
-          <button
-            className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
-            type="button"
-            onClick={handleOpen(messageId)}
-            ref={buttonRef}
-          >
-            <i className="far fa-ellipsis-vertical"></i>
-          </button>
-          {isOpen[messageId] && (
-            <div
-              ref={dropdownRef}
-              className="absolute bottom-9 md:right-4 right-0 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
+            <button
+              type="button"
+              className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+              onClick={handleOpenReactions(messageId)}
             >
-              <ul>
-                {message[0]?.props?.children?.props?.src !==
-                  "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f44d.png" && (
+              <i className="far fa-smile"></i>
+            </button>
+            <button
+              onClick={handleIsReplying}
+              type="button"
+              className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+            >
+              <i className="far fa-reply"></i>
+            </button>
+            <button
+              className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
+              type="button"
+              onClick={handleOpen(messageId)}
+              ref={buttonRef}
+            >
+              <i className="far fa-ellipsis-vertical"></i>
+            </button>
+            {isOpen[messageId] && (
+              <div
+                ref={dropdownRef}
+                className="absolute bottom-9 lg:right-4 md:-right-20 -right-16 bg-gray-100 dark:bg-gray-800 rounded-xl w-[150px] text-xs z-[999999]"
+              >
+                <ul>
+                  {message[0]?.props?.children?.props?.src !==
+                    "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f44d.png" && (
+                    <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
+                      <button
+                        type="button"
+                        className="w-full text-start"
+                        onClick={handleOpenModal(messageId, "edit")}
+                      >
+                        <i className="far fa-pen"></i> Edit
+                      </button>
+                    </li>
+                  )}
                   <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
                     <button
                       type="button"
                       className="w-full text-start"
-                      onClick={handleOpenModal(messageId, "edit")}
+                      onClick={handleOpenModal(messageId, "delete")}
                     >
-                      <i className="far fa-pen"></i> Edit
+                      <i className="far fa-trash"></i> Unsend
                     </button>
                   </li>
-                )}
-                <li className="hover:bg-gray-200 dark:hover:bg-gray-900 p-5 rounded-xl w-full">
-                  <button
-                    type="button"
-                    className="w-full text-start"
-                    onClick={handleOpenModal(messageId, "delete")}
-                  >
-                    <i className="far fa-trash"></i> Unsend
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <div
-        className={`flex flex-col transition-all duration-200 ease-in-out ${
-          isSwiped && "mr-14"
-        }`}
+        className={`flex flex-col transition-all duration-200 ease-in-out`}
+        style={{
+          marginRight: `${offset}px`,
+        }}
         onTouchEnd={handleTouchEnd}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -224,7 +232,7 @@ export default function MessageBody({
           <div
             className={`grid ${
               images.length > 1 ? "grid-cols-2" : "grid-cols-1"
-            } justify-items-end gap-2`}
+            } self-end gap-2`}
           >
             {images?.map((item: any, index: number) => (
               <Image
@@ -232,8 +240,8 @@ export default function MessageBody({
                 alt={item?.value}
                 rounded="md"
                 avatar={item?.value}
-                width={"32 md:w-64"}
-                height={"32 md:h-64"}
+                width={"44 md:w-64"}
+                height={"44 md:h-64"}
               />
             ))}
           </div>
