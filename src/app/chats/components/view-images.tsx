@@ -58,14 +58,14 @@ export default function ViewImages({
                 >
                   {isImage(image?.value?.split(".")?.pop()) && (
                     <img
-                      className="w-full h-full object-cover hover:scale-105 transition-all duration-300 ease-in-out"
+                      className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
                       src={Storage(image?.value)}
                       alt={`Image ${image.id}`}
                     />
                   )}
                   {isVideo(image?.value?.split(".")?.pop()) && (
                     <video
-                      className="w-full h-full object-cover hover:scale-105 transition-all duration-300 ease-in-out"
+                      className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
                       src={Storage(image?.value)}
                       controls
                     />
