@@ -24,6 +24,10 @@ import IsReplying from "../components/is-replying";
 import MessageFileUpload from "../components/message-file-upload";
 import MessageFilePreview from "../components/message-file-preview";
 import MessageFileSending from "../components/message-file-sending";
+import { getAllPublicAttachments } from "@/services/message-attachments-service";
+import ViewImages from "../components/view-images";
+import isImage from "../utils/is-image";
+import isVideo from "../utils/is-video";
 const MessageFilePreviewPage = memo(MessageFilePreview);
 const MessageFileSendingPreview = memo(MessageFileSending);
 
@@ -87,6 +91,30 @@ const Chats = () => {
   const seenbies = publicMessagesData?.messages[0]?.seenbies || null;
   const [attachments, setAttachments] = useState<any>([]);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [publicAttachments, setPublicAttachments] = useState<any>([]);
+  const [isOpenImage, setIsOpenImage] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const publicAttachments = async () => {
+      try {
+        const response = await getAllPublicAttachments();
+        if (response?.status === 200) {
+          setPublicAttachments(
+            response?.data?.attachments?.filter(
+              (pa: any) =>
+                isImage(pa?.value?.split(".")?.pop()) ||
+                isVideo(pa?.value?.split(".")?.pop())
+            )
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    publicAttachments();
+  }, []);
 
   useEffect(() => {
     if (!userTyping || !formInput?.content || !user) return;
@@ -431,6 +459,11 @@ const Chats = () => {
     }
   };
 
+  const handleOpenViewImages = (id: number) => () => {
+    setCurrentIndex(id);
+    setIsOpenImage(true);
+  };
+
   return (
     <div className="flex h-screen">
       <div
@@ -688,6 +721,7 @@ const Chats = () => {
                     textareaRef={textareaRef}
                     seenbies={seenbies}
                     attachments={message?.message_attachments}
+                    handleOpenViewImages={handleOpenViewImages}
                   />
                 </div>
               );
@@ -788,6 +822,13 @@ const Chats = () => {
           </div>
         </div>
       </div>
+      {isOpenImage && (
+        <ViewImages
+          images={publicAttachments}
+          currentItem={currentIndex}
+          setIsOpenImage={setIsOpenImage}
+        />
+      )}
     </div>
   );
 };

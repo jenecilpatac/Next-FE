@@ -36,6 +36,7 @@ export default function ChatContent({
   textareaRef,
   seenbies,
   attachments,
+  handleOpenViewImages,
 }: any) {
   const pathname = usePathname();
   const message = formatMessages(content.trim(), 16, 16);
@@ -303,6 +304,7 @@ export default function ChatContent({
               files={files}
               videos={videos}
               audios={audios}
+              handleOpenViewImages={handleOpenViewImages}
             />
           )}
           {index === 0 && !isPublic && (
@@ -378,6 +380,7 @@ export default function ChatContent({
               files={files}
               videos={videos}
               audios={audios}
+              handleOpenViewImages={handleOpenViewImages}
             />
           )}
           {index === 0 && isPublic && seenbies?.length > 0 && (

@@ -34,6 +34,7 @@ export default function MessageBody2({
   files,
   videos,
   audios,
+  handleOpenViewImages,
 }: any) {
   const { user }: any = useAuth();
   const touchRef = useRef(false);
@@ -75,9 +76,9 @@ export default function MessageBody2({
     if (startXRef.current === null) return;
 
     const currentX = e.touches[0].clientX;
-    const diff = startXRef.current + currentX;
+    const diff = currentX - startXRef.current;
 
-    let newOffset = Math.min(Math.max(diff, 0), MAX_OFFSET);
+    let newOffset = Math.max(0, Math.min(diff, MAX_OFFSET));
     setOffset(newOffset);
     touchRef.current = false;
   };
@@ -118,7 +119,7 @@ export default function MessageBody2({
                   {parent?.userId === user?.id
                     ? "you"
                     : senderId === parent?.userId
-                    ? "him/her self"
+                    ? "themself"
                     : parent?.sentBy?.name ?? "Anonymous"}
                 </div>
                 <button
@@ -139,7 +140,7 @@ export default function MessageBody2({
                   !isIcon && "bg-gray-500/65 shadow-md"
                 } text-white p-3 ${
                   link
-                    ? "rounded-t-3xl w-[200px] md:w-72"
+                    ? "rounded-t-3xl w-full md:w-72"
                     : bubbleClass
                     ? bubbleClass
                     : `${
@@ -152,7 +153,7 @@ export default function MessageBody2({
                 } xl:max-w-4xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit`}
                 title={timeSent && dateWithTime(timeSent)}
               >
-                <p className="text-sm whitespace-break-spaces break-words">
+                <p className="text-sm whitespace-break-spaces break-words select-none">
                   {message}
                 </p>
               </div>
@@ -194,14 +195,19 @@ export default function MessageBody2({
                 } gap-2 self-start`}
               >
                 {images?.map((item: any, index: number) => (
-                  <Image
+                  <div
+                    className="w-44 h-44 md:w-64 md:h-64 cursor-pointer"
                     key={index}
-                    alt={item?.value}
-                    rounded="md"
-                    avatar={item?.value}
-                    width={"44 md:w-64"}
-                    height={"44 md:h-64"}
-                  />
+                  >
+                    <Image
+                      onClick={handleOpenViewImages(item?.id)}
+                      alt={item?.value}
+                      rounded="md"
+                      avatar={item?.value}
+                      width={"44 md:w-64"}
+                      height={"44 md:h-64"}
+                    />
+                  </div>
                 ))}
               </div>
             )}
@@ -224,13 +230,14 @@ export default function MessageBody2({
             )}
 
             {videos?.length > 0 && (
-              <div className="flex flex-col p-2 gap-2">
+              <div className="flex flex-col p-2 gap-2 cursor-pointer">
                 {videos?.map((item: any, index: number) => (
                   <video
                     className="w-64 md:w-96 h-auto md:h-auto rounded-3xl"
                     key={index}
                     src={Storage(item?.value)}
                     controls
+                    onClick={handleOpenViewImages(item?.id)}
                   ></video>
                 ))}
               </div>
