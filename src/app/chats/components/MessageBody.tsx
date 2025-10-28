@@ -152,6 +152,7 @@ export default function MessageBody({
         </div>
       )}
       <div
+        id={messageId}
         className={`flex flex-col transition-all duration-200 ease-in-out`}
         style={{
           marginRight: `${offset}px`,
@@ -175,13 +176,14 @@ export default function MessageBody({
                 parent?.content !== "(y)" && "bg-black/20"
               }`}
             >
-              {formatMessages(parent?.content, 14, 14)}
+              {parent?.attachment
+                ? "Attachment"
+                : formatMessages(parent?.content, 14, 14)}
             </button>
           </div>
         )}
         {!isDisplayedIfNotAttachment && (
           <div
-            id={messageId}
             className={`transition-all duration-300 ease-in-out ${
               !isIcon && "dark:bg-blue-400/50 bg-blue-400/80 shadow-md"
             } text-white p-3 ${
@@ -199,7 +201,7 @@ export default function MessageBody({
             } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-3xl max-w-[230px] w-fit self-end`}
             title={timeSent && dateWithTime(timeSent)}
           >
-            <p className="text-sm whitespace-break-spaces break-words select-none">
+            <p className="text-sm whitespace-break-spaces break-words select-none md:select-auto">
               {message}
             </p>
           </div>
