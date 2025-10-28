@@ -237,15 +237,15 @@ export default function MessageBody({
           >
             {images?.map((item: any, index: number) => (
               <div
-                className="w-44 h-44 md:w-64 md:h-64 cursor-pointer"
+                className="w-36 h-36 md:w-64 md:h-64 cursor-pointer"
                 key={index}
               >
                 <Image
                   alt={item?.value}
                   rounded="md"
                   avatar={item?.value}
-                  width={"44 md:w-64"}
-                  height={"44 md:h-64"}
+                  width={"36 md:w-64"}
+                  height={"36 md:h-64"}
                   onClick={handleOpenViewImages(item?.id)}
                 />
               </div>

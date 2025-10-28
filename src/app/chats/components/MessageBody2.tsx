@@ -3,7 +3,7 @@ import dateWithTime from "../utils/dateWithTime";
 import Image from "./images/Image";
 import { useAuth } from "@/app/context/AuthContext";
 import formatMessages from "../utils/formatMessages";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Storage } from "@/app/utils/StorageUtils";
 
 export default function MessageBody2({
@@ -196,7 +196,7 @@ export default function MessageBody2({
               >
                 {images?.map((item: any, index: number) => (
                   <div
-                    className="w-44 h-44 md:w-64 md:h-64 cursor-pointer"
+                    className="w-36 h-36 md:w-64 md:h-64 cursor-pointer"
                     key={index}
                   >
                     <Image
@@ -204,8 +204,8 @@ export default function MessageBody2({
                       alt={item?.value}
                       rounded="md"
                       avatar={item?.value}
-                      width={"44 md:w-64"}
-                      height={"44 md:h-64"}
+                      width={"36 md:w-64"}
+                      height={"36 md:h-64"}
                     />
                   </div>
                 ))}
