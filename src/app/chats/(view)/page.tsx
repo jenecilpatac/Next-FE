@@ -464,6 +464,8 @@ const Chats = () => {
     setIsOpenImage(true);
   };
 
+  const isAttached = !messageRef?.current && attachments?.length > 0;
+
   return (
     <div className="flex h-screen">
       <div
@@ -583,17 +585,19 @@ const Chats = () => {
                     </button>
                   </div>
                 </div>
-                <div
-                  className={`${
-                    messageRef?.current === "(y)"
-                      ? ""
-                      : "dark:bg-blue-400/50 bg-blue-400/80"
-                  } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
-                >
-                  <p className="text-sm whitespace-break-spaces break-words">
-                    {formatMessages(messageRef?.current?.trim(), 16, 16)}
-                  </p>
-                </div>
+                {!isAttached && (
+                  <div
+                    className={`${
+                      messageRef?.current === "(y)"
+                        ? ""
+                        : "dark:bg-blue-400/50 bg-blue-400/80"
+                    } xl:max-w-3xl 2xl:max-w-7xl sm:max-w-lg md:max-w-xl lg:max-w-2xl max-w-[230px] text-white p-3 rounded-2xl shadow-md`}
+                  >
+                    <p className="text-sm whitespace-break-spaces break-words">
+                      {formatMessages(messageRef?.current?.trim(), 16, 16)}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {attachments?.length > 0 && (
