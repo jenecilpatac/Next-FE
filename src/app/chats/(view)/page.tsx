@@ -434,6 +434,11 @@ const Chats = () => {
     setIsDragOver(true);
   };
 
+  const onDragEnter = (e: any) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
   const handleDrop = (e: any) => {
     e.preventDefault();
     const droppedFiles = e.dataTransfer.files;
@@ -443,6 +448,7 @@ const Chats = () => {
       setAttachments((prev: any) => [...prev, ...files]);
     }
     setIsDragOver(false);
+    textareaRef.current.focus();
   };
 
   const onDragLeave = (e: any) => {
@@ -524,6 +530,7 @@ const Chats = () => {
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onDragLeave={onDragLeave}
+        onDragEnter={onDragEnter}
       >
         {/* Chat Header */}
         <div className="bg-sky-700 text-white p-4 flex items-center justify-between">
