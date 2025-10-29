@@ -37,7 +37,7 @@ export default function TodoOngoing({
                     bg-blue-400
                     border-t-[15px] border-t-blue-500
                     h-32
-                    ${index === 0 ? "mt-2" : "-mt-28"}
+                    ${index === 0 ? "mt-2" : "-mt-20"}
                     hover:md:scale-125 hover:scale-110 hover:md:translate-x-12 hover:z-50 hover:h-auto
                   `}
                 >
