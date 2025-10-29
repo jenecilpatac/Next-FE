@@ -5,8 +5,21 @@ export default function TodoCompleted({
   isSingleStatusRefresh,
   handleDeleteTodo,
   handleStatusUpdate,
+  setIsEdited,
+  setId,
+  isEdited,
 }: any) {
-  const { data, loading }: any = useFetch("/todos/status/done", isSingleStatusRefresh);
+  const { data, loading }: any = useFetch(
+    "/todos/status/done",
+    isSingleStatusRefresh
+  );
+
+  const handleToEditTodo = (id: number) => {
+    setIsEdited((isEdited: any) => ({
+      [id]: !isEdited[id],
+    }));
+    setId(id);
+  };
 
   return (
     <>
@@ -16,15 +29,36 @@ export default function TodoCompleted({
         <>
           {data?.todo?.length > 0 ? (
             data.todo.map((item: any, index: number) => (
-              <div key={index}>
+              <div key={index} className={`relative`}>
                 <div
-                  className={`group overflow-hidden h-48 text-white bg-blue-600 rounded-md p-4 w-full hover:scale-[1.15] hover:h-auto hover:z-50 shadow-xl border border-t-[15px] border-t-blue-300 ${
-                    index === 0 ? "mt-2" : "-mt-28"
-                  }`}
+                  className={`
+                    group relative overflow-hidden rounded-md p-4 w-full text-white shadow-xl border
+                    transition-all duration-500 ease-in-out transform
+                    bg-blue-600
+                    border-t-[15px] border-t-blue-300
+                    h-32
+                    ${index === 0 ? "mt-2" : "-mt-20"}
+                    hover:md:scale-125 hover:scale-110 hover:z-50 hover:h-auto
+                  `}
                 >
                   <h2 className="text-1xl -mt-3 truncate font-bold mb-2">
                     {item.title}
                   </h2>
+                  <button
+                    type="button"
+                    onClick={() => handleToEditTodo(item.id)}
+                    className="absolute top-1 right-10 text-violet-500 hover:scale-110 transition-all duration-150 ease-in-out"
+                  >
+                    {isEdited[item.id] ? (
+                      <>
+                        <i className="fas fa-xmark"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-pen"></i>
+                      </>
+                    )}
+                  </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteTodo(item.id)}
@@ -33,7 +67,9 @@ export default function TodoCompleted({
                     <i className="fas fa-trash text-1xl"></i>
                   </button>
                   <hr />
-                  <p className="mt-2 break-words whitespace-break-spaces">{item.content}</p>
+                  <p className="mt-2 break-words whitespace-break-spaces">
+                    {item.content}
+                  </p>
                   <div className="flex justify-center gap-4 mt-5">
                     <button
                       type="button"

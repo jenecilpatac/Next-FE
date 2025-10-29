@@ -25,7 +25,7 @@ const Page = () => {
   const { data, loading, error }: any = useFetch("/todos", isRefresh);
   const { data: editData, loading: editLoading }: any = useFetch(
     isEdited[id] ? `/todos/id/${id}` : null,
-    isRefresh
+    isRefresh || isSingleStatusRefresh
   );
   const { hasHigherRole }: any = useAuth();
   const [title, setTitle] = useState("");
@@ -74,10 +74,12 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
     setIsRefresh(true);
+    setIsSingleStatusRefresh(true);
     try {
       const response = await api.post(`/todos/update-todos/${id}`, {
         title: title || editData.todo.title,
         content: content || editData.todo.content,
+        status: editData.todo.status,
       });
 
       if (response.data.statusCode === 200) {
@@ -93,6 +95,7 @@ const Page = () => {
     } finally {
       setIsLoading(false);
       setIsRefresh(false);
+      setIsSingleStatusRefresh(false);
     }
   };
 
@@ -311,6 +314,9 @@ const Page = () => {
               isSingleStatusRefresh={isSingleStatusRefresh}
               handleStatusUpdate={handleStatusUpdate}
               handleDeleteTodo={handleDeleteTodo}
+              setIsEdited={setIsEdited}
+              isEdited={isEdited}
+              setId={setId}
             />
           </div>
         </div>
@@ -324,6 +330,9 @@ const Page = () => {
               isSingleStatusRefresh={isSingleStatusRefresh}
               handleDeleteTodo={handleDeleteTodo}
               handleStatusUpdate={handleStatusUpdate}
+              setIsEdited={setIsEdited}
+              isEdited={isEdited}
+              setId={setId}
             />
           </div>
         </div>

@@ -6,7 +6,10 @@ export default function TodoCancelled({
   handleDeleteTodo,
   handleStatusUpdate,
 }: any) {
-  const { data, loading }: any = useFetch("/todos/status/cancelled", isSingleStatusRefresh);
+  const { data, loading }: any = useFetch(
+    "/todos/status/cancelled",
+    isSingleStatusRefresh
+  );
 
   return (
     <>
@@ -16,11 +19,17 @@ export default function TodoCancelled({
         <>
           {data?.todo?.length > 0 ? (
             data.todo.map((item: any, index: number) => (
-              <div key={index}>
+              <div key={index} className={`relative`}>
                 <div
-                  className={`group overflow-hidden h-48 text-white bg-red-400 rounded-md p-4 w-full hover:scale-[1.15] hover:h-auto hover:z-50 shadow-xl border border-t-[15px] border-t-red-500 ${
-                    index === 0 ? "mt-2 border" : "-mt-28"
-                  }`}
+                  className={`
+                    group relative overflow-hidden rounded-md p-4 w-full text-white shadow-xl border
+                    transition-all duration-500 ease-in-out transform
+                    bg-red-400
+                    border-t-[15px] border-t-red-500
+                    h-32
+                    ${index === 0 ? "mt-2" : "-mt-28"}
+                    hover:md:scale-125 hover:scale-110 hover:md:-translate-x-12 hover:z-50 hover:h-auto
+                  `}
                 >
                   <h2 className="text-1xl -mt-3 truncate font-bold mb-2">
                     {item.title}
@@ -33,7 +42,9 @@ export default function TodoCancelled({
                     <i className="fas fa-trash text-1xl"></i>
                   </button>
                   <hr />
-                  <p className="mt-2 break-words whitespace-break-spaces">{item.content}</p>
+                  <p className="mt-2 break-words whitespace-break-spaces">
+                    {item.content}
+                  </p>
                   <div className="flex justify-center gap-4 mt-5">
                     <button
                       type="button"
