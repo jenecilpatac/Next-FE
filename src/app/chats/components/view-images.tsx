@@ -42,54 +42,73 @@ export default function ViewImages({
           <i className="far fa-x"></i>
         </button>
       </div>
-      {images?.length !== 0 && (
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="relative w-1/2 h-auto overflow-hidden rounded-lg">
-            <div
-              className="w-full h-full flex transition-transform duration-300"
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-              }}
-            >
-              {images?.map((image: any) => (
-                <div
-                  key={image.id}
-                  className="flex-shrink-0 w-full h-full relative"
-                >
-                  {isImage(image?.value?.split(".")?.pop()) && (
-                    <img
-                      className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
-                      src={Storage(image?.value)}
-                      alt={`Image ${image.id}`}
-                    />
-                  )}
-                  {isVideo(image?.value?.split(".")?.pop()) && (
-                    <video
-                      className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
-                      src={Storage(image?.value)}
-                      controls
-                    />
-                  )}
-                </div>
-              ))}
+      <div className="flex flex-col h-full gap-6 w-full overflow-x-auto">
+        {images?.length !== 0 && (
+          <div className="flex flex-col items-center justify-center h-[calc(100vh-120px)]">
+            <div className="relative w-10/12 md:w-1/2 h-auto overflow-hidden rounded-lg">
+              <div
+                className="w-full h-full flex transition-transform duration-300"
+                style={{
+                  transform: `translateX(-${currentIndex * 100}%)`,
+                }}
+              >
+                {images?.map((image: any) => (
+                  <div
+                    key={image.id}
+                    className="flex-shrink-0 w-full h-full relative"
+                  >
+                    {isImage(image?.value?.split(".")?.pop()) && (
+                      <img
+                        className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
+                        src={Storage(image?.value)}
+                        alt={`Image ${image.id}`}
+                      />
+                    )}
+                    {isVideo(image?.value?.split(".")?.pop()) && (
+                      <video
+                        className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
+                        src={Storage(image?.value)}
+                        controls
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
-          {images?.length > 1 && (
-            <div className="flex justify-center mt-2">
-              {images?.map((image: any) => (
+        )}
+        {images?.length > 1 && (
+          <div className="flex overflow-x-auto overflow-y-hidden gap-2 h-28 items-center justify-center">
+            {images?.map((image: any) => (
+              <div
+                key={image.id}
+                className="flex-shrink-0 h-28 w-20 relative cursor-pointer"
+                onClick={() => selectImage(image.id)}
+              >
                 <div
-                  onClick={() => selectImage(image.id)}
-                  key={image.id}
-                  className={`w-2.5 h-2.5 mx-1 rounded-full cursor-pointer hover:bg-blue-500 ${
-                    currentId === image.id ? "bg-blue-500" : "bg-gray-300"
+                  className={`absolute h-full w-full ${
+                    image.id === currentId ? "hover:bg-black/10" : "bg-black/80 hover:bg-black/10"
                   }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                ></div>
+                {isImage(image?.value?.split(".")?.pop()) && (
+                  <img
+                    className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
+                    src={Storage(image?.value)}
+                    alt={`Image ${image.id}`}
+                  />
+                )}
+                {isVideo(image?.value?.split(".")?.pop()) && (
+                  <video
+                    className="w-full h-full hover:scale-105 transition-all duration-300 ease-in-out"
+                    src={Storage(image?.value)}
+                    controls={false}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {images?.length > 1 && (
         <>

@@ -52,8 +52,7 @@ export default function MessageBody({
     setTimer(time);
   };
 
-  const handleTouchEnd = (e: any) => {
-    e.preventDefault();
+  const handleTouchEnd = () => {
     if (timer) clearTimeout(timer);
 
     if (offset === MAX_OFFSET) {
@@ -160,6 +159,7 @@ export default function MessageBody({
         onTouchEnd={handleTouchEnd}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
+        onContextMenu={IS_MOBILE ? (e: any) => e.preventDefault() : undefined}
       >
         {parent && (
           <div className="flex py-2 flex-col -mb-5">
@@ -213,6 +213,9 @@ export default function MessageBody({
                 src={link?.images?.length > 0 ? link?.images[0] : link?.url}
                 alt={link.title}
                 className="w-full h-40 object-contain rounded-md"
+                onContextMenu={
+                  IS_MOBILE ? (e: any) => e.preventDefault() : undefined
+                }
               />
               <div className="w-full flex flex-col border-t rounded-b-3xl bg-gray-100 dark:bg-gray-900/20">
                 <span
@@ -249,6 +252,9 @@ export default function MessageBody({
                   width={"36 md:w-64"}
                   height={"36 md:h-64"}
                   onClick={handleOpenViewImages(item?.id)}
+                  onContextMenu={
+                    IS_MOBILE ? (e: any) => e.preventDefault() : undefined
+                  }
                 />
               </div>
             ))}
@@ -279,6 +285,9 @@ export default function MessageBody({
                 src={Storage(item?.value)}
                 controls
                 onClick={handleOpenViewImages(item?.id)}
+                onContextMenu={
+                  IS_MOBILE ? (e: any) => e.preventDefault() : undefined
+                }
               ></video>
             ))}
           </div>
@@ -288,7 +297,12 @@ export default function MessageBody({
           <div className="flex flex-col p-2 gap-2">
             {audios?.map((item: any, index: number) => (
               <div key={index} className="self-end">
-                <audio controls>
+                <audio
+                  controls
+                  onContextMenu={
+                    IS_MOBILE ? (e: any) => e.preventDefault() : undefined
+                  }
+                >
                   <source
                     src={Storage(item?.value)}
                     type={`audio/${item.value.split(".").pop()}`}
