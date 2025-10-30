@@ -501,7 +501,7 @@ export default function ChatContent({
                     : undefined
                 }
                 type="button"
-                className="flex gap-5 items-center p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-3xl"
+                className="flex gap-5 w-full items-center p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-3xl"
                 key={index}
               >
                 <span className="text-3xl">{reaction.value}</span>
@@ -509,8 +509,8 @@ export default function ChatContent({
                   <Image
                     avatar={reaction?.user?.profile_pictures[0]?.avatar}
                     alt={reaction?.user?.name ?? "Anonymous"}
-                    width={12}
-                    height={12}
+                    width={"auto"}
+                    height={"auto"}
                   />
                 </div>
                 <span className="text-lg font-bold text-gray-700 dark:text-gray-300 break-words w-80 text-start">
