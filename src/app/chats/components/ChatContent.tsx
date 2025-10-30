@@ -277,6 +277,9 @@ export default function ChatContent({
               isLast={isLast}
               isFirst={isFirst}
               isOwner={true}
+              handleScrollToChat={handleScrollToChat}
+              parent={parent}
+              senderId={toSelectMessage?.userId}
             />
           ) : (
             <MessageBody
@@ -350,6 +353,9 @@ export default function ChatContent({
               avatar={avatar}
               name={name}
               isOwner={false}
+              handleScrollToChat={handleScrollToChat}
+              parent={parent}
+              senderId={toSelectMessage?.userId}
             />
           ) : (
             <MessageBody2
