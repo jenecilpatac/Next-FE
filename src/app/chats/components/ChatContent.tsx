@@ -505,12 +505,14 @@ export default function ChatContent({
                 key={index}
               >
                 <span className="text-3xl">{reaction.value}</span>
-                <Image
-                  avatar={reaction?.user?.profile_pictures[0]?.avatar}
-                  alt={reaction?.user?.name ?? "Anonymous"}
-                  width={12}
-                  height={12}
-                />
+                <div className="w-12 h-12">
+                  <Image
+                    avatar={reaction?.user?.profile_pictures[0]?.avatar}
+                    alt={reaction?.user?.name ?? "Anonymous"}
+                    width={12}
+                    height={12}
+                  />
+                </div>
                 <span className="text-lg font-bold text-gray-700 dark:text-gray-300 break-words w-80 text-start">
                   {reaction?.user?.name ?? "Anonymous"}
                 </span>
