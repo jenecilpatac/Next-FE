@@ -170,7 +170,7 @@ export default function AvatarList({ image, setIsRefresh }: any) {
           onLoad={handleImageLoaded}
           src={Storage(image.avatar)}
           alt=""
-          className={`w-full sm:h-40 h-28 rounded-lg ${
+          className={`w-full h-auto rounded-lg ${
             isImageLoading ? "hidden" : ""
           }`}
         />
