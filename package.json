@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "set PORT=5005 && next dev --turbopack",
-    "build": "next build --turbopack --no-lint",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "next lint",
     "start:debug": "cross-env DEBUG=fastify:* pnpm start"
