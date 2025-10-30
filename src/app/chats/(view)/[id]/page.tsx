@@ -899,6 +899,7 @@ const Chats = () => {
           <MessageFileUpload
             setAttachments={setAttachments}
             isLoading={isLoadingPrivateMessages}
+            textareaRef={textareaRef}
           />
           <div className="relative w-full py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
             {attachments?.length > 0 && (
@@ -915,12 +916,12 @@ const Chats = () => {
                 error={error?.content?.message}
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
-                disabled={loading}
+                disabled={isLoadingPrivateMessages}
                 maxLength={85000}
                 onPaste={handlePaste}
               />
 
-              {loading && (
+              {isLoadingPrivateMessages && (
                 <p className="rounded-3xl -top-0.5 left-1 absolute h-6 w-full bg-slate-300 dark:bg-slate-400 animate-pulse"></p>
               )}
             </div>
@@ -945,7 +946,7 @@ const Chats = () => {
           <div className="bottom-4 absolute right-4">
             {formInput.content || attachments?.length > 0 ? (
               <Button
-                disabled={isLoadingPrivateMessages}
+                disabled={isLoadingPrivateMessages || isSending}
                 type="button"
                 onClick={handleSendMessage}
                 icon="paper-plane-top"
@@ -954,7 +955,7 @@ const Chats = () => {
               />
             ) : (
               <Button
-                disabled={isLoadingPrivateMessages}
+                disabled={isLoadingPrivateMessages || isSending}
                 type="button"
                 onClick={handleSendLike}
                 icon="thumbs-up"

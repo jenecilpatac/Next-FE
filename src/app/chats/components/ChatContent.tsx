@@ -277,6 +277,9 @@ export default function ChatContent({
               isLast={isLast}
               isFirst={isFirst}
               isOwner={true}
+              handleScrollToChat={handleScrollToChat}
+              parent={parent}
+              senderId={toSelectMessage?.userId}
             />
           ) : (
             <MessageBody
@@ -350,6 +353,9 @@ export default function ChatContent({
               avatar={avatar}
               name={name}
               isOwner={false}
+              handleScrollToChat={handleScrollToChat}
+              parent={parent}
+              senderId={toSelectMessage?.userId}
             />
           ) : (
             <MessageBody2
@@ -501,16 +507,18 @@ export default function ChatContent({
                     : undefined
                 }
                 type="button"
-                className="flex gap-5 items-center p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-3xl"
+                className="flex gap-5 w-full items-center p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-3xl"
                 key={index}
               >
                 <span className="text-3xl">{reaction.value}</span>
-                <Image
-                  avatar={reaction?.user?.profile_pictures[0]?.avatar}
-                  alt={reaction?.user?.name ?? "Anonymous"}
-                  width={12}
-                  height={12}
-                />
+                <div className="w-12 h-12">
+                  <Image
+                    avatar={reaction?.user?.profile_pictures[0]?.avatar}
+                    alt={reaction?.user?.name ?? "Anonymous"}
+                    width={"auto"}
+                    height={"auto"}
+                  />
+                </div>
                 <span className="text-lg font-bold text-gray-700 dark:text-gray-300 break-words w-80 text-start">
                   {reaction?.user?.name ?? "Anonymous"}
                 </span>

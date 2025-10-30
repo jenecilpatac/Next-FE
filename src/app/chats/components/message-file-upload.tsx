@@ -1,6 +1,10 @@
 import { ChangeEvent, useRef } from "react";
 
-export default function MessageFileUpload({ setAttachments, isLoading }: any) {
+export default function MessageFileUpload({
+  setAttachments,
+  isLoading,
+  textareaRef,
+}: any) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -9,6 +13,7 @@ export default function MessageFileUpload({ setAttachments, isLoading }: any) {
       setAttachments((prev: any) => [...prev, ...files]);
     }
     e.target.value = "";
+    textareaRef?.current?.focus();
   };
   return (
     <div className="bottom-3 absolute">

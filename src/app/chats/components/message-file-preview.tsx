@@ -1,3 +1,6 @@
+import isAudio from "../utils/is-audio";
+import isImage from "../utils/is-image";
+import isVideo from "../utils/is-video";
 import Image from "./images/Image";
 
 export default function MessageFilePreview({
@@ -16,14 +19,30 @@ export default function MessageFilePreview({
         {attachments?.map((attachment: any, index: number) => (
           <div key={index} className="w-24 h-full flex-shrink-0 relative group">
             <div className="w-full h-full flex items-center justify-center">
-              {attachment?.type?.startsWith("image") ? (
+              {isImage(attachment?.name?.split(".")?.pop()) ? (
                 <Image
-                  avatar={URL.createObjectURL(attachment)}
-                  width={"24"}
+                  key={index}
+                  alt={attachment?.name}
                   rounded="md"
+                  avatar={URL.createObjectURL(attachment)}
+                  width={24}
                   height={"full"}
                   isUpload={true}
                 />
+              ) : isVideo(attachment?.name?.split(".")?.pop()) ? (
+                <video
+                  key={index}
+                  src={URL.createObjectURL(attachment)}
+                  controls
+                  className="w-24 h-full"
+                ></video>
+              ) : isAudio(attachment?.name?.split(".")?.pop()) ? (
+                <span className="flex flex-col items-center justify-center">
+                  <i className="fas fa-microphone text-6xl text-gray-600"></i>
+                  <span className="truncate text-xs w-24 text-center">
+                    {attachment?.name}
+                  </span>
+                </span>
               ) : (
                 <span className="flex flex-col items-center justify-center">
                   <i className="fas fa-file text-6xl text-gray-600"></i>
