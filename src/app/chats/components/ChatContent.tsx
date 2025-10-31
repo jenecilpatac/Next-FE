@@ -511,7 +511,7 @@ export default function ChatContent({
                 key={index}
               >
                 <span className="text-3xl">{reaction.value}</span>
-                <div className="w-12 h-12">
+                <div className="md:w-12 md:h-12 w-9 h-8 rounded-full overflow-hidden">
                   <Image
                     avatar={reaction?.user?.profile_pictures[0]?.avatar}
                     alt={reaction?.user?.name ?? "Anonymous"}
