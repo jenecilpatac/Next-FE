@@ -9,20 +9,21 @@ const ChildActiveLink = ({
   children: React.ReactNode;
 }) => {
   const pathname = usePathname();
-
-  const normalizePath = (path: string) => path.replace(/\/$/, "");
-
+  const normalize = (p: string) => p.replace(/\/$/, "");
   const isActive =
     href === "/"
       ? pathname === href
-      : normalizePath(pathname).startsWith(normalizePath(href));
+      : normalize(pathname).startsWith(normalize(href));
 
   return (
     <Link
       href={href}
-      className={`${
-        isActive ? "bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-700" : ""
-      } flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700`}
+      className={`flex items-center gap-2 pl-10 pr-3 py-2 text-sm rounded-lg transition-all duration-200
+        ${
+          isActive
+            ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium"
+            : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+        }`}
     >
       {children}
     </Link>

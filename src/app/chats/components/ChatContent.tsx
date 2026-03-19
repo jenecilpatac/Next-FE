@@ -203,7 +203,7 @@ export default function ChatContent({
       }
       acc[value].push(user);
       return acc;
-    }, {})
+    }, {}),
   ).map(([label, users]) => ({
     label,
     users,
@@ -214,7 +214,7 @@ export default function ChatContent({
       (reaction: any) =>
         reaction.userId === userId &&
         reaction.messageId === messageId &&
-        reaction.label === label
+        reaction.label === label,
     );
   };
 
@@ -248,22 +248,22 @@ export default function ChatContent({
     attachments?.length > 0;
 
   const images = attachments?.filter((file: any) =>
-    isImage(file?.value?.split(".")?.pop())
+    isImage(file?.value?.split(".")?.pop()),
   );
 
   const files = attachments?.filter(
     (file: any) =>
       !isVideo(file?.value?.split(".")?.pop()) &&
       !isImage(file?.value?.split(".")?.pop()) &&
-      !isAudio(file?.value?.split(".")?.pop())
+      !isAudio(file?.value?.split(".")?.pop()),
   );
 
   const videos = attachments?.filter((file: any) =>
-    isVideo(file?.value?.split(".")?.pop())
+    isVideo(file?.value?.split(".")?.pop()),
   );
 
   const audios = attachments?.filter((file: any) =>
-    isAudio(file?.value?.split(".")?.pop())
+    isAudio(file?.value?.split(".")?.pop()),
   );
 
   return (
@@ -413,7 +413,7 @@ export default function ChatContent({
                 <textarea
                   value={messageContent}
                   onChange={(e: any) => setMessageContent(e.target.value)}
-                  className="border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:border-blue-500 min-h-15"
+                  className="w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none min-h-[80px]"
                   placeholder="Type a message..."
                 ></textarea>
                 {error && (
@@ -430,7 +430,7 @@ export default function ChatContent({
               type="button"
               disabled={isLoading}
               onClick={handleOpenModal(messageId, "")}
-              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
@@ -438,15 +438,15 @@ export default function ChatContent({
               type="button"
               disabled={isLoading}
               onClick={handleSubmit(messageId)}
-              className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed`}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading && modalType === "edit"
                 ? "Updating..."
                 : isLoading && modalType
-                ? "Removing..."
-                : modalType === "edit"
-                ? "Update"
-                : "Remove"}
+                  ? "Removing..."
+                  : modalType === "edit"
+                    ? "Update"
+                    : "Remove"}
             </button>
           </ModalButton>
         </Modal>
@@ -484,7 +484,7 @@ export default function ChatContent({
               type="button"
               disabled={isLoading}
               onClick={handleOpenReactions(messageId)}
-              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors w-full"
             >
               Close
             </button>
@@ -531,7 +531,7 @@ export default function ChatContent({
               type="button"
               disabled={isLoading}
               onClick={handleOpenUsersReactions(messageId)}
-              className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 w-full"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors w-full"
             >
               Close
             </button>
