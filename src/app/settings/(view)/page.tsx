@@ -8,127 +8,175 @@ const Settings = () => {
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [isLoginHistoryVisible, setIsLoginHistoryVisible] = useState(false);
 
-  const toggle2FA = () => setIs2FAEnabled(!is2FAEnabled);
-  const toggleLoginHistory = () =>
-    setIsLoginHistoryVisible(!isLoginHistoryVisible);
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
-          Settings
-        </h1>
-
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Profile Information and Security
-          </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-4">
-            This section gives you full control over your personal information
-            and login settings, helping you maintain both convenience and
-            security on our platform. Keeping these details up-to-date and
-            secure is essential to ensure your account remains safe and
-            accessible.
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="max-w-3xl mx-auto p-6 space-y-4">
+        {/* Header */}
+        <div className="mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Settings
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Manage your account preferences and security
           </p>
-          <div className="flex justify-end items-center">
-            <div className="flex flex-col space-y-5">
-              <Link
-                href="/settings/manage-personal-information"
-                className="text-end hover:scale-105"
-              >
-                <span className="px-4 py-2 rounded-md text-white bg-sky-500 hover:bg-sky-600 focus:outline-none">
-                  <i className="fa-solid fa-address-book"></i> Manage Profile
-                  Information
-                </span>
-              </Link>
-              <Link
-                href="/settings/manage-password"
-                className="text-end hover:scale-105"
-              >
-                <span className="px-4 py-2 rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none">
-                  <i className="fa-solid fa-shield"></i> Manage Password
-                </span>
-              </Link>
+        </div>
+
+        {/* Profile & Security */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-user text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Profile Information &amp; Security
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Manage your personal details and login credentials.
+              </p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <Link
+                  href="/settings/manage-personal-information"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                >
+                  <i className="fa-solid fa-address-book" />
+                  Manage Profile
+                </Link>
+                <Link
+                  href="/settings/manage-password"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+                >
+                  <i className="fa-solid fa-shield" />
+                  Manage Password
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Two-Factor Authentication (2FA)
-          </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-4">
-            Enhance the security of your account by requiring a second form of
-            authentication when logging in.
-          </p>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-700 dark:text-gray-100">
-              {is2FAEnabled ? "Enabled" : "Disabled"}
-            </span>
-            <button
-              onClick={toggle2FA}
-              className={`px-4 py-2 rounded-md text-white hover:scale-105 ${
-                is2FAEnabled
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-green-500 hover:bg-green-600"
-              } focus:outline-none`}
-            >
-              {is2FAEnabled ? "Disable" : "Enable"}
-            </button>
+        {/* 2FA */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-lock text-green-600 dark:text-green-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Two-Factor Authentication
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Add an extra layer of security to your account.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <span
+                className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  is2FAEnabled
+                    ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                {is2FAEnabled ? "Enabled" : "Disabled"}
+              </span>
+              <button
+                onClick={() => setIs2FAEnabled(!is2FAEnabled)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium text-white transition-colors ${
+                  is2FAEnabled
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-green-500 hover:bg-green-600"
+                }`}
+              >
+                {is2FAEnabled ? "Disable" : "Enable"}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Account Activity
-          </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-4">
-            View the devices and sessions currently logged into your account.
-          </p>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-700 dark:text-gray-100">
-              View your activity
-            </span>
+        {/* Account Activity */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-chart-line text-purple-600 dark:text-purple-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Account Activity
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                View devices and sessions currently logged into your account.
+              </p>
+            </div>
             <button
               onClick={() => alert("No function yet")}
-              className="px-4 py-2 rounded-md text-white hover:scale-105 bg-indigo-500 hover:bg-indigo-600 focus:outline-none"
+              className="shrink-0 px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
             >
               View Activity
             </button>
           </div>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Login History
-          </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-4">
-            Monitor the login history of your account for any suspicious
-            activities.
-          </p>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-700 dark:text-gray-100">
-              {isLoginHistoryVisible ? "Visible" : "Not Visible"}
-            </span>
-            <button
-              onClick={toggleLoginHistory}
-              className="px-4 py-2 rounded-md text-white hover:scale-105 bg-gray-500 hover:bg-gray-400 focus:outline-none"
-            >
-              {isLoginHistoryVisible ? "Hide History" : "Show History"}
-            </button>
+        {/* Login History */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-clock-rotate-left text-orange-600 dark:text-orange-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Login History
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Monitor login history for any suspicious activity.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <span
+                className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  isLoginHistoryVisible
+                    ? "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                {isLoginHistoryVisible ? "Visible" : "Hidden"}
+              </span>
+              <button
+                onClick={() => setIsLoginHistoryVisible(!isLoginHistoryVisible)}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+              >
+                {isLoginHistoryVisible ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Security Tips
-          </h2>
-          <ul className="list-disc pl-5 text-gray-600 dark:text-gray-200">
-            <li>Use a unique and strong password for your account.</li>
-            <li>Enable two-factor authentication for added security.</li>
-            <li>Monitor your account activity regularly.</li>
-            <li>Log out from public or shared computers after use.</li>
-          </ul>
+        {/* Security Tips */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-lightbulb text-yellow-600 dark:text-yellow-400" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                Security Tips
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  "Use a unique and strong password for your account.",
+                  "Enable two-factor authentication for added security.",
+                  "Monitor your account activity regularly.",
+                  "Log out from public or shared computers after use.",
+                ].map((tip) => (
+                  <li
+                    key={tip}
+                    className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400"
+                  >
+                    <i className="fa-solid fa-circle-check text-green-500 mt-0.5 shrink-0" />
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
