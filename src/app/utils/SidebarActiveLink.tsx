@@ -11,23 +11,20 @@ const ActiveLink = ({
   children: React.ReactNode;
 }) => {
   const pathname = usePathname();
-
-  const normalizePath = (path: string) => path.replace(/\/$/, "");
-
   const isActive =
-    href === "/"
-      ? pathname === href
-      : normalizePath(pathname).startsWith(normalizePath(href));
+    pathname.split("/")[pathname.split("/").length - 1] ===
+    href.split("/")[href.split("/").length - 1];
 
   return (
     <Link
       href={href}
       target={target}
-      className={`${
-        isActive
-          ? "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white"
-          : ""
-      } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group`}
+      className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group
+        ${
+          isActive
+            ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-l-2 border-blue-500 rounded-l-none"
+            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white border-l-2 border-transparent rounded-l-none"
+        }`}
     >
       {children}
     </Link>
