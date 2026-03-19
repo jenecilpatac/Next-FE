@@ -15,7 +15,7 @@ const PostWithSlugs = () => {
   const { data, loading, error, setAddTake, loadingOnTake }: any = useFetch(
     `/categories/${slug}`,
     isRefresh,
-    true
+    true,
   );
   const sentinelRef = useRef<HTMLSpanElement>(null);
 
@@ -35,7 +35,7 @@ const PostWithSlugs = () => {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     if (sentinelRef.current) {
@@ -48,34 +48,35 @@ const PostWithSlugs = () => {
   }, [sentinelRef, data, loadingOnTake, setAddTake, error]);
   return (
     <div className="p-4 dark:bg-black mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <Link href="/blog/posts">
-          <i className="fa-solid fa-arrow-left"></i> Back to posts
-        </Link>
-        {loading ? (
-          <>
-            <span className="bg-slate-300 dark:bg-slate-400 h-6 rounded-lg animate-pulse w-96"></span>
-          </>
-        ) : (
-          <>
-            <h1 className="text-2xl font-bold">
+      <div className="mb-6">
+        <div className="flex flex-wrap justify-between items-center gap-4">
+          <Link
+            href="/blog/posts"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-xs"></i> Back to posts
+          </Link>
+          {loading ? (
+            <span className="bg-slate-200 dark:bg-slate-700 h-6 rounded-lg animate-pulse w-64"></span>
+          ) : (
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               {error?.response?.statusText ||
                 `${data?.category?.categoryName} posts`}
             </h1>
-          </>
-        )}
-        <span>
-          {data?.category?.posts && (
-            <>
-              Result(s):{" "}
-              <span className="font-semibold">
-                {data?.category?.posts?.length}
-              </span>
-            </>
           )}
-        </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {data?.category?.posts && (
+              <>
+                <span className="font-semibold text-gray-700 dark:text-gray-200">
+                  {data?.category?.posts?.length}
+                </span>{" "}
+                result(s)
+              </>
+            )}
+          </span>
+        </div>
+        <hr className="mt-4 border-gray-200 dark:border-gray-700" />
       </div>
-      <hr />
       <div className="py-4 sm:w-full md:w-full lg:w-3/4 xl:w-2/4 mx-auto overflow-hidden">
         {loading ? (
           <PostLoader />
@@ -84,17 +85,20 @@ const PostWithSlugs = () => {
             <PostsList key={index} post={post} setIsRefresh={setIsRefresh} />
           ))
         ) : (
-          <div className="flex justify-center items-center col-span-full h-64 rounded-lg shadow-md">
+          <div className="flex justify-center items-center col-span-full py-20">
             <div className="text-center">
-              <h1 className="text-xl font-semibold text-gray-700 dark:text-white mb-4">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fa-solid fa-newspaper text-2xl text-gray-400"></i>
+              </div>
+              <h1 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
                 {error
                   ? error?.response?.statusText
                   : data.message || "No Posts Added Yet"}
               </h1>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                 {error
                   ? error?.response?.data.message
-                  : "It looks like there are no posts available right now. Be patient and check back later!"}
+                  : "No posts available right now. Check back later!"}
               </p>
             </div>
           </div>

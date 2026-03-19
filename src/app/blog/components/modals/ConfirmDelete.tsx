@@ -6,73 +6,51 @@ export default function ConfirmDelete({
   onClose,
   children,
 }: any) {
-  if (!isOpen) {
-    return;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div className="sm:flex sm:items-start">
-                <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
-                  <svg
-                    className="size-6 text-red-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                    data-slot="icon"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                    />
-                  </svg>
-                </div>
-                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <h3
-                    className="text-base font-semibold text-gray-900"
-                    id="modal-title"
-                  >
-                    {title}
-                  </h3>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">{children}</p>
-                  </div>
-                </div>
-              </div>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-11 h-11 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-triangle-exclamation text-red-600 dark:text-red-400"></i>
             </div>
-            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-              <button
-                type="button"
-                disabled={isLoading}
-                onClick={handleProceedDeleteCategory}
-                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
-              >
-                {isLoading ? (
-                  <>
-                    <i className="fa-solid fa-spinner animate-ping mr-1"></i> Deleting...
-                  </>
-                ) : (
-                  <>
-                    <i className="fa-solid fa-trash mr-1"></i> Yes, Delete
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto"
-              >
-                Cancel
-              </button>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-snug">
+                {title}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {children}
+              </p>
             </div>
           </div>
+        </div>
+        <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={handleProceedDeleteCategory}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <i className="fa-solid fa-spinner animate-spin text-xs"></i>{" "}
+                Deleting...
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-trash text-xs"></i> Yes, Delete
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>
