@@ -56,11 +56,11 @@ export default function ConfirmDelete({
               >
                 {isLoading ? (
                   <>
-                    <i className="far fa-spinner animate-ping mr-1"></i> Deleting...
+                    <i className="fa-solid fa-spinner animate-ping mr-1"></i> Deleting...
                   </>
                 ) : (
                   <>
-                    <i className="far fa-trash mr-1"></i> Yes, Delete
+                    <i className="fa-solid fa-trash mr-1"></i> Yes, Delete
                   </>
                 )}
               </button>

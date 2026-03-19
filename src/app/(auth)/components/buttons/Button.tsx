@@ -16,7 +16,7 @@ export default function Button({
     >
       {isLoading ? (
         <span>
-          <i className="fas fa-spinner fa-pulse"></i> {loadingText}
+          <i className="fa-solid fa-spinner fa-pulse"></i> {loadingText}
         </span>
       ) : (
         <>{label}</>

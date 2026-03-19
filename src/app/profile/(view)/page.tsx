@@ -125,7 +125,7 @@ const Profile = () => {
                 onClick={openAddProfileModal}
                 className="hover:bg-gray-500 hover:scale-95 transition-all duration-300 ease-in-out absolute top-[80px] border-2 border-gray-400 dark:border-gray-700 text-white rounded-full bg-gray-400 px-2 py-1 right-0"
               >
-                <i className="fas fa-camera"></i>
+                <i className="fa-solid fa-camera"></i>
               </button>
             </div>
           </div>
@@ -138,7 +138,7 @@ const Profile = () => {
             <p className="text-sm text-gray-500 dark:text-gray-300">
               {user?.email}{" "}
               {user?.emailVerifiedAt !== null && (
-                <i className="fas fa-badge-check text-blue-500 text-xs"></i>
+                <i className="fa-solid fa-badge-check text-blue-500 text-xs"></i>
               )}
             </p>
           </div>
@@ -150,7 +150,7 @@ const Profile = () => {
             onClick={openEditProfileModal}
             className="hover:bg-blue-500 hover:scale-95 bg-opacity-75 hover:bg-opacity-75 transition-all duration-300 ease-in-out text-white rounded-lg bg-blue-400 px-2.5 py-1.5"
           >
-            <i className="far fa-pen"></i> Edit Profile
+            <i className="fa-solid fa-pen"></i> Edit Profile
           </button>
         </div>
       </div>
@@ -233,7 +233,7 @@ const Profile = () => {
                 onClick={handleAddPost}
                 className="hover:bg-blue-500 hover:scale-95 bg-opacity-75 hover:bg-opacity-75 transition-all duration-300 ease-in-out text-white rounded-lg bg-blue-400 px-2.5 py-1.5"
               >
-                <i className="far fa-plus"></i> Add post
+                <i className="fa-solid fa-plus"></i> Add post
               </button>
             </div>
             <div className="w-full flex justify-center">

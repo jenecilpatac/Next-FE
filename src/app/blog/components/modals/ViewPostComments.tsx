@@ -103,7 +103,7 @@ export default function ViewPostComments({
           onClick={onClose}
           className="absolute top-4 right-5 rounded-full text-white hover:bg-gray-400 dark:hover:bg-gray-600 bg-gray-300 dark:bg-gray-500 px-2 py-0.5"
         >
-          <i className="far fa-xmark text-xl mt-1"></i>
+          <i className="fa-solid fa-xmark text-xl mt-1"></i>
         </button>
         <h2 className="text-2xl font-bold text-center mb-5">
           {loading ? (
@@ -163,13 +163,13 @@ export default function ViewPostComments({
               </div>
               {!isOpenSec && (
                 <div className="absolute top-2 right-3">
-                  <i className="far fa-smile"></i>
+                  <i className="fa-solid fa-smile"></i>
                 </div>
               )}
               {isOpenSec && (
                 <div className="flex justify-between pb-2 items-center transition-all duration-300 ease-in-out">
                   <div>
-                    <i className="far fa-smile"></i>
+                    <i className="fa-solid fa-smile"></i>
                   </div>
                   <div>
                     <button
@@ -186,7 +186,7 @@ export default function ViewPostComments({
                           : "text-blue-500 dark:text-blue-300 hover:dark:bg-gray-600 hover:bg-gray-300"
                       } rounded-full px-2 py-1`}
                     >
-                      <i className="far fa-paper-plane-top"></i>
+                      <i className="fa-solid fa-paper-plane-top"></i>
                     </button>
                   </div>
                 </div>

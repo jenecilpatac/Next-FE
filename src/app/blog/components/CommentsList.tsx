@@ -22,7 +22,7 @@ export default function CommentsList({ comment, author, commentOwner }: any) {
         <p className={`text-md font-bold relative text-gray-800 dark:text-gray-300 ${author && "pt-6"}`}>
           {author && (
             <span className="absolute top-0 text-xs bg-gray-300 text-gray-700 dark:text-gray-200 dark:bg-gray-600 px-2 py-1 rounded-lg">
-              <i className="far fa-microphone-stand text-xs"></i> Author
+              <i className="fa-solid fa-microphone-stand text-xs"></i> Author
             </span>
           )}
           {comment.user === null ? "Deleted User" : comment.user.name}

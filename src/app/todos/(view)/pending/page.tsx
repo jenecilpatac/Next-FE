@@ -92,7 +92,7 @@ const Pending = () => {
           ) : (
             <div className="text-center flex flex-col items-center justify-center h-full">
               <p className="text-[70px] mb-3">
-                <i className="far fa-memo-circle-info text-[70px]"></i>
+                <i className="fa-solid fa-memo-circle-info text-[70px]"></i>
               </p>
               <p className="text-2xl">You have no posted/pending todo yet.</p>
             </div>

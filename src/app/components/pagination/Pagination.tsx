@@ -76,7 +76,7 @@ const Pagination = ({
               disabled={currentPage === 1}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
-              <i className="far fa-chevrons-left" aria-hidden="true" />
+              <i className="fa-solid fa-chevrons-left" aria-hidden="true" />
             </button>
             <button
               onClick={handlePrevious}
@@ -84,7 +84,7 @@ const Pagination = ({
               className="relative inline-flex items-center px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
               <span className="sr-only">Previous</span>
-              <i className="far fa-chevron-left" aria-hidden="true" />
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
             </button>
 
             {pageNumbers.map((page) => (
@@ -106,14 +106,14 @@ const Pagination = ({
               className="relative inline-flex items-center px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
               <span className="sr-only">Next</span>
-              <i className="far fa-chevron-right" aria-hidden="true" />
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
             </button>
             <button
               onClick={handleLastPage}
               disabled={currentPage === totalPages}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
             >
-              <i className="far fa-chevrons-right" aria-hidden="true" />
+              <i className="fa-solid fa-chevrons-right" aria-hidden="true" />
             </button>
           </nav>
         </div>

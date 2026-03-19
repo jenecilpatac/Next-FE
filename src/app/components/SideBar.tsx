@@ -107,7 +107,7 @@ const SideBar = ({ children }: any) => {
             <li onClick={toggleSideBar}>
               <button type="button" onClick={toogleDropdown} className="w-full">
                 <ActiveLink href="/todos">
-                  <i className="flex-shrink-0 w-5 h-5 text-2xl text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white far fa-clipboard-list-check"></i>
+                  <i className="flex-shrink-0 w-5 h-5 text-2xl text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white fa-solid fa-clipboard"></i>
                   <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
                     Todos
                   </span>
@@ -157,23 +157,23 @@ const SideBar = ({ children }: any) => {
                 <li onClick={toggleSideBar}>
                   <ChildActiveLink href="/todos/pending">
                     Pending{" "}
-                    <i className="far fa-clock-rotate-left ml-3 text-red-600"></i>
+                    <i className="fa-solid fa-clock-rotate-left ml-3 text-red-600"></i>
                   </ChildActiveLink>
                 </li>
                 <li onClick={toggleSideBar}>
                   <ChildActiveLink href="/todos/done">
-                    Done <i className="far fa-check ml-3 text-green-500"></i>
+                    Done <i className="fa-solid fa-check ml-3 text-green-500"></i>
                   </ChildActiveLink>
                 </li>
                 <li onClick={toggleSideBar}>
                   <ChildActiveLink href="/todos/ongoing">
-                    Ongoing <i className="far fa-rotate ml-3 text-blue-600"></i>
+                    Ongoing <i className="fa-solid fa-rotate ml-3 text-blue-600"></i>
                   </ChildActiveLink>
                 </li>
                 <li onClick={toggleSideBar}>
                   <ChildActiveLink href="/todos/cancelled">
                     Cancelled{" "}
-                    <i className="far fa-file-xmark ml-3 text-red-400"></i>
+                    <i className="fa-solid fa-xmark ml-3 text-red-400"></i>
                   </ChildActiveLink>
                 </li>
               </ul>
@@ -209,7 +209,7 @@ const SideBar = ({ children }: any) => {
             </li>
             <li onClick={toggleSideBar}>
               <ActiveLink href="/tallies/schedules">
-                <i className="far fa-calendar flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
+                <i className="fa-solid fa-calendar flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
                 <span className="flex-1 ms-3 whitespace-nowrap">
                   NBA Schedules
                 </span>
@@ -217,7 +217,7 @@ const SideBar = ({ children }: any) => {
             </li>
             <li onClick={toggleSideBar}>
               <ActiveLink href="/tallies/teams">
-                <i className="far fa-people-group flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
+                <i className="fa-solid fa-people-group flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
                 <span className="flex-1 ms-3 whitespace-nowrap">NBA Teams</span>
               </ActiveLink>
             </li>
@@ -229,7 +229,7 @@ const SideBar = ({ children }: any) => {
                 onClick={() => logout()}
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-                <i className="far fa-arrow-left-from-bracket"></i>
+                <i className="fa-solid fa-arrow-left-from-bracket"></i>
                 <span className="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
               </a>
             </li>

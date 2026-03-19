@@ -74,7 +74,7 @@ const UserProfile = () => {
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {data?.name}{" "}
                   {data?.emailVerifiedAt !== null && (
-                    <i className="fas fa-badge-check text-blue-500 text-md"></i>
+                    <i className="fa-solid fa-badge-check text-blue-500 text-md"></i>
                   )}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -86,14 +86,14 @@ const UserProfile = () => {
                     bgColor="blue-500"
                     hoverBgColor="blue-600"
                   >
-                    <i className="far fa-user-plus"></i> Add Friend
+                    <i className="fa-solid fa-user-plus"></i> Add Friend
                   </Button>
                   <Button
                     type="button"
                     bgColor="gray-500"
                     hoverBgColor="gray-600"
                   >
-                    <i className="far fa-layer-plus"></i> Follow
+                    <i className="fa-solid fa-layer-plus"></i> Follow
                   </Button>
                 </div>
               </div>

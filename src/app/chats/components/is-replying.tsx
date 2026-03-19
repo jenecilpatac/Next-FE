@@ -37,7 +37,7 @@ export default function IsReplying({
             setSelectedMessage(null);
           }}
         >
-          <i className="far fa-x"></i>
+          <i className="fa-solid fa-x"></i>
         </button>
       </div>
     </div>

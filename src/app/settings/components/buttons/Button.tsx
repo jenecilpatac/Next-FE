@@ -20,11 +20,11 @@ export default function Button({
       >
         {isLoading ? (
           <>
-            <i className="far fa-spinner animate-spin"></i> {loadingText}
+            <i className="fa-solid fa-spinner animate-spin"></i> {loadingText}
           </>
         ) : (
           <>
-            <i className={`fas fa-${icon}`}></i> {label}
+            <i className={`fa-solid fa-${icon}`}></i> {label}
           </>
         )}
       </button>

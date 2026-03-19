@@ -45,14 +45,14 @@ const Success = () => {
             onClick={() => router.push("/dashboard")}
             className="mt-6 px-4 py-2 bg-blue-600 text-sm hover:scale-105 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <i className="far fa-arrow-up"></i> Go to Dashboard
+            <i className="fa-solid fa-arrow-up"></i> Go to Dashboard
           </button>
           <button
             type="button"
             onClick={() => logout()}
             className="mt-6 px-4 py-2 bg-gray-600 text-sm hover:scale-105 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
-            <i className="far fa-arrow-left-from-bracket"></i> Logout
+            <i className="fa-solid fa-arrow-right-from-bracket"></i> Logout
           </button>
         </div>
       </div>

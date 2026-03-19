@@ -50,7 +50,7 @@ const PostWithSlugs = () => {
     <div className="p-4 dark:bg-black mx-auto">
       <div className="flex justify-between items-center mb-4">
         <Link href="/blog/posts">
-          <i className="far fa-arrow-left"></i> Back to posts
+          <i className="fa-solid fa-arrow-left"></i> Back to posts
         </Link>
         {loading ? (
           <>
@@ -102,7 +102,7 @@ const PostWithSlugs = () => {
         {data?.category?.posts && (
           <div className="flex justify-center items-center">
             {loadingOnTake ? (
-              <i className="fa-duotone fas fa-spinner-third animate-spin"></i>
+              <i className="fa-duotone fa-solid fa-spinner-third animate-spin"></i>
             ) : error ? (
               <p className="text-sm dark:text-gray-500 text-gray-400 font-bold">
                 {error.message}

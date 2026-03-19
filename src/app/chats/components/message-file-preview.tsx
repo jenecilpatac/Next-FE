@@ -38,14 +38,14 @@ export default function MessageFilePreview({
                 ></video>
               ) : isAudio(attachment?.name?.split(".")?.pop()) ? (
                 <span className="flex flex-col items-center justify-center">
-                  <i className="fas fa-microphone text-6xl text-gray-600"></i>
+                  <i className="fa-solid fa-microphone text-6xl text-gray-600"></i>
                   <span className="truncate text-xs w-24 text-center">
                     {attachment?.name}
                   </span>
                 </span>
               ) : (
                 <span className="flex flex-col items-center justify-center">
-                  <i className="fas fa-file text-6xl text-gray-600"></i>
+                  <i className="fa-solid fa-file text-6xl text-gray-600"></i>
                   <span className="truncate text-xs w-24 text-center">
                     {attachment?.name}
                   </span>
@@ -57,7 +57,7 @@ export default function MessageFilePreview({
               onClick={handleRemoveItem(index)}
               className="invisible group-hover:visible absolute top-0 right-0 rounded-md transition-all duration-100 ease-in-out h-full w-full flex items-center justify-center bg-black/50"
             >
-              <i className="far fa-x"></i>
+              <i className="fa-solid fa-x"></i>
             </button>
           </div>
         ))}

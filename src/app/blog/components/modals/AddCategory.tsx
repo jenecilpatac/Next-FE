@@ -87,7 +87,7 @@ export default function AddCategory({
               className="absolute right-4 top-3 bg-gray-400 bg-opacity-75 px-2 py-0.5 rounded-full hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75"
               onClick={handleCloseModal}
             >
-              <i className="far fa-xmark text-white"></i>
+              <i className="fa-solid fa-xmark text-white"></i>
             </button>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function AddCategory({
               onClick={handleCloseModal}
               className="bg-gray-500 bg-opacity-75 hover:bg-gray-600 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
             >
-              <i className="far fa-xmark"></i> Cancel
+              <i className="fa-solid fa-xmark"></i> Cancel
             </button>
             <button
               type="submit"
@@ -142,11 +142,11 @@ export default function AddCategory({
             >
               {loading ? (
                 <>
-                  <i className="far fa-spinner animate-spin"></i> Submiting...
+                  <i className="fa-solid fa-spinner animate-spin"></i> Submiting...
                 </>
               ) : (
                 <>
-                  <i className="far fa-save"></i> Submit
+                  <i className="fa-solid fa-save"></i> Submit
                 </>
               )}
             </button>

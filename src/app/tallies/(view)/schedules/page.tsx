@@ -103,7 +103,7 @@ export default function page() {
             href={"/tallies"}
             className="px-3 py-3 text-sm text-white hover:scale-105 bg-blue-600 rounded-lg shadow hover:bg-blue-800 hover:text-white transition"
           >
-            <i className="far fa-arrow-left"></i> Back to Tallies
+            <i className="fa-solid fa-arrow-left"></i> Back to Tallies
           </Link>
         </div>
         <ul className="grid w-full gap-6 md:grid-cols-2 mb-5">
@@ -124,7 +124,7 @@ export default function page() {
                 <div className="w-full text-lg font-semibold">Date</div>
                 <div className="w-full">Filter as date</div>
               </div>
-              <i className="far fa-calendar w-5 h-5"></i>
+              <i className="fa-solid fa-calendar w-5 h-5"></i>
             </label>
           </li>
           <li>
@@ -143,7 +143,7 @@ export default function page() {
                 <div className="w-full text-lg font-semibold">Year</div>
                 <div className="w-full">Filter as year</div>
               </div>
-              <i className="far fa-calendar w-5 h-5"></i>
+              <i className="fa-solid fa-calendar w-5 h-5"></i>
             </label>
           </li>
         </ul>
@@ -220,12 +220,12 @@ export default function page() {
                 >
                   {buttonLoading ? (
                     <>
-                      <i className="far fa-spinner animate-spin"></i>{" "}
+                      <i className="fa-solid fa-spinner animate-spin"></i>{" "}
                       Filtering...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-calendar"></i> Filter
+                      <i className="fa-solid fa-calendar"></i> Filter
                     </>
                   )}
                 </button>
@@ -288,12 +288,12 @@ export default function page() {
                 >
                   {buttonLoading ? (
                     <>
-                      <i className="far fa-spinner animate-spin"></i>{" "}
+                      <i className="fa-solid fa-spinner animate-spin"></i>{" "}
                       Filtering...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-calendar"></i> Filter
+                      <i className="fa-solid fa-calendar"></i> Filter
                     </>
                   )}
                 </button>
@@ -317,7 +317,7 @@ export default function page() {
               {data.length === 0 ? (
                 <div className="flex items-center justify-center h-72">
                   <div className="text-center">
-                    <i className="fas fa-calendar-times text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                    <i className="fa-solid fa-calendar-times text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
                     <p className="text-lg font-semibold text-gray-500 dark:text-gray-300">
                       {!filteredData
                         ? "Filter date first to see results"
@@ -409,11 +409,11 @@ export default function page() {
               >
                 {buttonLoading ? (
                   <>
-                    <i className="far fa-spinner animate-spin"></i>
+                    <i className="fa-solid fa-spinner animate-spin"></i>
                   </>
                 ) : (
                   <>
-                    Next Page <i className="far fa-arrow-right"></i>
+                    Next Page <i className="fa-solid fa-arrow-right"></i>
                   </>
                 )}
               </button>

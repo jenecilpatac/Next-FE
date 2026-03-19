@@ -107,7 +107,7 @@ export default function EditProfile({
           onClick={onClose}
           className="px-2 text-white py-0.5 rounded-full bg-gray-400 bg-opacity-75 hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75 absolute top-2 right-2"
         >
-          <i className="far fa-xmark"></i>
+          <i className="fa-solid fa-xmark"></i>
         </button>
         <h2 className="text-xl text-center font-bold mb-4">Edit Profile</h2>
         <hr className="border-gray-500" />
@@ -125,11 +125,11 @@ export default function EditProfile({
               >
                 {isSetProfile?.length === 0 || isSetProfile === undefined ? (
                   <>
-                    <i className="far fa-plus"></i> Upload profile picture
+                    <i className="fa-solid fa-plus"></i> Upload profile picture
                   </>
                 ) : (
                   <>
-                    <i className="far fa-image"></i> Update Picture
+                    <i className="fa-solid fa-image"></i> Update Picture
                   </>
                 )}
               </button>
@@ -144,17 +144,17 @@ export default function EditProfile({
                 <>
                   {user?.bio === null ? (
                     <>
-                      <i className="far fa-plus"></i> Add
+                      <i className="fa-solid fa-plus"></i> Add
                     </>
                   ) : (
                     <>
-                      <i className="far fa-pen"></i> Edit
+                      <i className="fa-solid fa-pen"></i> Edit
                     </>
                   )}
                 </>
               ) : (
                 <>
-                  <i className="far fa-xmark"></i> Cancel
+                  <i className="fa-solid fa-xmark"></i> Cancel
                 </>
               )}
             </button>
@@ -192,7 +192,7 @@ export default function EditProfile({
                     onClick={toggleUpdateBio}
                     className="bg-gray-500 bg-opacity-75 hover:bg-gray-600 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
                   >
-                    <i className="far fa-xmark"></i> Cancel
+                    <i className="fa-solid fa-xmark"></i> Cancel
                   </button>
                   <button
                     disabled={!bio || isBioLoading}
@@ -203,12 +203,12 @@ export default function EditProfile({
                   >
                     {isBioLoading ? (
                       <>
-                        <i className="far fa-spinner animate-spin"></i>{" "}
+                        <i className="fa-solid fa-spinner animate-spin"></i>{" "}
                         Saving...
                       </>
                     ) : (
                       <>
-                        <i className="far fa-save"></i> Save
+                        <i className="fa-solid fa-save"></i> Save
                       </>
                     )}
                   </button>
@@ -242,17 +242,17 @@ export default function EditProfile({
                   user?.jobTitle ||
                   user?.gender ? (
                     <>
-                      <i className="far fa-pen"></i> Edit
+                      <i className="fa-solid fa-pen"></i> Edit
                     </>
                   ) : (
                     <>
-                      <i className="far fa-plus"></i> Add
+                      <i className="fa-solid fa-plus"></i> Add
                     </>
                   )}
                 </>
               ) : (
                 <>
-                  <i className="far fa-xmark"></i> Cancel
+                  <i className="fa-solid fa-xmark"></i> Cancel
                 </>
               )}
             </button>
@@ -361,7 +361,7 @@ export default function EditProfile({
                       type="button"
                       className="bg-gray-500 bg-opacity-75 hover:bg-gray-600 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
                     >
-                      <i className="far fa-xmark"></i> Cancel
+                      <i className="fa-solid fa-xmark"></i> Cancel
                     </button>
                     <button
                       type="submit"
@@ -370,12 +370,12 @@ export default function EditProfile({
                     >
                       {isPersonalDetailsLoading ? (
                         <>
-                          <i className="far fa-spinner animate-spin"></i>{" "}
+                          <i className="fa-solid fa-spinner animate-spin"></i>{" "}
                           Saving...
                         </>
                       ) : (
                         <>
-                          <i className="far fa-save"></i> Save
+                          <i className="fa-solid fa-save"></i> Save
                         </>
                       )}
                     </button>

@@ -41,7 +41,7 @@ export default function MessageFileSending({ attachments }: any) {
             key={index}
             className="flex flex-col items-center justify-center"
           >
-            <i className="fas fa-file text-6xl text-gray-600"></i>
+            <i className="fa-solid fa-file text-6xl text-gray-600"></i>
             <span className="truncate text-xs w-24 text-center">
               {item?.name}
             </span>

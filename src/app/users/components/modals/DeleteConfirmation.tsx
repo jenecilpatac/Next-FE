@@ -66,14 +66,14 @@ export default function DeleteConfirmation({
                 onClick={() => handleDeleteUser(id)}
                 className="hover:scale-105 inline-flex w-full items-center gap-1 justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
               >
-                {isLoading ? <><i className="far fa-spinner animate-spin"></i> Deleting...</> : <><i className="far fa-trash"></i> Delete</>}
+                {isLoading ? <><i className="fa-solid fa-spinner animate-spin"></i> Deleting...</> : <><i className="fa-solid fa-trash"></i> Delete</>}
               </button>
               <button
                 type="button"
                 onClick={onClose}
                 className="hover:scale-105 mt-3 items-center gap-1 inline-flex w-full justify-center rounded-md bg-gray-400 text-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-500 sm:mt-0 sm:w-auto"
               >
-                <i className="far fa-xmark"></i> Cancel
+                <i className="fa-solid fa-xmark"></i> Cancel
               </button>
             </div>
           </div>

@@ -49,46 +49,9 @@ export default function RootLayout({
     <html lang="en" suppressContentEditableWarning>
       <head>
         <meta name="author" content="Allan Justine Mascariñas" />
-
         <link
           rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-duotone-solid.css"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-thin.css"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-solid.css"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-regular.css"
-        />
-
-        <link
-          rel="stylesheet"
-          href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-light.css"
-        />
-
-        <link
-          rel="shortcut icon"
-          href="https://cdn-icons-png.flaticon.com/128/2065/2065254.png"
-          type="image/x-icon"
-        />
-
-        <link
-          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         />
       </head>
       <body

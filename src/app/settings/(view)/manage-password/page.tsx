@@ -63,7 +63,7 @@ const ManagePassword = () => {
       <div className="max-w-4xl mx-auto p-6">
         <Link href="/settings" className="text-gray-600 dark:text-gray-200">
           <span className="hover:border-b">
-            <i className="far fa-arrow-left"></i> Back to settings
+            <i className="fa-solid fa-arrow-left"></i> Back to settings
           </span>
         </Link>
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mt-3 mb-6">
@@ -78,7 +78,7 @@ const ManagePassword = () => {
           </p>
           {!isNotOAuth && (
             <div className="flex gap-3 border border-yellow-500 items-center bg-yellow-400/15 text-yellow-300 mb-5 rounded-lg p-3">
-              <i className="far fa-triangle-exclamation text-4xl"></i>
+              <i className="fa-solid fa-triangle-exclamation text-4xl"></i>
               <p>
                 When logging in with Google or GitHub, your account is securely
                 linked to your credentials from those services. As a result, you

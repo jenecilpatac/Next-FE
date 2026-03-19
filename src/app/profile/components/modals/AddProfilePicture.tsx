@@ -80,7 +80,7 @@ export default function AddProfileModal({
           onClick={onClose}
           className="px-2 text-white py-0.5 rounded-full bg-gray-400 bg-opacity-75 hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75 absolute top-2 right-2"
         >
-          <i className="far fa-xmark"></i>
+          <i className="fa-solid fa-xmark"></i>
         </button>
         <div className="flex flex-col gap-2 justify-center items-center">
           <div className="relative">
@@ -106,7 +106,7 @@ export default function AddProfileModal({
                   onClick={handleCancelUpload}
                   className="bg-gray-400 text-white px-1.5 py-0.5 text-sm rounded-full mt-2 hover:-translate-y-1 transition-all duration-300 ease-in-out absolute top-0 right-2"
                 >
-                  <i className="far fa-xmark"></i>
+                  <i className="fa-solid fa-xmark"></i>
                 </button>
               </>
             )}
@@ -125,17 +125,17 @@ export default function AddProfileModal({
                 <>
                   {loading ? (
                     <>
-                      <i className="far fa-spinner animate-spin"></i> Uploading
+                      <i className="fa-solid fa-spinner animate-spin"></i> Uploading
                     </>
                   ) : (
                     <>
-                      <i className="far fa-upload"></i> Upload
+                      <i className="fa-solid fa-upload"></i> Upload
                     </>
                   )}
                 </>
               ) : (
                 <>
-                  <i className="far fa-plus"></i> Upload photo
+                  <i className="fa-solid fa-plus"></i> Upload photo
                 </>
               )}
             </button>

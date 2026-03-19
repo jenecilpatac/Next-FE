@@ -82,7 +82,7 @@ const ManagePersonalInformation = () => {
       <div className="max-w-4xl mx-auto p-6">
         <Link href="/settings" className="text-gray-600 dark:text-gray-200">
           <span className="hover:border-b">
-            <i className="far fa-arrow-left"></i> Back to settings
+            <i className="fa-solid fa-arrow-left"></i> Back to settings
           </span>
         </Link>
         <h1 className="text-3xl mt-3 font-semibold text-gray-900 dark:text-gray-100 mb-6">

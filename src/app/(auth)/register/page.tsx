@@ -107,7 +107,7 @@ const Register = () => {
             role="alert"
             aria-live="assertive"
           >
-            <i className="w-6 h-6 mr-4 far fa-triangle-exclamation mt-2 text-red-500"></i>
+            <i className="w-6 h-6 mr-4 fa-solid fa-triangle-exclamation mt-2 text-red-500"></i>
             <span className="block ml-2 sm:inline">{flashError}</span>
             <button
               onClick={handleCloseFlashError}

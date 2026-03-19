@@ -27,7 +27,7 @@ export default function pages() {
               href="/tallies/schedules"
               className="px-3 py-3 text-sm text-white bg-blue-600 rounded-lg shadow hover:bg-blue-800 hover:text-white transition"
             >
-              <i className="far fa-coins"></i> Start Betting
+              <i className="fa-solid fa-coins"></i> Start Betting
             </Link>
           </div>
           <div className="hover:scale-105 flex">
@@ -35,7 +35,7 @@ export default function pages() {
               href="/tallies/teams"
               className="px-3 py-3 text-sm text-white bg-cyan-400 rounded-lg shadow hover:bg-cyan-600 hover:text-white transition"
             >
-              <i className="far fa-users"></i> View Teams
+              <i className="fa-solid fa-users"></i> View Teams
             </Link>
           </div>
         </div>

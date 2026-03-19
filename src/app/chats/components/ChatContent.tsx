@@ -315,12 +315,12 @@ export default function ChatContent({
               <span className="float-end flex items-center gap-1">
                 {toSelectMessage?.isSeen ? (
                   <>
-                    <i className="far fa-eye text-[10px]"></i>
+                    <i className="fa-solid fa-eye text-[10px]"></i>
                     <span className="text-[10px]">Seen</span>
                   </>
                 ) : (
                   <>
-                    <i className="far fa-check text-[10px]"></i>
+                    <i className="fa-solid fa-check text-[10px]"></i>
                     <span className="text-[10px]">Delivered</span>
                   </>
                 )}

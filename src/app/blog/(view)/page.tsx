@@ -109,7 +109,7 @@ const Blog = () => {
       <div className="flex justify-between flex-wrap gap-5 items-center mb-4">
         <h1 className="text-2xl font-bold">Blog Categories</h1>
         <div className="relative">
-          <i className="far fa-magnifying-glass left-3 top-3 absolute text-gray-400"></i>
+          <i className="fa-solid fa-magnifying-glass left-3 top-3 absolute text-gray-400"></i>
           <input
             maxLength={255}
             value={searchTerm}
@@ -125,7 +125,7 @@ const Blog = () => {
             className="bg-blue-600 text-white px-4 text-sm py-2 rounded-lg hover:bg-blue-700 focus:outline-none"
             onClick={handleOpenModal}
           >
-            <i className="far fa-plus"></i> Add Category
+            <i className="fa-solid fa-plus"></i> Add Category
           </button>
         )}
       </div>

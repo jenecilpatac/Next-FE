@@ -124,7 +124,7 @@ export default function AddPost({
                 className="absolute right-4 top-3 bg-gray-400 bg-opacity-75 px-2 py-0.5 rounded-full hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75"
                 onClick={handleCloseModal}
               >
-                <i className="far fa-xmark text-black dark:text-white"></i>
+                <i className="fa-solid fa-xmark text-black dark:text-white"></i>
               </button>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function AddPost({
                 <div>
                   <p className="font-bold text-md">{user?.name}</p>
                   <div className="flex gap-1 bg-gray-300 dark:bg-gray-700 max-w-fit p-1 rounded-md items-center">
-                    <i className="far fa-earth-americas"></i>
+                    <i className="fa-solid fa-earth-americas"></i>
                     <select
                       onChange={handleInputChange("publishedAs")}
                       value={formInput.publishedAs}
@@ -218,7 +218,7 @@ export default function AddPost({
                     className="items-center flex hover:bg-gray-200 hover:dark:bg-gray-700 p-2 rounded-full"
                     onClick={() => document.getElementById("image")?.click()}
                   >
-                    <i className="far fa-image text-2xl text-green-700 dark:text-green-600"></i>
+                    <i className="fa-solid fa-image text-2xl text-green-700 dark:text-green-600"></i>
                   </button>
                   <input
                     hidden
@@ -298,11 +298,11 @@ export default function AddPost({
                 >
                   {loading ? (
                     <>
-                      <i className="far fa-spinner animate-spin"></i> Posting...
+                      <i className="fa-solid fa-spinner animate-spin"></i> Posting...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-paper-plane"></i> Post
+                      <i className="fa-solid fa-paper-plane"></i> Post
                     </>
                   )}
                 </button>

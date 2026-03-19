@@ -29,7 +29,7 @@ const About = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-gray-50 dark:bg-black hover:dark:bg-gray-800 hover:bg-gray-200 hover:scale-105 transition duration-300 ease-in-out p-6 rounded-lg shadow-xl border">
               <h3 className="text-xl font-semibold mb-2">
-                <i className="far fa-lightbulb-gear"></i> Innovation
+                <i className="fa-solid fa-lightbulb"></i> Innovation
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
                 We constantly strive to innovate and bring fresh ideas to solve
@@ -38,7 +38,7 @@ const About = () => {
             </div>
             <div className="bg-gray-50 dark:bg-black hover:dark:bg-gray-800 hover:bg-gray-200 hover:scale-105 transition duration-300 ease-in-out p-6 rounded-lg shadow-xl border">
               <h3 className="text-xl font-semibold mb-2">
-                <i className="far fa-handshake"></i> Integrity
+                <i className="fa-solid fa-handshake"></i> Integrity
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
                 We maintain the highest level of integrity in our relationships
@@ -47,7 +47,7 @@ const About = () => {
             </div>
             <div className="bg-gray-50 dark:bg-black hover:dark:bg-gray-800 hover:bg-gray-200 hover:scale-105 transition duration-300 ease-in-out p-6 rounded-lg shadow-xl border">
               <h3 className="text-xl font-semibold mb-2">
-                <i className="far fa-trophy-star"></i> Excellence
+                <i className="fa-solid fa-trophy"></i> Excellence
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
                 We are committed to excellence in every project, ensuring we
@@ -190,7 +190,7 @@ const About = () => {
           href="#"
           className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md transition duration-300 hover:translate-x-0.5 ease-in-out hover:-translate-y-0.5"
         >
-          <i className="far fa-headset"></i> Contact Us
+          <i className="fa-solid fa-headset"></i> Contact Us
         </a>
       </section>
     </div>

@@ -53,11 +53,11 @@ export default function TodoOngoing({
                   >
                     {isEdited[item.id] ? (
                       <>
-                        <i className="fas fa-xmark"></i>
+                        <i className="fa-solid fa-xmark"></i>
                       </>
                     ) : (
                       <>
-                        <i className="fas fa-pen"></i>
+                        <i className="fa-solid fa-pen"></i>
                       </>
                     )}
                   </button>
@@ -66,7 +66,7 @@ export default function TodoOngoing({
                     onClick={() => handleDeleteTodo(item.id)}
                     className="absolute top-1 right-3 text-red-500 hover:scale-110 transition-all duration-150 ease-in-out"
                   >
-                    <i className="fas fa-trash text-lg"></i>
+                    <i className="fa-solid fa-trash text-lg"></i>
                   </button>
 
                   <hr className="border-gray-300 my-2" />
@@ -83,21 +83,21 @@ export default function TodoOngoing({
                       onClick={() => handleStatusUpdate(item.id, "pending")}
                       className="hover:-translate-y-1 transition-transform duration-300"
                     >
-                      <i className="far fa-history rounded-full border border-red-500 bg-red-500 hover:bg-red-600 text-white p-2 text-xs"></i>
+                      <i className="fa-solid fa-history rounded-full border border-red-500 bg-red-500 hover:bg-red-600 text-white p-2 text-xs"></i>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStatusUpdate(item.id, "done")}
                       className="hover:-translate-y-1 transition-transform duration-300"
                     >
-                      <i className="far fa-check-double rounded-full border border-blue-900 bg-blue-800 hover:bg-blue-900 text-white p-2 text-xs"></i>
+                      <i className="fa-solid fa-check-double rounded-full border border-blue-900 bg-blue-800 hover:bg-blue-900 text-white p-2 text-xs"></i>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStatusUpdate(item.id, "cancelled")}
                       className="hover:-translate-y-1 transition-transform duration-300"
                     >
-                      <i className="far fa-ban rounded-full border border-red-900 bg-red-800 hover:bg-red-900 text-white p-2 text-xs"></i>
+                      <i className="fa-solid fa-ban rounded-full border border-red-900 bg-red-800 hover:bg-red-900 text-white p-2 text-xs"></i>
                     </button>
                   </div>
                 </div>

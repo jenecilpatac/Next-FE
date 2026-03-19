@@ -116,7 +116,7 @@ const Users = () => {
           onClick={handleOpenModal}
           className="bg-blue-500 hover:bg-blue-600 hover:scale-105 text-white transition-all duration-300 ease-in-out text-md px-2 py-1 rounded"
         >
-          <i className="far fa-user-plus"></i> Add User
+          <i className="fa-solid fa-user-plus"></i> Add User
         </button>
       </div>
       <hr />

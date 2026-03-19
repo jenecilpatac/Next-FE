@@ -19,7 +19,7 @@ export default function NotFound() {
             href="/"
             className="inline-flex text-white bg-blue-600 hover:bg-blue-700 hover:scale-105 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center my-4"
           >
-            <i className="far fa-arrow-left mr-2 mt-0.5" /> Back to Homepage
+            <i className="fa-solid fa-arrow-left mr-2 mt-0.5" /> Back to Homepage
           </Link>
         </div>
       </div>

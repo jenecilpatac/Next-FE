@@ -188,11 +188,11 @@ const Page = () => {
                 >
                   {isLoading ? (
                     <>
-                      <i className="fas fa-spinner animate-spin"></i> Adding...
+                      <i className="fa-solid fa-spinner animate-spin"></i> Adding...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-edit"></i> Update Todo
+                      <i className="fa-solid fa-edit"></i> Update Todo
                     </>
                   )}
                 </button>
@@ -245,11 +245,11 @@ const Page = () => {
                 >
                   {isLoading ? (
                     <>
-                      <i className="fas fa-spinner animate-spin"></i> Adding...
+                      <i className="fa-solid fa-spinner animate-spin"></i> Adding...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-plus"></i> Add Todo
+                      <i className="fa-solid fa-plus"></i> Add Todo
                     </>
                   )}
                 </button>
@@ -294,7 +294,7 @@ const Page = () => {
             ) : (
               <div className="text-center flex flex-col items-center justify-center h-full">
                 <p className="text-[70px] mb-3">
-                  <i className="far fa-memo-circle-info text-[70px]"></i>
+                  <i className="fa-solid fa-memo-circle-info text-[70px]"></i>
                 </p>
                 <p className="text-2xl">You have no posted/pending todo yet.</p>
               </div>
@@ -306,7 +306,7 @@ const Page = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
         <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
           <h4 className="text-xl font-semibold mb-2 bg-blue-400 text-center rounded-md py-2 text-white">
-            <i className="far fa-arrows-rotate"></i> Ongoing
+            <i className="fa-solid fa-arrows-rotate"></i> Ongoing
           </h4>
           <hr />
           <div className="flex flex-col gap-4">
@@ -322,7 +322,7 @@ const Page = () => {
         </div>
         <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
           <h4 className="text-xl font-semibold mb-2 bg-blue-700 text-center rounded-md py-2 text-white">
-            <i className="far fa-memo-circle-check"></i> Completed
+            <i className="fa-solid fa-memo-circle-check"></i> Completed
           </h4>
           <hr />
           <div className="flex flex-col gap-4">
@@ -338,7 +338,7 @@ const Page = () => {
         </div>
         <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
           <h4 className="text-xl font-semibold mb-2 bg-red-500 text-center rounded-md py-2 text-white">
-            <i className="far fa-ban"></i> Cancelled
+            <i className="fa-solid fa-ban"></i> Cancelled
           </h4>
           <hr />
           <div className="flex flex-col gap-4">

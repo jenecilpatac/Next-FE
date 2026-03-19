@@ -233,7 +233,7 @@ const Video = ({ url }: any) => {
             >
               <div className="text-white p-3 flex gap-2 items-center rounded-3xl bg-black/30">
                 <span>5s</span>
-                <i className="fas fa-backward text-xl" />
+                <i className="fa-solid fa-backward text-xl" />
               </div>
             </div>
 
@@ -250,9 +250,9 @@ const Video = ({ url }: any) => {
                 }`}
               >
                 {isPlaying ? (
-                  <i className="fas fa-pause text-xl bg-black/30 py-3 px-4 rounded-full" />
+                  <i className="fa-solid fa-pause text-xl bg-black/30 py-3 px-4 rounded-full" />
                 ) : (
-                  <i className="fas fa-play text-lg bg-black/30 py-[11.5px] px-4 rounded-full" />
+                  <i className="fa-solid fa-play text-lg bg-black/30 py-[11.5px] px-4 rounded-full" />
                 )}
               </div>
             </div>
@@ -265,7 +265,7 @@ const Video = ({ url }: any) => {
               onDoubleClick={nextFiveSeconds}
             >
               <div className="text-white p-3 gap-2 flex items-center rounded-3xl bg-black/30">
-                <i className="fas fa-forward text-xl" /> <span>5s</span>
+                <i className="fa-solid fa-forward text-xl" /> <span>5s</span>
               </div>
             </div>
           </div>
@@ -319,7 +319,7 @@ const Video = ({ url }: any) => {
                 onClick={prevFiveSeconds}
                 className="text-white py-2 px-1 rounded-lg"
               >
-                <i className="fas fa-backward text-xl" />
+                <i className="fa-solid fa-backward text-xl" />
               </button>
 
               {/* Play/Pause Button */}
@@ -328,9 +328,9 @@ const Video = ({ url }: any) => {
                 className="text-white py-2 px-1 rounded-lg"
               >
                 {isPlaying ? (
-                  <i className="fas fa-pause text-xl" />
+                  <i className="fa-solid fa-pause text-xl" />
                 ) : (
-                  <i className="fas fa-play text-xl" />
+                  <i className="fa-solid fa-play text-xl" />
                 )}
               </button>
 
@@ -339,7 +339,7 @@ const Video = ({ url }: any) => {
                 onClick={nextFiveSeconds}
                 className="text-white py-2 px-1 rounded-lg"
               >
-                <i className="fas fa-forward text-xl" />
+                <i className="fa-solid fa-forward text-xl" />
               </button>
 
               {/* Duration */}
@@ -361,16 +361,16 @@ const Video = ({ url }: any) => {
                 className="text-white py-2 px-1 rounded-lg"
               >
                 {isTheaterMode ? (
-                  <i className="far fa-rectangle text-xl" />
+                  <i className="fa-solid fa-rectangle text-xl" />
                 ) : (
-                  <i className="far fa-rectangle-wide text-xl" />
+                  <i className="fa-solid fa-rectangle-wide text-xl" />
                 )}
               </button>
               <button
                 onClick={toggleFullscreen}
                 className="text-white py-2 px-1 rounded-lg"
               >
-                <i className="fas fa-expand text-xl" />
+                <i className="fa-solid fa-expand text-xl" />
               </button>
             </div>
           </div>

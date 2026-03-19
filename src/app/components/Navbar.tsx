@@ -106,17 +106,25 @@ const Navbar = () => {
             {dropdownOpen && (
               <div
                 ref={dropdownRef}
-                className="border shadow-md dark:border-gray-600 border-gray-200 absolute z-50 mt-4 text-base list-none bg-white divide-y divide-gray-100 min-w-52 rounded-lg dark:bg-gray-700 dark:divide-gray-600 right-12 top-9 md:right-0 md:top-6"
+                className="border shadow-md dark:border-gray-600 border-gray-200 absolute z-50 mt-4 text-base w-64 list-none bg-white divide-y divide-gray-100 min-w-52 rounded-lg dark:bg-gray-700 dark:divide-gray-600 right-12 top-9 md:right-0 md:top-6"
               >
                 <div className="absolute right-3 top-[-4px] transform rotate-45 bg-white dark:bg-gray-700 w-2 h-2"></div>
                 <Link href={"/profile"} onClick={toggleDropdown}>
-                  <div className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600">
-                    <span className="block text-sm text-gray-900 dark:text-white">
-                      {user?.name}
-                    </span>
-                    <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                      {user?.email}
-                    </span>
+                  <div className="flex gap-1 items-center px-3 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <Image
+                      avatar={isSetProfile && isSetProfile[0]?.avatar}
+                      alt={user?.name}
+                      h={8}
+                      w={8}
+                    />
+                    <div className="px-4 py-3">
+                      <span className="block text-sm text-gray-900 dark:text-white">
+                        {user?.name}
+                      </span>
+                      <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                        {user?.email}
+                      </span>
+                    </div>
                   </div>
                 </Link>
                 <ul className="py-2" aria-labelledby="user-menu-button">
@@ -126,7 +134,7 @@ const Navbar = () => {
                       href="/dashboard"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                      Dashboard
+                      <i className="fa-solid fa-gauge"></i> Dashboard
                     </Link>
                   </li>
                   <li>
@@ -136,7 +144,7 @@ const Navbar = () => {
                       target="_blank"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                      Chats
+                      <i className="fa-solid fa-comments"></i> Chats
                     </Link>
                   </li>
                   <li>
@@ -145,7 +153,7 @@ const Navbar = () => {
                       href="/settings"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                      Settings
+                      <i className="fa-solid fa-gears"></i> Settings
                     </Link>
                   </li>
                   <li></li>
@@ -158,6 +166,7 @@ const Navbar = () => {
                       }}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
+                      <i className="fa-solid fa-arrow-right-from-bracket"></i>{" "}
                       Sign out
                     </a>
                   </li>
@@ -175,9 +184,9 @@ const Navbar = () => {
             >
               <span className="sr-only">Open main menu</span>
               {menuOpen ? (
-                <i className="far fa-xmark"></i>
+                <i className="fa-solid fa-xmark"></i>
               ) : (
-                <i className="fas fa-bars-staggered"></i>
+                <i className="fa-solid fa-bars-staggered"></i>
               )}
             </button>
           </div>

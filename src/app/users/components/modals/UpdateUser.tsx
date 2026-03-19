@@ -103,7 +103,7 @@ export default function UpdateUser({
           onClick={handleClose}
           className="px-2 text-white py-0.5 rounded-full bg-gray-400 bg-opacity-75 hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75 absolute top-2 right-2"
         >
-          <i className="far fa-xmark"></i>
+          <i className="fa-solid fa-xmark"></i>
         </button>
         <h2 className="text-xl font-bold mb-4">Updating {userName}...</h2>
         <hr className="border-gray-500" />
@@ -235,7 +235,7 @@ export default function UpdateUser({
                   type="button"
                   className="px-2 py-1.5 rounded-md bg-gray-400 hover:scale-105 transition-all duration-300 ease-in-out hover:bg-gray-500"
                 >
-                  <i className="far fa-xmark"></i> Close
+                  <i className="fa-solid fa-xmark"></i> Close
                 </button>
                 <button
                   type="submit"
@@ -244,12 +244,12 @@ export default function UpdateUser({
                 >
                   {isLoading ? (
                     <>
-                      <i className="far fa-spinner animate-spin"></i>{" "}
+                      <i className="fa-solid fa-spinner animate-spin"></i>{" "}
                       Updating...
                     </>
                   ) : (
                     <>
-                      <i className="far fa-save"></i> Update
+                      <i className="fa-solid fa-save"></i> Update
                     </>
                   )}
                 </button>

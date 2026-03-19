@@ -109,7 +109,7 @@ export default function AvatarList({ image, setIsRefresh }: any) {
               onClick={toggleDropdown}
               className="bg-gray-500 bg-opacity-80 rounded-full px-2.5 py-1 hover:-translate-x-1 transition-all duration-300 ease-in-out"
             >
-              <i className="far fa-pen text-white"></i>
+              <i className="fa-solid fa-pen text-white"></i>
             </button>
             {dropdownOpen && (
               <div

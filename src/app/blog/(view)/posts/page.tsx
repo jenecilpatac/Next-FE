@@ -111,7 +111,7 @@ const Posts = () => {
           <h1 className="text-2xl font-bold">Posts</h1>
         </div>
         <div className="relative">
-          <i className="far fa-magnifying-glass left-3 top-3 absolute text-gray-400"></i>
+          <i className="fa-solid fa-magnifying-glass left-3 top-3 absolute text-gray-400"></i>
           <input
             value={searchTerm}
             maxLength={255}
@@ -129,7 +129,7 @@ const Posts = () => {
               onClick={handleOpenModal}
               className="px-3 py-2 text-sm bg-blue-500 hover:bg-blue-600 hover:scale-105 transition-all duration-300 ease-in-out text-white rounded-md active:bg-blue-700"
             >
-              <i className="far fa-plus"></i> Add Post
+              <i className="fa-solid fa-plus"></i> Add Post
             </button>
           </div>
         )}
@@ -168,7 +168,7 @@ const Posts = () => {
         {data?.posts && (
           <div className="flex justify-center items-center">
             {loadingOnTake ? (
-              <i className="fa-duotone fas fa-spinner-third animate-spin"></i>
+              <i className="fa-duotone fa-solid fa-spinner-third animate-spin"></i>
             ) : error ? (
               <p className="text-sm dark:text-gray-500 text-gray-400 font-bold">
                 {error.message}

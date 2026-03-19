@@ -86,7 +86,7 @@ export default function MessageBody({
           offset > 40 ? "opacity-100" : "opacity-0 -mr-8"
         }`}
       >
-        <i className="far fa-reply text-xl"></i>
+        <i className="fa-solid fa-reply text-xl"></i>
       </div>
       {!IS_MOBILE && (
         <div className="justify-center flex mr-1 items-center">
@@ -100,14 +100,14 @@ export default function MessageBody({
               className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
               onClick={handleOpenReactions(messageId)}
             >
-              <i className="far fa-smile"></i>
+              <i className="fa-solid fa-smile"></i>
             </button>
             <button
               onClick={handleIsReplying}
               type="button"
               className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
             >
-              <i className="far fa-reply"></i>
+              <i className="fa-solid fa-reply"></i>
             </button>
             <button
               className="px-2.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
@@ -115,7 +115,7 @@ export default function MessageBody({
               onClick={handleOpen(messageId)}
               ref={buttonRef}
             >
-              <i className="far fa-ellipsis-vertical"></i>
+              <i className="fa-solid fa-ellipsis-vertical"></i>
             </button>
             {isOpen[messageId] && (
               <div
@@ -131,7 +131,7 @@ export default function MessageBody({
                         className="w-full text-start"
                         onClick={handleOpenModal(messageId, "edit")}
                       >
-                        <i className="far fa-pen"></i> Edit
+                        <i className="fa-solid fa-pen"></i> Edit
                       </button>
                     </li>
                   )}
@@ -141,7 +141,7 @@ export default function MessageBody({
                       className="w-full text-start"
                       onClick={handleOpenModal(messageId, "delete")}
                     >
-                      <i className="far fa-trash"></i> Unsend
+                      <i className="fa-solid fa-trash"></i> Unsend
                     </button>
                   </li>
                 </ul>
@@ -164,7 +164,7 @@ export default function MessageBody({
         {parent && (
           <div className="flex py-2 flex-col -mb-5">
             <div className="text-sm self-end">
-              <i className="far fa-reply"></i> You replied to{" "}
+              <i className="fa-solid fa-reply"></i> You replied to{" "}
               {parent?.userId === user?.id
                 ? "Yourself"
                 : parent?.sentBy?.name ?? "Anonymous"}
@@ -268,7 +268,7 @@ export default function MessageBody({
                 key={index}
                 className="flex gap-2 items-center self-end"
               >
-                <i className="far fa-file text-2xl"></i>
+                <i className="fa-solid fa-file text-2xl"></i>
                 <span className="text-md">
                   {item?.value?.split("/")?.pop()}
                 </span>

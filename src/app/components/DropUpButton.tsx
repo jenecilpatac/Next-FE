@@ -56,11 +56,11 @@ export default function DropUpButton() {
         {!mounted ? (
           <i className="far cursor-pointer fa-eclipse"></i>
         ) : activeTheme === "dark" ? (
-          <i className="far fa-moon-stars cursor-pointer text-blue-500"></i>
+          <i className="fa-solid fa-moon-stars cursor-pointer text-blue-500"></i>
         ) : activeTheme === "light" ? (
-          <i className="far fa-sun-bright cursor-pointer text-yellow-500"></i>
+          <i className="fa-solid fa-sun-bright cursor-pointer text-yellow-500"></i>
         ) : activeTheme === "system" ? (
-          <i className="far fa-computer cursor-pointer text-gray-500"></i>
+          <i className="fa-solid fa-computer cursor-pointer text-gray-500"></i>
         ) : null}
       </button>
 
@@ -79,7 +79,7 @@ export default function DropUpButton() {
               }`}
             >
               <i
-                className={`far fa-moon-stars ${
+                className={`fa-solid fa-moon-stars ${
                   activeTheme === "dark" ? "text-blue-600" : "text-blue-500"
                 }`}
               ></i>
@@ -95,7 +95,7 @@ export default function DropUpButton() {
               }`}
             >
               <i
-                className={`far fa-sun-bright ${
+                className={`fa-solid fa-sun-bright ${
                   activeTheme === "light"
                     ? "text-yellow-600"
                     : "text-yellow-500"
@@ -113,7 +113,7 @@ export default function DropUpButton() {
               }`}
             >
               <i
-                className={`far fa-computer ${
+                className={`fa-solid fa-computer ${
                   activeTheme === "system" ? "text-gray-600" : "text-gray-500"
                 }`}
               ></i>

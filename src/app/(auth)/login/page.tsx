@@ -126,14 +126,14 @@ const Login = () => {
             role="alert"
             aria-live="assertive"
           >
-            <i className="w-6 h-6 far fa-triangle-exclamation mt-2 text-red-500 text-2xl"></i>
+            <i className="w-6 h-6 fa-solid fa-triangle-exclamation mt-2 text-red-500 text-2xl"></i>
             <span className="block ml-3 pr-2 sm:inline">{flashError}</span>
             <button
               onClick={handleCloseFlashError}
               className="ml-auto absolute right-3 text-red-500 hover:text-red-700 focus:outline-none"
               aria-label="Close alert"
             >
-              <i className="far fa-xmark"></i>
+              <i className="fa-solid fa-xmark"></i>
             </button>
           </div>
         ) : (
@@ -143,14 +143,14 @@ const Login = () => {
               role="alert"
               aria-live="assertive"
             >
-              <i className="w-6 h-6 far fa-triangle-exclamation mt-2 text-green-500 text-2xl"></i>
+              <i className="w-6 h-6 fa-solid fa-triangle-exclamation mt-2 text-green-500 text-2xl"></i>
               <span className="block ml-3 pr-2 sm:inline">{flashSuccess}</span>
               <button
                 onClick={handleCloseFlashSuccess}
                 className="ml-auto absolute right-3 text-green-500 hover:text-green-700 focus:outline-none"
                 aria-label="Close alert"
               >
-                <i className="far fa-xmark"></i>
+                <i className="fa-solid fa-xmark"></i>
               </button>
             </div>
           )

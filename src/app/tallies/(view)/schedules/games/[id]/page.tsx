@@ -50,7 +50,7 @@ export default function page() {
               href="/tallies/schedules"
               className="font-semibold py-2 px-4 rounded hover:text-blue-600"
             >
-              <i className="far fa-arrow-left"></i> Back to Schedules
+              <i className="fa-solid fa-arrow-left"></i> Back to Schedules
             </Link>
           </div>
           <div className="p-5 max-w-xl rounded shadow-xl dark:bg-gray-900 bg-gray-50">

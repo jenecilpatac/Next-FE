@@ -98,14 +98,14 @@ export default function SinglePost({
                       onClick={prevImage}
                       className="absolute top-1/2 left-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
                     >
-                      <i className="fas fa-chevron-left"></i>
+                      <i className="fa-solid fa-chevron-left"></i>
                     </button>
 
                     <button
                       onClick={nextImage}
                       className="absolute top-1/2 right-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
                     >
-                      <i className="fas fa-chevron-right"></i>
+                      <i className="fa-solid fa-chevron-right"></i>
                     </button>
                   </>
                 )}
@@ -154,7 +154,7 @@ export default function SinglePost({
         <div className="p-3 flex justify-between gap-2 items-center border-t border-gray-200 dark:border-gray-700">
           <div className="text-sm text-gray-900 dark:text-gray-300 flex items-center relative">
             <span className="absolute top-1 font-bold left-2 px-2 py-1 rounded-md text-xs bg-gray-300 text-gray-700 dark:text-gray-100 dark:bg-gray-600">
-              <i className="far fa-microphone-stand text-xs"></i>{" "}
+              <i className="fa-solid fa-microphone-stand text-xs"></i>{" "}
               Author
             </span>
             <span className="px-2 pb-2 pt-8 bg-gray-100 text-gray-900 dark:text-gray-200 min-w-24 dark:bg-gray-700 rounded-lg font-bold text-xs flex gap-1 items-center">
@@ -179,19 +179,19 @@ export default function SinglePost({
             <span>
               {post?.publishedAs === "public" ? (
                 <>
-                  <i className="far fa-earth-americas"></i>
+                  <i className="fa-solid fa-earth-americas"></i>
                 </>
               ) : post?.publishedAs === "private" ? (
                 <>
-                  <i className="far fa-lock"></i>
+                  <i className="fa-solid fa-lock"></i>
                 </>
               ) : post?.publishedAs === "friends" ? (
                 <>
-                  <i className="far fa-user-group"></i>
+                  <i className="fa-solid fa-user-group"></i>
                 </>
               ) : (
                 <>
-                  <i className="far fa-signs-posts"></i>
+                  <i className="fa-solid fa-signs-posts"></i>
                 </>
               )}{" "}
               •{" "}
@@ -206,7 +206,7 @@ export default function SinglePost({
             <div className="cursor-pointer flex gap-2 items-center">
               {post?.likes.length > 0 && (
                 <>
-                  <i className="fas fa-thumbs-up text-blue-500"></i>
+                  <i className="fa-solid fa-thumbs-up text-blue-500"></i>
                   <span>{post?.likes.length}</span>
                 </>
               )}
@@ -265,7 +265,7 @@ export default function SinglePost({
               <button type="button">
                 {post?.comments.length > 0 && (
                   <span className="hover:border-b relative group border-gray-600 dark:border-gray-300">
-                    <i className="far fa-comment"></i>
+                    <i className="fa-solid fa-comment"></i>
                     <span className="ml-1">
                       {post?.comments.length}{" "}
                       {post?.comments.length === 1 ? "comment" : "comments"}
@@ -308,7 +308,7 @@ export default function SinglePost({
               </button>
               <button type="button">
                 <span className="hover:border-b border-gray-600 dark:border-gray-300">
-                  <i className="far fa-share"></i>{" "}
+                  <i className="fa-solid fa-share"></i>{" "}
                   <span className="ml-1">10</span>
                 </span>
               </button>

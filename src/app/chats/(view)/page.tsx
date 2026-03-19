@@ -496,7 +496,7 @@ const Chats = () => {
               placeholder="Search Chats"
               onChange={handleSearchTerm}
             />
-            <i className="far fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
+            <i className="fa-solid fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
           </div>
         </div>
         <div className="overflow-y-auto h-[calc(100vh-80px)]">
@@ -555,13 +555,13 @@ const Chats = () => {
           </div>
           <div className="flex items-center space-x-4">
             <button className="text-white">
-              <i className="fas fa-users" />
+              <i className="fa-solid fa-users" />
             </button>
             <button className="text-white">
-              <i className="fas fa-info-circle" />
+              <i className="fa-solid fa-info-circle" />
             </button>
             <button className="text-white">
-              <i className="fas fa-cog" />
+              <i className="fa-solid fa-cog" />
             </button>
           </div>
         </div>
@@ -588,7 +588,7 @@ const Chats = () => {
                 <div className="justify-center flex mr-1 items-center">
                   <div className="group-hover:block hidden">
                     <button className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full">
-                      <i className="far fa-ellipsis-vertical"></i>
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
                     </button>
                   </div>
                 </div>
@@ -741,7 +741,7 @@ const Chats = () => {
             <p className="text-center mb-20 items-center">
               Be the first to start a conversation in{" "}
               <strong>Public Chats</strong>. Say <strong>HI</strong>{" "}
-              <i className="fas fa-hand-wave text-xl"></i>{" "}
+              <i className="fa-solid fa-hand-wave text-xl"></i>{" "}
             </p>
           )}
           {loadingOnTake && (
@@ -767,7 +767,7 @@ const Chats = () => {
               className="py-3 px-3.5 text-white hover:bg-gray-400/75 hover:dark:bg-gray-500/75 dark:border-gray-400 border-gray-300 flex place-items-center rounded-full border bg-gray-400 dark:bg-gray-500"
               type="button"
             >
-              <i className="far fa-arrow-down"></i>
+              <i className="fa-solid fa-arrow-down"></i>
             </button>
           </div>
           <MessageFileUpload
@@ -806,7 +806,7 @@ const Chats = () => {
               >
                 <button type="button" onClick={handleEmojiPickerOpen}>
                   <i
-                    className={`fas fa-smile ${
+                    className={`fa-solid fa-smile ${
                       isEmojiPickerOpen
                         ? "text-yellow-500"
                         : "dark:text-white text-gray-600 hover:dark:text-gray-400 hover:text-gray-500"

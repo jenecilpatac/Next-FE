@@ -22,21 +22,21 @@ export default function PendingStatusTodoList({
           onClick={() => handleStatusUpdate(item.id, "ongoing")}
           className="hover:-translate-y-1 transition-all duration-300 ease-in-out"
         >
-          <i className="far fa-check rounded-full border-green-600 hover:bg-green-500 hover:text-white text-green-600 border p-2 text-xs"></i>
+          <i className="fa-solid fa-check rounded-full border-green-600 hover:bg-green-500 hover:text-white text-green-600 border p-2 text-xs"></i>
         </button>
         <button
           type="button"
           onClick={() => handleStatusUpdate(item.id, "done")}
           className="hover:-translate-y-1 transition-all duration-300 ease-in-out"
         >
-          <i className="far fa-check-double rounded-full border-blue-600 hover:bg-blue-500 hover:text-white text-blue-400 border p-2 text-xs"></i>
+          <i className="fa-solid fa-check-double rounded-full border-blue-600 hover:bg-blue-500 hover:text-white text-blue-400 border p-2 text-xs"></i>
         </button>
         <button
           type="button"
           onClick={() => handleStatusUpdate(item.id, "cancelled")}
           className="hover:-translate-y-1 transition-all duration-300 ease-in-out"
         >
-          <i className="far fa-ban rounded-full border-red-600 hover:bg-red-500 hover:text-white text-red-600 border p-2 text-xs"></i>
+          <i className="fa-solid fa-ban rounded-full border-red-600 hover:bg-red-500 hover:text-white text-red-600 border p-2 text-xs"></i>
         </button>
       </div>
     </div>

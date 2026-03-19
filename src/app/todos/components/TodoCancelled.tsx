@@ -39,7 +39,7 @@ export default function TodoCancelled({
                     onClick={() => handleDeleteTodo(item.id)}
                     className="text-red-900 absolute top-1 right-3 hover:scale-110 transition-all duration-100 ease-in-out"
                   >
-                    <i className="fas fa-trash text-1xl"></i>
+                    <i className="fa-solid fa-trash text-1xl"></i>
                   </button>
                   <hr />
                   <p className="mt-2 break-words whitespace-break-spaces">
@@ -51,28 +51,28 @@ export default function TodoCancelled({
                       onClick={() => handleStatusUpdate(item.id, "pending")}
                       className="hidden group-hover:block hover:-translate-y-1 transition-all duration-300 ease-in-out"
                     >
-                      <i className="far fa-history rounded-full border-red-500 bg-red-800 hover:bg-red-900 text-white border p-2 text-xs"></i>
+                      <i className="fa-solid fa-history rounded-full border-red-500 bg-red-800 hover:bg-red-900 text-white border p-2 text-xs"></i>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStatusUpdate(item.id, "ongoing")}
                       className="hidden group-hover:block hover:-translate-y-1 transition-all duration-300 ease-in-out"
                     >
-                      <i className="far fa-check rounded-full border-blue-500 bg-blue-400 hover:bg-blue-500 text-white border p-2 text-xs"></i>
+                      <i className="fa-solid fa-check rounded-full border-blue-500 bg-blue-400 hover:bg-blue-500 text-white border p-2 text-xs"></i>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStatusUpdate(item.id, "done")}
                       className="hidden group-hover:block hover:-translate-y-1 transition-all duration-300 ease-in-out"
                     >
-                      <i className="far fa-check-double rounded-full border-blue-900 bg-blue-800 hover:bg-blue-900 text-white border p-2 text-xs"></i>
+                      <i className="fa-solid fa-check-double rounded-full border-blue-900 bg-blue-800 hover:bg-blue-900 text-white border p-2 text-xs"></i>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleStatusUpdate(item.id, "cancelled")}
                       className="hidden group-hover:block hover:-translate-y-1 transition-all duration-300 ease-in-out"
                     >
-                      <i className="far fa-ban rounded-full border-red-900 bg-red-800 hover:bg-red-900 text-white border p-2 text-xs"></i>
+                      <i className="fa-solid fa-ban rounded-full border-red-900 bg-red-800 hover:bg-red-900 text-white border p-2 text-xs"></i>
                     </button>
                   </div>
                 </div>

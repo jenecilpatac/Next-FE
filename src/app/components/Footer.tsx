@@ -105,7 +105,7 @@ export default function Footer() {
                 type="submit"
                 className="w-full py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-400 hover:translate-x-1 hover:-translate-y-1 transition-all duration-300 ease-in-out"
               >
-                <i className="far fa-paper-plane"></i> Subscribe
+                <i className="fa-solid fa-paper-plane"></i> Subscribe
               </button>
             </form>
           </div>

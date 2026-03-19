@@ -37,7 +37,7 @@ const Settings = () => {
                 className="text-end hover:scale-105"
               >
                 <span className="px-4 py-2 rounded-md text-white bg-sky-500 hover:bg-sky-600 focus:outline-none">
-                  <i className="far fa-address-book"></i> Manage Profile
+                  <i className="fa-solid fa-address-book"></i> Manage Profile
                   Information
                 </span>
               </Link>
@@ -46,7 +46,7 @@ const Settings = () => {
                 className="text-end hover:scale-105"
               >
                 <span className="px-4 py-2 rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none">
-                  <i className="far fa-shield"></i> Manage Password
+                  <i className="fa-solid fa-shield"></i> Manage Password
                 </span>
               </Link>
             </div>

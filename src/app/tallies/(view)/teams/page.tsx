@@ -35,7 +35,7 @@ export default function page() {
             href={"/tallies"}
             className="px-3 py-3 text-sm text-white hover:scale-105 bg-blue-600 rounded-lg shadow hover:bg-blue-800 hover:text-white transition"
           >
-            <i className="far fa-arrow-left"></i> Back to Tallies
+            <i className="fa-solid fa-arrow-left"></i> Back to Tallies
           </Link>
         </div>
         <h1 className="text-3xl font-semibold text-gray-800 dark:text-white mb-4 text-center">

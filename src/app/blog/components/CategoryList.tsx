@@ -14,7 +14,7 @@ export default function CategoryList({
     >
       {hasHigherRole && (
         <button className="absolute top-3 right-4" onClick={handleDeleteCategory} type="button">
-          <i className="far fa-xmark"></i>
+          <i className="fa-solid fa-xmark"></i>
         </button>
       )}
       <div className="h-auto min-h-32 overflow-hidden mb-5">
@@ -44,7 +44,7 @@ export default function CategoryList({
         className="text-blue-600 hover:text-blue-500 absolute bottom-3"
         href={`/blog/posts/${post.slug}`}
       >
-        View posts <i className="far fa-arrow-right text-xs"></i>
+        View posts <i className="fa-solid fa-arrow-right text-xs"></i>
       </Link>
     </div>
   );
