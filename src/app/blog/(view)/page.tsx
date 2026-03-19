@@ -18,7 +18,7 @@ const Blog = () => {
   const { data, loading, error }: any = useFetch(
     "/categories",
     isRefresh,
-    false
+    false,
   );
   const { showSuccess, showError } = useToastr();
   const [seemore, setSeemore] = useState<any>({});
@@ -69,7 +69,7 @@ const Blog = () => {
           post.description
             .toLowerCase()
             .includes(searchTerm.trim().toLowerCase()) ||
-          post.slug.toLowerCase().includes(searchTerm.trim().toLowerCase())
+          post.slug.toLowerCase().includes(searchTerm.trim().toLowerCase()),
       )
     : [];
 
@@ -97,7 +97,10 @@ const Blog = () => {
       }
     } catch (error: any) {
       console.error(error);
-      showError(error?.response?.data || `${error.message} or server error.`, "Error");
+      showError(
+        error?.response?.data || `${error.message} or server error.`,
+        "Error",
+      );
     } finally {
       setIsLoading(false);
       setIsRefresh(false);
@@ -106,31 +109,42 @@ const Blog = () => {
 
   return (
     <div className="mx-auto p-4 dark:bg-black">
-      <div className="flex justify-between flex-wrap gap-5 items-center mb-4">
-        <h1 className="text-2xl font-bold">Blog Categories</h1>
-        <div className="relative">
-          <i className="fa-solid fa-magnifying-glass left-3 top-3 absolute text-gray-400"></i>
-          <input
-            maxLength={255}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            type="search"
-            className="py-2 pl-9 pr-2 rounded-lg active:ring-1 active:ring-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none border border-gray-400"
-            placeholder="Search..."
-          />
+      <div className="mb-6">
+        <div className="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Blog Categories
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Browse and explore all available categories
+            </p>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative">
+              <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+              <input
+                maxLength={255}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                type="search"
+                className="py-2 pl-9 pr-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                placeholder="Search categories..."
+              />
+            </div>
+            {isAuthenticated && hasHigherRole && (
+              <button
+                ref={buttonRef}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                onClick={handleOpenModal}
+              >
+                <i className="fa-solid fa-plus text-xs"></i> Add Category
+              </button>
+            )}
+          </div>
         </div>
-        {isAuthenticated && hasHigherRole && (
-          <button
-            ref={buttonRef}
-            className="bg-blue-600 text-white px-4 text-sm py-2 rounded-lg hover:bg-blue-700 focus:outline-none"
-            onClick={handleOpenModal}
-          >
-            <i className="fa-solid fa-plus"></i> Add Category
-          </button>
-        )}
+        <hr className="mt-4 border-gray-200 dark:border-gray-700" />
       </div>
-      <hr />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 my-8 overflow-hidden">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 overflow-hidden">
         {loading ? (
           <CategoryLoader />
         ) : filteredPosts?.length > 0 ? (
@@ -143,28 +157,32 @@ const Blog = () => {
               seemore={seemore}
               handleDeleteCategory={handleDeleteCategory(
                 post.id,
-                post.categoryName
+                post.categoryName,
               )}
             />
           ))
         ) : (
-          <div className="flex justify-center items-center col-span-full h-64 rounded-lg shadow-md">
+          <div className="flex justify-center items-center col-span-full py-20">
             <div className="text-center">
-              <h1 className="text-xl font-semibold text-gray-700 dark:text-white mb-4">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fa-solid fa-folder-open text-2xl text-gray-400"></i>
+              </div>
+              <h1 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
                 {searchTerm
                   ? "No results found"
                   : data.message || "No Blog Categories Added Yet"}
               </h1>
-              <p className="text-gray-600 dark:text-gray-300 w-96">
+              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                 {searchTerm ? (
                   <>
-                    It looks like there are no categories available on your
-                    search "
-                    <span className="font-bold break-words">{searchTerm}</span>
+                    No categories match "
+                    <span className="font-semibold break-words">
+                      {searchTerm}
+                    </span>
                     ".
                   </>
                 ) : (
-                  "It looks like there are no categories available right now. Be patient and check back later!"
+                  "No categories available right now. Check back later!"
                 )}
               </p>
             </div>
@@ -180,7 +198,9 @@ const Blog = () => {
 
       <ConfirmDelete
         title={`Are you sure you want to delete ${categoryName}?`}
-        handleProceedDeleteCategory={handleProceedDeleteCategory(isDeleteOpen.id)}
+        handleProceedDeleteCategory={handleProceedDeleteCategory(
+          isDeleteOpen.id,
+        )}
         isOpen={isDeleteOpen.open}
         isLoading={isLoading}
         onClose={handleDeleteCategory(isDeleteOpen.id, categoryName)}
