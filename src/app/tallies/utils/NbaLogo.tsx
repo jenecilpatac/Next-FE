@@ -63,12 +63,21 @@ const teamLogos: { [key: string]: string } = {
     "https://loodibee.com/wp-content/uploads/nba-washington-wizards-logo-300x300.png",
 };
 
-const NbaLogo = ({ teamName }: NbaLogoProps) => {
+const NbaLogo = ({
+  teamName,
+  className = "w-36 h-36",
+}: NbaLogoProps & { className?: string }) => {
   const logo =
     teamLogos[teamName] ||
     "https://loodibee.com/wp-content/uploads/nba-logo-transparent-300x300.png";
 
-  return <img src={logo} alt={`${teamName} logo`} />;
+  return (
+    <img
+      src={logo}
+      alt={`${teamName} logo`}
+      className={`object-contain ${className}`}
+    />
+  );
 };
 
 export default NbaLogo;
