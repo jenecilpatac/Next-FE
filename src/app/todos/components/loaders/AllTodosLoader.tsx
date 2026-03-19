@@ -1,24 +1,26 @@
 export default function AllTodosLoader() {
   return (
     <>
-      {Array.from(Array(12)).map((_, index) => (
-        <div key={index}>
-          <div className="h-40 p-5 dark:bg-gray-900 bg-gray-50 shadow-md w-full rounded-lg transition-all duration-300 ease-in-out z-0">
-            <div className="relative mb-2">
-              <div className="h-5 bg-slate-300 dark:bg-slate-400 rounded w-3/4 animate-pulse"></div>
-              <div className="absolute -right-3 mt-1 -top-5">
-                <span className="inline-block w-12 h-4 bg-slate-300 dark:bg-slate-400 rounded animate-pulse"></span>
-              </div>
-            </div>
-            <hr />
-            <div className="mt-2">
-              <div className="h-10 bg-slate-300 dark:bg-slate-400 rounded animate-pulse"></div>
-            </div>
-            <div className="flex justify-center space-x-5 mt-3">
-              <div className="w-8 h-8 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-              <div className="w-8 h-8 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-              <div className="w-8 h-8 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-            </div>
+      {Array.from(Array(8)).map((_, index) => (
+        <div
+          key={index}
+          className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex flex-col gap-3"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 animate-pulse" />
+            <div className="h-5 w-14 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse shrink-0" />
+          </div>
+          <div className="space-y-1.5">
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full animate-pulse" />
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-4/5 animate-pulse" />
+          </div>
+          <div className="flex justify-end gap-2 pt-1 border-t border-gray-100 dark:border-gray-800">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-7 h-7 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse"
+              />
+            ))}
           </div>
         </div>
       ))}
