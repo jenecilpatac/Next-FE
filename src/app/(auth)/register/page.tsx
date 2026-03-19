@@ -13,7 +13,7 @@ import Button from "../components/buttons/Button";
 const Register = () => {
   const [flashError, setFlashError] = useState("");
   const [error, setError] = useState<ValidationErrors | any>("");
-  const [formInput, setFormInput] = useState<any>({
+  const [formInput, setFormInput] = useState({
     email: "",
     name: "",
     username: "",
@@ -26,14 +26,14 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const handleChange = (field: string) => (e: any) =>
+    setFormInput((prev) => ({ ...prev, [field]: e.target.value }));
+
   const handleRegister = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post("/auth/register", {
-        ...formInput,
-      });
-
+      const response = await api.post("/auth/register", { ...formInput });
       if (response.status === 201) {
         setError("");
         setFormInput({
@@ -48,51 +48,31 @@ const Register = () => {
         });
         Swal.fire({
           icon: "success",
-          title: "Success",
-          confirmButtonText: "Ok",
-          confirmButtonColor: "#1E90FF",
-          html: "You have successfully registered. You will be redirected to the login page. <br> Thank you!",
+          title: "Account Created!",
+          confirmButtonText: "Go to Login",
+          confirmButtonColor: "#3b82f6",
+          html: "You have successfully registered. Click below to sign in.",
         }).then((result) => {
-          if (result.isConfirmed) {
-            router.push("/login");
-          }
+          if (result.isConfirmed) router.push("/login");
         });
       } else {
         setFlashError(response.data.message);
       }
     } catch (error: any) {
-      console.error(error);
-      setError(error.response.data);
-      if (error.message === "Network Error") {
+      setError(error.response?.data);
+      if (error.message === "Network Error")
         setFlashError(`${error.message} or server error.`);
-      }
-      if (error.response.status === 429) {
+      if (error.response?.status === 429)
         setFlashError(`${error.response.statusText}. Please try again later.`);
-      }
-      if (error.response.status === 400) {
-        setFlashError("");
-      }
+      if (error.response?.status === 400) setFlashError("");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (title: any) => async (e: any) => {
-    const value = e.target.value;
-
-    setFormInput((formInput: any) => ({
-      ...formInput,
-      [title]: value,
-    }));
-  };
-
-  const handleCloseFlashError = () => {
-    setFlashError("");
-  };
-
   return (
     <div
-      className="flex items-center justify-center min-h-screen"
+      className="flex items-center justify-center min-h-screen px-4 py-8"
       style={{
         backgroundImage:
           'url("https://t4.ftcdn.net/jpg/08/94/02/21/360_F_894022146_cOoOtPF24XRZixcpnlojDhjZftU3p8dH.jpg")',
@@ -100,119 +80,142 @@ const Register = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="my-3 p-10 max-w-[26rem] bg-opacity-50 bg-black rounded-lg shadow-md">
-        {flashError && (
-          <div
-            className="flex items-center px-4 py-5 mb-4 text-red-700 bg-red-100 border border-red-400 rounded"
-            role="alert"
-            aria-live="assertive"
-          >
-            <i className="w-6 h-6 mr-4 fa-solid fa-triangle-exclamation mt-2 text-red-500"></i>
-            <span className="block ml-2 sm:inline">{flashError}</span>
-            <button
-              onClick={handleCloseFlashError}
-              className="ml-auto text-red-500 hover:text-red-700 focus:outline-none"
-              aria-label="Close alert"
-            >
-              &times;
-            </button>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+      <div className="relative z-10 w-full max-w-lg">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-8">
+          {/* Brand */}
+          <div className="flex items-center gap-2.5 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center shadow-md shadow-blue-500/30">
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/2065/2065254.png"
+                className="h-4 w-4 brightness-0 invert"
+                alt="Blog App"
+              />
+            </div>
+            <span className="text-white font-semibold">Blog App</span>
           </div>
-        )}
 
-        <h3 className="text-3xl font-bold text-white mb-6">
-          Register to Your Account
-        </h3>
+          <h1 className="text-2xl font-bold text-white mb-1">
+            Create an account
+          </h1>
+          <p className="text-sm text-gray-300 mb-6">
+            Fill in your details to get started
+          </p>
 
-        <form className="space-y-6" onSubmit={handleRegister}>
-          <Input
-            icon="envelope"
-            error={error?.email?.message}
-            type="email"
-            onChange={handleChange("email")}
-            value={formInput.email}
-            id="email"
-            placeholder="Enter your email"
-          />
-          <Input
-            icon="user"
-            error={error?.name?.message}
-            type="text"
-            onChange={handleChange("name")}
-            value={formInput.name}
-            id="name"
-            placeholder="Enter your name"
-          />
-          <Input
-            icon="user"
-            error={error?.username?.message}
-            type="text"
-            onChange={handleChange("username")}
-            id="username"
-            placeholder="Enter your username"
-            value={formInput.username}
-          />
-          <Input
-            icon="location-dot"
-            error={error?.address?.message}
-            type="text"
-            onChange={handleChange("address")}
-            id="address"
-            placeholder="Enter your address"
-            value={formInput.address}
-          />
-          <Input
-            icon="phone"
-            error={error?.phoneNumber?.message}
-            type="text"
-            onChange={handleChange("phoneNumber")}
-            id="phoneNumber"
-            placeholder="Enter your phone number"
-            value={formInput.phoneNumber}
-          />
-          <Input
-            icon="calendar"
-            error={error?.dateOfBirth?.message}
-            type="date"
-            onChange={handleChange("dateOfBirth")}
-            id="dateOfBirth"
-            placeholder="Enter your date of birth"
-            value={formInput.dateOfBirth}
-          />
-          <Input
-            icon="lock"
-            error={error?.password?.message}
-            type="password"
-            onChange={handleChange("password")}
-            id="password"
-            placeholder="Enter your password"
-            value={formInput.password}
-          />
-          <Input
-            icon="lock"
-            error={error?.confirmPassword?.message}
-            type="password"
-            onChange={handleChange("confirmPassword")}
-            id="confirmPassword"
-            placeholder="Enter your confirm password"
-            value={formInput.confirmPassword}
-          />
+          {/* Alert */}
+          {flashError && (
+            <div className="flex items-start gap-3 px-4 py-3 mb-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-sm">
+              <i className="fa-solid fa-circle-exclamation mt-0.5 shrink-0" />
+              <span className="flex-1">{flashError}</span>
+              <button
+                onClick={() => setFlashError("")}
+                className="shrink-0 hover:text-red-200"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+          )}
 
-          <Button
-            type="submit"
-            bgColor="blue-600"
-            hoverBgColor="blue-700"
-            loadingText="Registering..."
-            label="Register"
-            isLoading={loading}
-          />
-        </form>
+          {/* Form */}
+          <form onSubmit={handleRegister} className="space-y-4">
+            {/* Two-column grid for short fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                icon="envelope"
+                error={error?.email?.message}
+                type="email"
+                onChange={handleChange("email")}
+                value={formInput.email}
+                id="email"
+                placeholder="Email"
+              />
+              <Input
+                icon="user"
+                error={error?.name?.message}
+                type="text"
+                onChange={handleChange("name")}
+                value={formInput.name}
+                id="name"
+                placeholder="Full name"
+              />
+              <Input
+                icon="at"
+                error={error?.username?.message}
+                type="text"
+                onChange={handleChange("username")}
+                value={formInput.username}
+                id="username"
+                placeholder="Username"
+              />
+              <Input
+                icon="phone"
+                error={error?.phoneNumber?.message}
+                type="text"
+                onChange={handleChange("phoneNumber")}
+                value={formInput.phoneNumber}
+                id="phoneNumber"
+                placeholder="Phone number"
+              />
+              <Input
+                icon="calendar"
+                error={error?.dateOfBirth?.message}
+                type="date"
+                onChange={handleChange("dateOfBirth")}
+                value={formInput.dateOfBirth}
+                id="dateOfBirth"
+                placeholder="Date of birth"
+              />
+              <Input
+                icon="location-dot"
+                error={error?.address?.message}
+                type="text"
+                onChange={handleChange("address")}
+                value={formInput.address}
+                id="address"
+                placeholder="Address"
+              />
+            </div>
 
-        <p className="mt-4 text-white text-center">
-          Already have an account?{" "}
-          <Link href="/login" className="text-blue-400 hover:underline">
-            Login
-          </Link>
-        </p>
+            {/* Password fields full width */}
+            <Input
+              icon="lock"
+              error={error?.password?.message}
+              type="password"
+              onChange={handleChange("password")}
+              value={formInput.password}
+              id="password"
+              placeholder="Password"
+            />
+            <Input
+              icon="lock"
+              error={error?.confirmPassword?.message}
+              type="password"
+              onChange={handleChange("confirmPassword")}
+              value={formInput.confirmPassword}
+              id="confirmPassword"
+              placeholder="Confirm password"
+            />
+
+            <Button
+              type="submit"
+              loadingText="Creating account..."
+              label="Create Account"
+              isLoading={loading}
+            />
+          </form>
+
+          <p className="mt-6 text-center text-sm text-gray-400">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
