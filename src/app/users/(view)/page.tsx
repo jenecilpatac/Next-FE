@@ -107,63 +107,78 @@ const Users = () => {
   };
 
   return (
-    <div className="p-5">
-      <div className="flex justify-between mb-3">
-        <h1 className="text-2xl font-bold">All Users</h1>
-        <button
-          type="button"
-          ref={buttonRef}
-          onClick={handleOpenModal}
-          className="bg-blue-500 hover:bg-blue-600 hover:scale-105 text-white transition-all duration-300 ease-in-out text-md px-2 py-1 rounded"
-        >
-          <i className="far fa-user-plus"></i> Add User
-        </button>
+    <div className="p-5 dark:bg-black min-h-screen">
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">All Users</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Manage and monitor user accounts</p>
+          </div>
+          <button
+            type="button"
+            ref={buttonRef}
+            onClick={handleOpenModal}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <i className="fa-solid fa-user-plus text-xs"></i> Add User
+          </button>
+        </div>
+        <hr className="mt-4 border-gray-200 dark:border-gray-800" />
       </div>
-      <hr />
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-md mt-3">
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-blue-500/70 dark:bg-gray-900 text-white">
-              <th className="px-4 py-2 text-left w-11">ID</th>
-              <th className="px-4 py-2 text-left">Username</th>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Email</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Roles</th>
-              <th className="px-4 py-2 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <UserItemListLoader />
-            ) : data?.users?.users?.length > 0 ? (
-              data.users?.users.map((user: any, index: number) => (
-                <UserItemList
-                  item={user}
-                  key={index}
-                  index={index}
-                  handleVerifyUser={handleVerifyUser}
-                  handleConfirmDelete={handleConfirmDelete}
-                  setIsRefresh={setIsRefresh}
-                  isLoading={isLoading}
-                  userId={id}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7}>
-                  <p className="text-center">No users found</p>
-                </td>
+
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide w-11">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Username</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Name</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Email</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Role</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-        <Pagination
-          totalItems={data?.users?.total ?? 0}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {loading ? (
+                <UserItemListLoader />
+              ) : data?.users?.users?.length > 0 ? (
+                data.users?.users.map((user: any, index: number) => (
+                  <UserItemList
+                    item={user}
+                    key={index}
+                    index={index}
+                    handleVerifyUser={handleVerifyUser}
+                    handleConfirmDelete={handleConfirmDelete}
+                    setIsRefresh={setIsRefresh}
+                    isLoading={isLoading}
+                    userId={id}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                        <i className="fa-solid fa-users text-gray-400 text-lg"></i>
+                      </div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No users found</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="border-t border-gray-100 dark:border-gray-800">
+          <Pagination
+            totalItems={data?.users?.total ?? 0}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
       <AddUser
         isOpen={isOpen}

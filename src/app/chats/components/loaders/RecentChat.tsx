@@ -1,32 +1,18 @@
 export default function RecentChat() {
   return (
     <>
-      {Array.from(Array(7)).map((_, index: any) => (
+      {Array.from(Array(7)).map((_, index) => (
         <div
-          className="flex items-center p-2 rounded-lg cursor-progress md:mx-3"
           key={index}
+          className="flex items-center gap-3 px-3 py-2.5 mx-2 my-0.5 rounded-xl"
+          style={{ animationDelay: `${index * 0.1}s` }}
         >
-          <div
-            className="w-14 h-14 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full mx-auto md:mx-0"
-            style={{
-              animationDelay: `${index * 0.2}s`,
-            }}
-          ></div>
-          <div className="ml-3 hidden md:block">
-            <p
-              className={`text-md font-semibold w-${
-                index % 2 === 0 ? "44" : "32"
-              } rounded-md mb-2 h-6 bg-slate-300 dark:bg-slate-400 animate-pulse`}
-              style={{
-                animationDelay: `${index * 0.2}s`,
-              }}
-            ></p>
-            <p
-              className="text-xs text-gray-500 dark:text-gray-100 rounded-md w-14 h-4 bg-slate-300 dark:bg-slate-400 animate-pulse"
-              style={{
-                animationDelay: `${index * 0.2}s`,
-              }}
-            ></p>
+          <div className="w-11 h-11 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse shrink-0" />
+          <div className="flex-1 hidden md:block space-y-1.5">
+            <div
+              className={`h-3.5 bg-slate-200 dark:bg-slate-700 rounded animate-pulse ${index % 2 === 0 ? "w-32" : "w-24"}`}
+            />
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded animate-pulse w-20" />
           </div>
         </div>
       ))}

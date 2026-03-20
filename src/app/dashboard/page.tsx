@@ -25,7 +25,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const Dashboard = () => {
@@ -115,99 +115,100 @@ const Dashboard = () => {
     ],
   };
 
+  const statCards = [
+    {
+      label: "Posts",
+      value: dashboardData.posts,
+      icon: "fa-sign",
+      color: "blue",
+      bg: "bg-blue-50 dark:bg-blue-900/20",
+      text: "text-blue-600 dark:text-blue-400",
+      loading,
+    },
+    {
+      label: "Likes",
+      value: dashboardData.likes,
+      icon: "fa-thumbs-up",
+      color: "pink",
+      bg: "bg-pink-50 dark:bg-pink-900/20",
+      text: "text-pink-600 dark:text-pink-400",
+      loading,
+    },
+    {
+      label: "Comments",
+      value: dashboardData.comments,
+      icon: "fa-comment",
+      color: "green",
+      bg: "bg-green-50 dark:bg-green-900/20",
+      text: "text-green-600 dark:text-green-400",
+      loading,
+    },
+    {
+      label: "Shares",
+      value: dashboardData.shares,
+      icon: "fa-share",
+      color: "violet",
+      bg: "bg-violet-50 dark:bg-violet-900/20",
+      text: "text-violet-600 dark:text-violet-400",
+      loading: false,
+    },
+  ];
+
   return (
-    <div className="min-h-screen p-6">
-      <h1 className="text-3xl font-semibold text-gray-900 dark:text-white mb-8">
-        Dashboard
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-gray-200 p-6 rounded-lg shadow-md flex justify-between items-center hover:scale-105 transition duration-300 ease-in-out">
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Posts
-            </h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {loading ? (
-                <>
-                  <i className="far fa-fan animate-spin text-3xl"></i>
-                </>
-              ) : (
-                dashboardData.posts
-              )}
-            </p>
-          </div>
-          <div className="text-6xl text-blue-500">
-            <i className="fas text-6xl fa-sign-post"></i>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-gray-200 p-6 rounded-lg shadow-md flex justify-between items-center hover:scale-105 transition duration-300 ease-in-out">
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Likes
-            </h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {loading ? (
-                <>
-                  <i className="far fa-fan animate-spin text-3xl"></i>
-                </>
-              ) : (
-                dashboardData.likes
-              )}
-            </p>
-          </div>
-          <div className="text-6xl text-pink-500">
-            <i className="fas text-6xl fa-thumbs-up"></i>
-          </div>
-        </div>
-
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-gray-200 p-6 rounded-lg shadow-md flex justify-between items-center hover:scale-105 transition duration-300 ease-in-out">
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Comments
-            </h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {loading ? (
-                <>
-                  <i className="far fa-fan animate-spin text-3xl"></i>
-                </>
-              ) : (
-                dashboardData.comments
-              )}
-            </p>
-          </div>
-          <div className="text-6xl text-green-500">
-            <i className="fas text-6xl fa-comment"></i>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-gray-200 p-6 rounded-lg shadow-md flex justify-between items-center hover:scale-105 transition duration-300 ease-in-out">
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-              Shares
-            </h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
-              {dashboardData.shares}
-            </p>
-          </div>
-          <div className="text-6xl text-violet-500">
-            <i className="fas text-6xl fa-share"></i>
-          </div>
-        </div>
+    <div className="min-h-screen p-6 dark:bg-black">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Dashboard
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          Overview of your blog activity
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hover:bg-gray-100 p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Posts Growth Over Time
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        {statCards.map((card) => (
+          <div
+            key={card.label}
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div>
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {card.label}
+              </p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
+                {card.loading ? (
+                  <i className="fa-solid fa-spinner animate-spin text-2xl text-gray-300"></i>
+                ) : (
+                  (card.value ?? 0)
+                )}
+              </p>
+            </div>
+            <div
+              className={`w-14 h-14 ${card.bg} rounded-2xl flex items-center justify-center`}
+            >
+              <i className={`fa-solid ${card.icon} text-2xl ${card.text}`}></i>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+            Growth Over Time
           </h3>
+          <p className="text-xs text-gray-400 mb-4">
+            Posts, likes, comments & shares
+          </p>
           <Line data={lineChartData} />
         </div>
-
-        <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 hover:bg-gray-100 p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Posts, Likes, Comments and Shares Distribution
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+            Distribution
           </h3>
+          <p className="text-xs text-gray-400 mb-4">Monthly breakdown</p>
           <Bar data={barChartData} />
         </div>
       </div>

@@ -3,125 +3,113 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 
+const themes = [
+  { value: "dark", label: "Dark", icon: "fa-moon", color: "text-blue-500" },
+  { value: "light", label: "Light", icon: "fa-sun", color: "text-yellow-500" },
+  {
+    value: "system",
+    label: "System",
+    icon: "fa-computer",
+    color: "text-gray-400",
+  },
+];
+
 export default function DropUpButton() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { setTheme } = useTheme();
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
+  const { setTheme } = useTheme();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    setActiveTheme(localStorage.getItem("theme") ?? "system");
   }, []);
 
   useEffect(() => {
-    const themeFromStorage = localStorage.getItem("theme");
-    if (mounted) {
-      setActiveTheme(themeFromStorage);
-    } else {
-      if (!themeFromStorage) {
-        setTheme("system");
-      }
-    }
+    if (!mounted && !localStorage.getItem("theme")) setTheme("system");
   }, [mounted, setTheme]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const t = e.target as Node;
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
+        !dropdownRef.current.contains(t) &&
         buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
+        !buttonRef.current.contains(t)
       ) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleSelect = (value: string) => {
+    setTheme(value);
+    setActiveTheme(value);
+    setIsOpen(false);
+  };
+
+  const current = themes.find((t) => t.value === activeTheme);
+
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2">
+      {/* Dropdown */}
+      <div
+        ref={dropdownRef}
+        className={`transition-all duration-200 origin-bottom-right ${
+          isOpen
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
+        <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden w-36">
+          {themes.map(({ value, label, icon, color }) => (
+            <button
+              key={value}
+              onClick={() => handleSelect(value)}
+              className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors
+                ${
+                  activeTheme === value
+                    ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/60"
+                }`}
+            >
+              <i
+                className={`fa-solid ${icon} ${activeTheme === value ? "text-blue-500" : color} w-4 text-center`}
+              />
+              {label}
+              {activeTheme === value && (
+                <i className="fa-solid fa-check ml-auto text-xs text-blue-500" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Toggle button */}
       <button
         ref={buttonRef}
-        onClick={toggleDropdown}
-        className="px-2 py-1 text-xl text-white transition-all border shadow-md border-white rounded-lg bg-gray-900 dark:bg-white hover:text-black"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-10 h-10 flex items-center justify-center rounded-xl shadow-lg transition-all duration-200 active:scale-95
+          ${
+            isOpen
+              ? "bg-blue-500 text-white shadow-blue-500/30"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-100 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500"
+          }`}
+        aria-label="Toggle theme"
       >
-        {!mounted ? (
-          <i className="far cursor-pointer fa-eclipse"></i>
-        ) : activeTheme === "dark" ? (
-          <i className="far fa-moon-stars cursor-pointer text-blue-500"></i>
-        ) : activeTheme === "light" ? (
-          <i className="far fa-sun-bright cursor-pointer text-yellow-500"></i>
-        ) : activeTheme === "system" ? (
-          <i className="far fa-computer cursor-pointer text-gray-500"></i>
-        ) : null}
+        {mounted && current ? (
+          <i
+            className={`fa-solid ${current.icon} text-sm ${isOpen ? "text-white" : current.color}`}
+          />
+        ) : (
+          <i className="fa-solid fa-circle-half-stroke text-sm text-gray-400" />
+        )}
       </button>
-
-      {isOpen && (
-        <div
-          ref={dropdownRef}
-          className="absolute bottom-full right-0 mb-2 w-32 bg-white border rounded-lg shadow-md"
-        >
-          <ul className="p-2 space-y-2 text-black">
-            <li
-              onClick={() => setTheme("dark")}
-              className={`cursor-pointer flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200 hover:text-black transition-all ${
-                activeTheme === "dark"
-                  ? "bg-gray-200 text-black"
-                  : "text-gray-700"
-              }`}
-            >
-              <i
-                className={`far fa-moon-stars ${
-                  activeTheme === "dark" ? "text-blue-600" : "text-blue-500"
-                }`}
-              ></i>
-              <span>Dark</span>
-            </li>
-
-            <li
-              onClick={() => setTheme("light")}
-              className={`cursor-pointer flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200 hover:text-black transition-all ${
-                activeTheme === "light"
-                  ? "bg-gray-200 text-black"
-                  : "text-gray-700"
-              }`}
-            >
-              <i
-                className={`far fa-sun-bright ${
-                  activeTheme === "light"
-                    ? "text-yellow-600"
-                    : "text-yellow-500"
-                }`}
-              ></i>
-              <span>Light</span>
-            </li>
-
-            <li
-              onClick={() => setTheme("system")}
-              className={`cursor-pointer flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200 hover:text-black transition-all ${
-                activeTheme === "system"
-                  ? "bg-gray-200 text-black"
-                  : "text-gray-700"
-              }`}
-            >
-              <i
-                className={`far fa-computer ${
-                  activeTheme === "system" ? "text-gray-600" : "text-gray-500"
-                }`}
-              ></i>
-              <span>System</span>
-            </li>
-          </ul>
-        </div>
-      )}
     </div>
   );
 }

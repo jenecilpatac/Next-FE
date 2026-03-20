@@ -26,9 +26,7 @@ export default function AddPost({
   const [imageError, setImageError] = useState("");
   const { showSuccess } = useToastr();
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const handleCloseModal = () => {
     onClose(false);
@@ -51,16 +49,10 @@ export default function AddPost({
       formData.append("description", formInput.description);
       formData.append("categoryId", String(formInput.categoryId));
       formData.append("publishedAs", String(formInput.publishedAs));
-      formInput.image.forEach((img: any) => {
-        formData.append("image", img);
-      });
-
+      formInput.image.forEach((img: any) => formData.append("image", img));
       const response = await api.post("/posts/create-post", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
       if (response.status === 201) {
         handleCloseModal();
         showSuccess(response.data.message, "Post Added");
@@ -68,7 +60,6 @@ export default function AddPost({
     } catch (error: any) {
       setError(error.response.data);
       setImageError(error?.response.data.message);
-      console.error(error);
     } finally {
       setIsRefresh(false);
       setLoading(false);
@@ -76,241 +67,239 @@ export default function AddPost({
   };
 
   const handleFileChange = (e: any) => {
-    const files = e.target.files;
-    if (files) {
-      setFormInput((formInput: any) => ({
-        ...formInput,
-        image: Array.from(files),
-      }));
-    }
+    if (e.target.files)
+      setFormInput((p: any) => ({ ...p, image: Array.from(e.target.files) }));
   };
 
   const handleRemoveImage = (index: number) => {
-    setFormInput((formInput: any) => ({
-      ...formInput,
-      image: formInput.image.filter((_: any, i: number) => i !== index),
+    setFormInput((p: any) => ({
+      ...p,
+      image: p.image.filter((_: any, i: number) => i !== index),
     }));
   };
 
-  const handleCancelUpload = () => {
-    setFormInput((formInput: any) => ({
-      ...formInput,
-      image: [],
-    }));
-    setImageError("");
-  };
+  const visibilityOptions = [
+    { value: "public", icon: "fa-earth-americas", label: "Public" },
+    { value: "friends", icon: "fa-user-group", label: "Friends" },
+    { value: "private", icon: "fa-lock", label: "Only me" },
+  ];
 
-  const handleInputChange = (title: any) => (e: any) => {
-    setFormInput((formInput: any) => ({
-      ...formInput,
-      [title]: e.target.value,
-    }));
-  };
+  const currentVis = visibilityOptions.find(
+    (o) => o.value === formInput.publishedAs,
+  );
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-        <div
-          ref={postModalRef || modalRef}
-          className="p-6 bg-white dark:bg-gray-900 shadow-md rounded-lg w-full mx-3 md:w-1/3 relative"
-        >
-          <div className="flex justify-between">
-            <div className="w-full mb-2">
-              <h2 className="text-lg text-center font-bold">Create Post</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div
+        ref={postModalRef || modalRef}
+        className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+          <h2 className="text-base font-bold text-gray-900 dark:text-white">
+            Create Post
+          </h2>
+          <button
+            type="button"
+            onClick={handleCloseModal}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            <i className="fa-solid fa-xmark text-gray-500 dark:text-gray-400 text-sm"></i>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="px-6 py-4 space-y-4 max-h-[65vh] overflow-y-auto">
+            {/* Author + Visibility */}
+            <div className="flex items-center gap-3">
+              <Image
+                avatar={user?.profile_pictures[0]?.avatar}
+                alt={user?.name}
+                h={11}
+                w={11}
+              />
+              <div>
+                <p className="text-sm font-bold text-gray-900 dark:text-white">
+                  {user?.name}
+                </p>
+                <div className="relative mt-0.5">
+                  <select
+                    onChange={(e) =>
+                      setFormInput((p: any) => ({
+                        ...p,
+                        publishedAs: e.target.value,
+                      }))
+                    }
+                    value={formInput.publishedAs}
+                    className="appearance-none pl-6 pr-6 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  >
+                    {visibilityOptions.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                  <i
+                    className={`fa-solid ${currentVis?.icon} absolute left-1.5 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none`}
+                  ></i>
+                  <i className="fa-solid fa-chevron-down absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-gray-400 pointer-events-none"></i>
+                </div>
+              </div>
             </div>
+
+            {/* Description */}
             <div>
-              <button
-                type="button"
-                className="absolute right-4 top-3 bg-gray-400 bg-opacity-75 px-2 py-0.5 rounded-full hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75"
-                onClick={handleCloseModal}
-              >
-                <i className="far fa-xmark text-black dark:text-white"></i>
-              </button>
+              <textarea
+                onChange={(e) =>
+                  setFormInput((p: any) => ({
+                    ...p,
+                    description: e.target.value,
+                  }))
+                }
+                className="w-full px-0 py-1 text-sm bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 focus:outline-none focus:border-blue-500 resize-none placeholder-gray-400 dark:text-white transition-colors"
+                rows={4}
+                placeholder={`What's on your mind, ${user?.name?.split(" ")[0]}?`}
+                value={formInput.description}
+              />
+              {error?.description && (
+                <small className="text-red-500 text-xs">
+                  {error.description.message}
+                </small>
+              )}
             </div>
-          </div>
-          <hr />
-          <form onSubmit={handleSubmit} className="mt-4">
-            <div className="space-y-3 max-h-[70vh] overflow-y-auto">
-              <div className="flex gap-2">
-                <Image
-                  avatar={user?.profile_pictures[0]?.avatar}
-                  alt={user?.name}
-                  h={12}
-                  w={12}
+
+            {/* Category */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                Category
+              </label>
+              <select
+                onChange={(e) =>
+                  setFormInput((p: any) => ({
+                    ...p,
+                    categoryId: e.target.value,
+                  }))
+                }
+                value={formInput.categoryId}
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              >
+                <option value="" hidden>
+                  Select a category
+                </option>
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categoriesLoading ? (
+                  <option>Loading...</option>
+                ) : (
+                  categories?.map((c: any) => (
+                    <option key={c.id} value={c.id}>
+                      {c.categoryName}
+                    </option>
+                  ))
+                )}
+              </select>
+              {error?.categoryId && (
+                <small className="text-red-500 text-xs">
+                  {error.categoryId.message}
+                </small>
+              )}
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <div className="flex items-center justify-between p-3 border border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Add photos
+                </span>
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("image")?.click()}
+                  className="w-9 h-9 flex items-center justify-center rounded-xl bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
+                >
+                  <i className="fa-solid fa-image text-green-600 dark:text-green-400"></i>
+                </button>
+                <input
+                  hidden
+                  accept="image/*"
+                  id="image"
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
                 />
-                <div>
-                  <p className="font-bold text-md">{user?.name}</p>
-                  <div className="flex gap-1 bg-gray-300 dark:bg-gray-700 max-w-fit p-1 rounded-md items-center">
-                    <i className="far fa-earth-americas"></i>
-                    <select
-                      onChange={handleInputChange("publishedAs")}
-                      value={formInput.publishedAs}
-                      className="bg-transparent focus:outline-none dark:bg-gray-700 bg-gray-300"
+              </div>
+              {(imageError?.includes("Invalid image") ||
+                imageError?.includes("File too large")) && (
+                <small className="text-red-500 text-xs mt-1 block">
+                  {imageError}
+                </small>
+              )}
+              {formInput.image.length > 0 && (
+                <div className="mt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-500">
+                      {formInput.image.length} photo(s) selected
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormInput((p: any) => ({ ...p, image: [] }))
+                      }
+                      className="text-xs text-red-500 hover:underline"
                     >
-                      <option value="public">Public</option>
-                      <option value="friends">Friends</option>
-                      <option value="private">Private</option>
-                    </select>
+                      Remove all
+                    </button>
+                  </div>
+                  <div className="flex gap-2 flex-wrap">
+                    {formInput.image.map((img: any, i: number) => (
+                      <div
+                        key={i}
+                        className="relative group w-20 h-20 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700"
+                      >
+                        <img
+                          src={URL.createObjectURL(img)}
+                          alt={img.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(i)}
+                          className="absolute inset-0 bg-black/50 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                        >
+                          <i className="fa-solid fa-trash text-sm"></i>
+                        </button>
+                        <p className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] px-1 truncate">
+                          {formatFileSize(img.size)}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium" htmlFor="category">
-                  Select Category
-                </label>
-                <select
-                  onChange={handleInputChange("categoryId")}
-                  name="category"
-                  value={formInput.categoryId}
-                  className="block w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:shadow-outline focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="" hidden>
-                    Select Category
-                  </option>
-                  <option value="" disabled>
-                    Select Category
-                  </option>
-                  {categoriesLoading ? (
-                    <option value="Loading...">Loading...</option>
-                  ) : (
-                    categories.map((category: any) => (
-                      <option key={category.id} value={category.id}>
-                        {category.categoryName}
-                      </option>
-                    ))
-                  )}
-                </select>
-                {error?.categoryId && (
-                  <small className="text-red-500">
-                    {error?.categoryId.message}
-                  </small>
-                )}
-              </div>
-
-              <div>
-                <label
-                  className="block text-sm font-medium"
-                  htmlFor="description"
-                >
-                  Description
-                </label>
-                <textarea
-                  onChange={handleInputChange("description")}
-                  className="appearance-none border border-gray-300 dark:border-gray-700 h-auto resize-none rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:ring-blue-500 focus:border-blue-500"
-                  id="description"
-                  rows={7}
-                  placeholder={`What's on your mind, ${
-                    user?.name?.split(" ")[0]
-                  }?`}
-                  value={formInput.description}
-                />
-                {error?.description && (
-                  <small className="text-red-500">
-                    {error?.description.message}
-                  </small>
-                )}
-              </div>
-              <div>
-                <div className="border p-2 border-gray-300 dark:border-gray-700 flex justify-between rounded-md items-center">
-                  <span>Add to your post</span>
-                  <button
-                    type="button"
-                    className="items-center flex hover:bg-gray-200 hover:dark:bg-gray-700 p-2 rounded-full"
-                    onClick={() => document.getElementById("image")?.click()}
-                  >
-                    <i className="far fa-image text-2xl text-green-700 dark:text-green-600"></i>
-                  </button>
-                  <input
-                    hidden
-                    accept="image/*"
-                    className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline focus:ring-blue-500 focus:border-blue-500"
-                    id="image"
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    placeholder="Image"
-                  />
-                </div>
-                <div>
-                  {error?.image && (
-                    <small className="text-red-500">
-                      {error?.image.message}
-                    </small>
-                  )}
-                  {(imageError?.includes(
-                    "Invalid image type, only jpeg, jpg, png, gif, ico, webp are allowed."
-                  ) ||
-                    imageError?.includes("File too large") ||
-                    imageError?.includes(
-                      "File too large, only 1MB is allowed."
-                    )) && <small className="text-red-500">{imageError}</small>}
-
-                  {formInput.image.length > 0 && (
-                    <div className="mt-2">
-                      <button
-                        type="button"
-                        onClick={handleCancelUpload}
-                        className="mb-2 text-blue-500 hover:underline"
-                      >
-                        Cancel upload
-                      </button>
-                      <div className="flex gap-2 w-full overflow-x-auto">
-                        {formInput.image.map((image: any, index: number) => (
-                          <div key={index}>
-                            <div className="relative group w-20 h-20">
-                              <img
-                                src={URL.createObjectURL(image)}
-                                alt={`Preview ${image.name}`}
-                                className="w-full h-full object-cover rounded"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveImage(index)}
-                                className="text-sm absolute inset-0 m-auto text-white bg-black bg-opacity-50 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                            <p className="w-20 truncate">
-                              <small>{image.name}</small>
-                            </p>
-                            <p>
-                              <small>{formatFileSize(image.size)}</small>
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
-            <div>
-              <div className="w-full mt-5">
-                <button
-                  type="submit"
-                  disabled={loading || !formInput.description}
-                  className={`w-full text-white font-bold py-2 px-4 rounded text-sm ${
-                    !formInput.description
-                      ? "bg-gray-400/75 dark:bg-gray-700/75 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-700 hover:scale-105 transition-all duration-300 ease-in-out"
-                  }`}
-                >
-                  {loading ? (
-                    <>
-                      <i className="far fa-spinner animate-spin"></i> Posting...
-                    </>
-                  ) : (
-                    <>
-                      <i className="far fa-paper-plane"></i> Post
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+            <button
+              type="submit"
+              disabled={loading || !formInput.description}
+              className={`w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-colors flex items-center justify-center gap-2 ${!formInput.description ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+            >
+              {loading ? (
+                <>
+                  <i className="fa-solid fa-spinner animate-spin text-xs"></i>{" "}
+                  Posting...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-paper-plane text-xs"></i> Post
+                </>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 }

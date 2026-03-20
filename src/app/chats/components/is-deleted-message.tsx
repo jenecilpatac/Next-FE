@@ -36,7 +36,7 @@ export default function IsDeletedMessage({
           {isOwner ? (
             <>
               <div className="text-sm self-end">
-                <i className="far fa-reply"></i> You replied to{" "}
+                <i className="fa-solid fa-reply"></i> You replied to{" "}
                 {parent?.userId === user?.id
                   ? "Yourself"
                   : parent?.sentBy?.name ?? "Anonymous"}
@@ -56,7 +56,7 @@ export default function IsDeletedMessage({
           ) : (
             <>
               <div className="text-sm ml-12">
-                <i className="far fa-reply"></i> {name ?? "Anonymous"} replied
+                <i className="fa-solid fa-reply"></i> {name ?? "Anonymous"} replied
                 to{" "}
                 {parent?.userId === user?.id
                   ? "you"

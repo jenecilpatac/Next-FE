@@ -20,12 +20,12 @@ const Page = () => {
   const [isSingleStatusRefresh, setIsSingleStatusRefresh] = useState(false);
   const [isEdited, setIsEdited] = useState<{ [key: number]: boolean }>({});
   const { todoAdded, addTodo } = useSocket(
-    process.env.NEXT_PUBLIC_SOCKET_URL as string
+    process.env.NEXT_PUBLIC_SOCKET_URL as string,
   );
   const { data, loading, error }: any = useFetch("/todos", isRefresh);
   const { data: editData, loading: editLoading }: any = useFetch(
     isEdited[id] ? `/todos/id/${id}` : null,
-    isRefresh || isSingleStatusRefresh
+    isRefresh || isSingleStatusRefresh,
   );
   const { hasHigherRole }: any = useAuth();
   const [title, setTitle] = useState("");
@@ -137,218 +137,203 @@ const Page = () => {
   };
 
   return (
-    <div className="space-y-4 mx-auto p-4 dark:bg-black">
-      <h1 className="text-4xl font-semibold">Todos</h1>
-      <div className={`${hasHigherRole ? "lg:flex" : "md:flex"} mx-auto gap-3`}>
-        <div className="mb-5 flex justify-center">
-          {isEdited[id] ? (
-            <form onSubmit={(e) => handleUpdateTodo(e)}>
-              <div className="rounded-md p-4 w-full border border-gray-200 dark:border-gray-700 sm:w-64 space-y-4 dark:bg-gray-900 bg-gray-50 transition-all ease-in-out duration-300 shadow-xl">
-                <h2 className="text-xl">Edit Todo</h2>
-                <hr />
-                <div>
-                  <label htmlFor="title">Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Enter Title"
-                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isError.title && "border-red-500"
-                    }`}
-                  />
-                  {isError.title && (
-                    <span className="text-red-500">
-                      {isError.title.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="content">Content</label>
-                  <textarea
-                    name="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Enter Content"
-                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isError.content && "border-red-500"
-                    }`}
-                  />
-                  {isError.content && (
-                    <span className="text-red-500">
-                      {isError.content.message}
-                    </span>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-2 px-4 rounded-md bg-blue-500 text-white text-sm hover:scale-105 hover:bg-blue-600 transition-all duration-300 ease-in-out"
-                >
-                  {isLoading ? (
-                    <>
-                      <i className="fas fa-spinner animate-spin"></i> Adding...
-                    </>
-                  ) : (
-                    <>
-                      <i className="far fa-edit"></i> Update Todo
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <form onSubmit={(e) => handleSubmitTodo(e)}>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-md p-4 w-full sm:w-64 space-y-4 dark:bg-gray-900 bg-gray-50 transition-all ease-in-out duration-300 transform shadow-xl">
-                <h2 className="text-xl">Add Todo</h2>
-                <hr />
-                <div>
-                  <label htmlFor="title">Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Enter Title"
-                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isError.title && "border-red-500"
-                    }`}
-                  />
-                  {isError.title && (
-                    <span className="text-red-500">
-                      {isError.title.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="content">Content</label>
-                  <textarea
-                    name="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Enter Content"
-                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isError.content && "border-red-500"
-                    }`}
-                  />
-                  {isError.content && (
-                    <span className="text-red-500">
-                      {isError.content.message}
-                    </span>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-2 px-4 rounded-md bg-blue-500 text-white text-sm hover:scale-105 hover:bg-blue-600 transition-all duration-300 ease-in-out"
-                >
-                  {isLoading ? (
-                    <>
-                      <i className="fas fa-spinner animate-spin"></i> Adding...
-                    </>
-                  ) : (
-                    <>
-                      <i className="far fa-plus"></i> Add Todo
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-        {loading ? (
-          <div className="w-full">
+    <div className="mx-auto p-4 dark:bg-black min-h-screen">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Todos
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+          Manage your tasks and track progress
+        </p>
+        <hr className="mt-4 border-gray-200 dark:border-gray-800" />
+      </div>
+
+      <div className={`${hasHigherRole ? "lg:flex" : "md:flex"} gap-5`}>
+        {/* Add / Edit Form */}
+        <div className="mb-5 shrink-0">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm w-full sm:w-72 overflow-hidden">
             <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3 ${
-                hasHigherRole
-                  ? "lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                  : "lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-              }`}
+              className={`px-5 py-3 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2 ${isEdited[id] ? "bg-amber-50 dark:bg-amber-900/10" : "bg-blue-50 dark:bg-blue-900/10"}`}
+            >
+              <div
+                className={`w-7 h-7 rounded-lg flex items-center justify-center ${isEdited[id] ? "bg-amber-100 dark:bg-amber-900/30" : "bg-blue-100 dark:bg-blue-900/30"}`}
+              >
+                <i
+                  className={`fa-solid ${isEdited[id] ? "fa-pen text-amber-600 dark:text-amber-400" : "fa-plus text-blue-600 dark:text-blue-400"} text-xs`}
+                ></i>
+              </div>
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white">
+                {isEdited[id] ? "Edit Todo" : "New Todo"}
+              </h2>
+            </div>
+            <form
+              onSubmit={isEdited[id] ? handleUpdateTodo : handleSubmitTodo}
+              className="p-5 space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Enter title"
+                  className={`w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition dark:bg-gray-800 dark:text-white ${isError.title ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}
+                />
+                {isError.title && (
+                  <small className="text-red-500 text-xs mt-0.5 block">
+                    {isError.title.message}
+                  </small>
+                )}
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                  Content
+                </label>
+                <textarea
+                  name="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Enter content"
+                  rows={4}
+                  className={`w-full px-3 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none dark:bg-gray-800 dark:text-white ${isError.content ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}
+                />
+                {isError.content && (
+                  <small className="text-red-500 text-xs mt-0.5 block">
+                    {isError.content.message}
+                  </small>
+                )}
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-colors flex items-center justify-center gap-2 ${isEdited[id] ? "bg-amber-500 hover:bg-amber-600" : "bg-blue-600 hover:bg-blue-700"} disabled:opacity-60`}
+              >
+                {isLoading ? (
+                  <>
+                    <i className="fa-solid fa-spinner animate-spin text-xs"></i>{" "}
+                    {isEdited[id] ? "Saving..." : "Adding..."}
+                  </>
+                ) : (
+                  <>
+                    <i
+                      className={`fa-solid ${isEdited[id] ? "fa-check" : "fa-plus"} text-xs`}
+                    ></i>{" "}
+                    {isEdited[id] ? "Save Changes" : "Add Todo"}
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Todo Grid */}
+        <div className="flex-1">
+          {loading ? (
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${hasHigherRole ? "lg:grid-cols-3 xl:grid-cols-4" : "lg:grid-cols-4 xl:grid-cols-5"}`}
             >
               <AllTodosLoader />
             </div>
-          </div>
-        ) : (
-          <div className="w-full">
-            {data?.todos?.length > 0 ? (
-              <div
-                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3 ${
-                  hasHigherRole
-                    ? "lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                    : "lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-                }`}
-              >
-                {data.todos.map((item: any, index: number) => (
-                  <div key={index}>
-                    <TodoItemList
-                      item={item}
-                      setIsEdited={setIsEdited}
-                      isEdited={isEdited}
-                      setId={setId}
-                      handleStatusUpdate={handleStatusUpdate}
-                    />
-                  </div>
-                ))}
+          ) : data?.todos?.length > 0 ? (
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${hasHigherRole ? "lg:grid-cols-3 xl:grid-cols-4" : "lg:grid-cols-4 xl:grid-cols-5"}`}
+            >
+              {data.todos.map((item: any, index: number) => (
+                <TodoItemList
+                  key={index}
+                  item={item}
+                  setIsEdited={setIsEdited}
+                  isEdited={isEdited}
+                  setId={setId}
+                  handleStatusUpdate={handleStatusUpdate}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 text-center">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                <i className="fa-solid fa-clipboard-list text-2xl text-gray-400"></i>
               </div>
-            ) : (
-              <div className="text-center flex flex-col items-center justify-center h-full">
-                <p className="text-[70px] mb-3">
-                  <i className="far fa-memo-circle-info text-[70px]"></i>
-                </p>
-                <p className="text-2xl">You have no posted/pending todo yet.</p>
-              </div>
-            )}
-          </div>
-        )}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No todos yet. Add your first one!
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-      <hr />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-        <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
-          <h4 className="text-xl font-semibold mb-2 bg-blue-400 text-center rounded-md py-2 text-white">
-            <i className="far fa-arrows-rotate"></i> Ongoing
-          </h4>
-          <hr />
-          <div className="flex flex-col gap-4">
-            <TodoOngoing
-              isSingleStatusRefresh={isSingleStatusRefresh}
-              handleStatusUpdate={handleStatusUpdate}
-              handleDeleteTodo={handleDeleteTodo}
-              setIsEdited={setIsEdited}
-              isEdited={isEdited}
-              setId={setId}
-            />
+
+      <hr className="my-6 border-gray-200 dark:border-gray-800" />
+
+      {/* Status Columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          {
+            label: "Ongoing",
+            icon: "fa-arrows-rotate",
+            color: "blue",
+            accent: "bg-blue-500",
+            light: "bg-blue-50 dark:bg-blue-900/10",
+            component: (
+              <TodoOngoing
+                isSingleStatusRefresh={isSingleStatusRefresh}
+                handleStatusUpdate={handleStatusUpdate}
+                handleDeleteTodo={handleDeleteTodo}
+                setIsEdited={setIsEdited}
+                isEdited={isEdited}
+                setId={setId}
+              />
+            ),
+          },
+          {
+            label: "Completed",
+            icon: "fa-circle-check",
+            color: "green",
+            accent: "bg-green-500",
+            light: "bg-green-50 dark:bg-green-900/10",
+            component: (
+              <TodoCompleted
+                isSingleStatusRefresh={isSingleStatusRefresh}
+                handleDeleteTodo={handleDeleteTodo}
+                handleStatusUpdate={handleStatusUpdate}
+                setIsEdited={setIsEdited}
+                isEdited={isEdited}
+                setId={setId}
+              />
+            ),
+          },
+          {
+            label: "Cancelled",
+            icon: "fa-ban",
+            color: "red",
+            accent: "bg-red-500",
+            light: "bg-red-50 dark:bg-red-900/10",
+            component: (
+              <TodoCancelled
+                isSingleStatusRefresh={isSingleStatusRefresh}
+                handleStatusUpdate={handleStatusUpdate}
+                handleDeleteTodo={handleDeleteTodo}
+              />
+            ),
+          },
+        ].map((col) => (
+          <div
+            key={col.label}
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden"
+          >
+            <div
+              className={`flex items-center gap-2 px-4 py-3 ${col.light} border-b border-gray-100 dark:border-gray-800`}
+            >
+              <span className={`w-2 h-2 rounded-full ${col.accent}`}></span>
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+                {col.label}
+              </h4>
+            </div>
+            <div className="p-4 flex flex-col gap-3">{col.component}</div>
           </div>
-        </div>
-        <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
-          <h4 className="text-xl font-semibold mb-2 bg-blue-700 text-center rounded-md py-2 text-white">
-            <i className="far fa-memo-circle-check"></i> Completed
-          </h4>
-          <hr />
-          <div className="flex flex-col gap-4">
-            <TodoCompleted
-              isSingleStatusRefresh={isSingleStatusRefresh}
-              handleDeleteTodo={handleDeleteTodo}
-              handleStatusUpdate={handleStatusUpdate}
-              setIsEdited={setIsEdited}
-              isEdited={isEdited}
-              setId={setId}
-            />
-          </div>
-        </div>
-        <div className="dark:bg-gray-900 bg-gray-200 rounded-md p-4 shadow-md">
-          <h4 className="text-xl font-semibold mb-2 bg-red-500 text-center rounded-md py-2 text-white">
-            <i className="far fa-ban"></i> Cancelled
-          </h4>
-          <hr />
-          <div className="flex flex-col gap-4">
-            <TodoCancelled
-              isSingleStatusRefresh={isSingleStatusRefresh}
-              handleStatusUpdate={handleStatusUpdate}
-              handleDeleteTodo={handleDeleteTodo}
-            />
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

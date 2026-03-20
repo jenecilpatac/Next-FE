@@ -89,7 +89,7 @@ export default function MessageBody2({
           offset > 40 ? "opacity-100" : "opacity-0 -ml-8"
         }`}
       >
-        <i className="far fa-reply text-xl"></i>
+        <i className="fa-solid fa-reply text-xl"></i>
       </div>
       <div className={`flex flex-col justify-end ${!isLast && "opacity-0"}`}>
         <Image avatar={avatar} alt={name} width={10} height={10} title={name} />
@@ -117,7 +117,7 @@ export default function MessageBody2({
             {parent && (
               <div className="flex py-2 flex-col -mb-5">
                 <div className="text-sm">
-                  <i className="far fa-reply"></i> {name ?? "Anonymous"} replied
+                  <i className="fa-solid fa-reply"></i> {name ?? "Anonymous"} replied
                   to{" "}
                   {parent?.userId === user?.id
                     ? "you"
@@ -230,7 +230,7 @@ export default function MessageBody2({
                     key={index}
                     className="flex gap-2 items-center"
                   >
-                    <i className="far fa-file text-2xl"></i>
+                    <i className="fa-solid fa-file text-2xl"></i>
                     <span className="text-md">
                       {item?.value?.split("/")?.pop()}
                     </span>
@@ -322,21 +322,21 @@ export default function MessageBody2({
                 onClick={handleOpen(messageId)}
                 ref={buttonRef}
               >
-                <i className="far fa-ellipsis-vertical"></i>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
               </button> */}
                 <button
                   onClick={handleIsReplying}
                   type="button"
                   className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
                 >
-                  <i className="far fa-reply"></i>
+                  <i className="fa-solid fa-reply"></i>
                 </button>
                 <button
                   type="button"
                   className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full"
                   onClick={handleOpenReactions(messageId)}
                 >
-                  <i className="far fa-smile"></i>
+                  <i className="fa-solid fa-smile"></i>
                 </button>
                 {/* {isOpen[messageId] && (
                 <div
@@ -350,7 +350,7 @@ export default function MessageBody2({
                         type="button"
                         className="w-full text-start"
                       >
-                        <i className="far fa-reply"></i> Reply
+                        <i className="fa-solid fa-reply"></i> Reply
                       </button>
                     </li>
                   </ul>

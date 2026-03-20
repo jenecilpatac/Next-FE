@@ -42,22 +42,18 @@ const ManagePersonalInformation = () => {
   }, []);
 
   const handleInputChange = (title: any) => (e: any) => {
-    setFormInput((formInput: any) => ({
-      ...formInput,
-      [title]: e.target.value,
-    }));
+    setFormInput((prev: any) => ({ ...prev, [title]: e.target.value }));
   };
 
   const handleSubmitPersonalInformation = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
     setIsRefresh(true);
-    const { username, email, ...rest} = formInput;
+    const { username, email, ...rest } = formInput;
     try {
       const response = await api.patch("settings/manage-personal-info", {
         ...rest,
       });
-
       if (response.status === 200) {
         setError("");
         showSuccess(response.data.message, "Success");
@@ -67,8 +63,8 @@ const ManagePersonalInformation = () => {
       setError(error.response.data);
       if (error.response.status === 429) {
         showError(
-          "Password update limit reached. Please try again after 24 hours.",
-          "Limit Reached"
+          "Update limit reached. Please try again after 24 hours.",
+          "Limit Reached",
         );
       }
     } finally {
@@ -78,35 +74,47 @@ const ManagePersonalInformation = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto p-6">
-        <Link href="/settings" className="text-gray-600 dark:text-gray-200">
-          <span className="hover:border-b">
-            <i className="far fa-arrow-left"></i> Back to settings
-          </span>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="max-w-3xl mx-auto p-6 space-y-4">
+        {/* Back link */}
+        <Link
+          href="/settings"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+        >
+          <i className="fa-solid fa-arrow-left" />
+          Back to Settings
         </Link>
-        <h1 className="text-3xl mt-3 font-semibold text-gray-900 dark:text-gray-100 mb-6">
-          Manage Personal Information
-        </h1>
 
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Personal Details
-          </h2>
-          <p className="text-gray-500 dark:text-gray-200 mb-4">
-            Your personal details are key to ensuring your account stays secure
-            and up to date. By maintaining accurate information, you can ensure
-            that we can easily contact you regarding your{" "}
-            <Link
-              className="text-blue-500 hover:underline hover:text-blue-600"
-              href="/profile"
-            >
-              account
-            </Link>{" "}
-            and keep everything running smoothly.
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Personal Information
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Keep your profile details accurate and up to date.
           </p>
+        </div>
 
-          <form onSubmit={handleSubmitPersonalInformation}>
+        {/* Personal Details Card */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-address-book text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Personal Details
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Your public profile information
+              </p>
+            </div>
+          </div>
+
+          <form
+            onSubmit={handleSubmitPersonalInformation}
+            className="space-y-1"
+          >
             <Input
               error={error?.name?.message}
               value={formInput.name}
@@ -153,37 +161,43 @@ const ManagePersonalInformation = () => {
               placeholder="Enter your date of birth"
               error={error?.dateOfBirth?.message}
             />
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <Button
                 type="submit"
                 label="Save Changes"
-                bgColor="blue-500"
-                hoverBgColor="blue-600"
-                icon="save"
+                bgColor="blue-600"
+                hoverBgColor="blue-700"
+                icon="floppy-disk"
                 loadingText="Saving..."
                 isLoading={isLoading}
               />
             </div>
           </form>
         </div>
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md p-6 mb-6 border border-gray-300 dark:border-gray-500">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-100 mb-4">
-            Login Details
-          </h2>
-          <p className="text-gray-600 dark:text-gray-200 mb-4">
-            Your login details play a critical role in the security of your
-            account. By updating your{" "}
-            <Link
-              className="text-blue-500 hover:underline hover:text-blue-600"
-              href="/settings/manage-password"
-            >
-              password
-            </Link>{" "}
-            regularly and keeping an eye on your login history, you can take
-            steps to prevent unauthorized access and ensure your account remains
-            safe.
-          </p>
-          <form>
+
+        {/* Login Details Card */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-key text-gray-500 dark:text-gray-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                Login Details
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Username and email cannot be changed here.{" "}
+                <Link
+                  href="/settings/manage-password"
+                  className="text-blue-500 hover:underline"
+                >
+                  Manage password
+                </Link>
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1">
             <Input
               value={formInput.username}
               onChange={handleInputChange("username")}
@@ -202,18 +216,7 @@ const ManagePersonalInformation = () => {
               placeholder="Enter your email"
               error={error?.email?.message}
             />
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                label="Save Changes"
-                bgColor="blue-500"
-                disabled
-                hoverBgColor="blue-600"
-                icon="save"
-                loadingText="Saving..."
-              />
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

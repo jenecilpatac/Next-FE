@@ -27,7 +27,7 @@ export default function SinglePost({
 
   const prevImage = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + post?.image.length) % post?.image.length
+      (prevIndex) => (prevIndex - 1 + post?.image.length) % post?.image.length,
     );
   };
 
@@ -58,8 +58,8 @@ export default function SinglePost({
 
   return (
     <div className="mb-5">
-      <div className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition-all duration-300 ease-in-out">
-        <div className="bg-blue-500 text-white px-4 py-2 rounded-t-md text-center text-sm font-semibold uppercase tracking-wide">
+      <div className="bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden transition-shadow duration-300 hover:shadow-md">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 text-center text-xs font-semibold uppercase tracking-widest">
           <Link
             className="hover:underline"
             href={`/blog/posts/${post?.category?.slug}`}
@@ -98,14 +98,14 @@ export default function SinglePost({
                       onClick={prevImage}
                       className="absolute top-1/2 left-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
                     >
-                      <i className="fas fa-chevron-left"></i>
+                      <i className="fa-solid fa-chevron-left"></i>
                     </button>
 
                     <button
                       onClick={nextImage}
                       className="absolute top-1/2 right-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
                     >
-                      <i className="fas fa-chevron-right"></i>
+                      <i className="fa-solid fa-chevron-right"></i>
                     </button>
                   </>
                 )}
@@ -128,15 +128,15 @@ export default function SinglePost({
           )}
         </div>
 
-        <div className="px-4 py-2">
+        <div className="px-4 py-3">
           <p
             className={`${
               post.description.length < 100
-                ? "text-4xl font-bold"
+                ? "text-2xl font-bold"
                 : post.description.length > 150 && !seeMore
-                ? "line-clamp-[10] text-md"
-                : "text-md"
-            } text-gray-700 dark:text-gray-300 break-words whitespace-break-spaces`}
+                  ? "line-clamp-[10] text-sm"
+                  : "text-sm"
+            } text-gray-800 dark:text-gray-200 break-words whitespace-break-spaces leading-relaxed`}
           >
             {post.description.trim()}
           </p>
@@ -144,61 +144,44 @@ export default function SinglePost({
             <button
               onClick={handleSeeMore}
               type="button"
-              className="text-gray-400 font-bold hover:underline dark:text-gray-500"
+              className="text-xs text-blue-500 hover:underline mt-1 font-medium"
             >
-              See more...
+              See more
             </button>
           )}
         </div>
 
-        <div className="p-3 flex justify-between gap-2 items-center border-t border-gray-200 dark:border-gray-700">
-          <div className="text-sm text-gray-900 dark:text-gray-300 flex items-center relative">
-            <span className="absolute top-1 font-bold left-2 px-2 py-1 rounded-md text-xs bg-gray-300 text-gray-700 dark:text-gray-100 dark:bg-gray-600">
-              <i className="far fa-microphone-stand text-xs"></i>{" "}
-              Author
-            </span>
-            <span className="px-2 pb-2 pt-8 bg-gray-100 text-gray-900 dark:text-gray-200 min-w-24 dark:bg-gray-700 rounded-lg font-bold text-xs flex gap-1 items-center">
-              <Image
-                avatar={post?.user?.profile_pictures[0]?.avatar}
-                alt={post?.user?.name}
-                h={5}
-                w={5}
-              />{" "}
-              <span className="truncate" title={post?.user?.name}>
+        <div className="px-4 py-3 flex justify-between gap-2 items-center border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2">
+            <Image
+              avatar={post?.user?.profile_pictures[0]?.avatar}
+              alt={post?.user?.name}
+              h={7}
+              w={7}
+            />
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">
                 {post?.user?.name === user?.name
                   ? "You"
                   : post?.user === null
-                  ? "Deleted User"
-                  : post?.user?.name === null
-                  ? "Anonymous"
-                  : post?.user?.name}
+                    ? "Deleted User"
+                    : (post?.user?.name ?? "Anonymous")}
               </span>
-            </span>
-          </div>
-          <div className="text-sm text-gray-500 dark:text-gray-300 truncate">
-            <span>
-              {post?.publishedAs === "public" ? (
-                <>
-                  <i className="far fa-earth-americas"></i>
-                </>
-              ) : post?.publishedAs === "private" ? (
-                <>
-                  <i className="far fa-lock"></i>
-                </>
-              ) : post?.publishedAs === "friends" ? (
-                <>
-                  <i className="far fa-user-group"></i>
-                </>
-              ) : (
-                <>
-                  <i className="far fa-signs-posts"></i>
-                </>
-              )}{" "}
-              •{" "}
-              <small title={dateFormat(post?.createdAt)}>
-                {dateFormat(post?.createdAt)}
-              </small>
-            </span>
+              <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                {post?.publishedAs === "public" ? (
+                  <i className="fa-solid fa-earth-americas"></i>
+                ) : post?.publishedAs === "private" ? (
+                  <i className="fa-solid fa-lock"></i>
+                ) : post?.publishedAs === "friends" ? (
+                  <i className="fa-solid fa-user-group"></i>
+                ) : (
+                  <i className="fa-solid fa-signs-posts"></i>
+                )}
+                <span title={dateFormat(post?.createdAt)}>
+                  {dateFormat(post?.createdAt)}
+                </span>
+              </span>
+            </div>
           </div>
         </div>
         {(post?.likes.length || post?.comments.length) > 0 && (
@@ -206,7 +189,7 @@ export default function SinglePost({
             <div className="cursor-pointer flex gap-2 items-center">
               {post?.likes.length > 0 && (
                 <>
-                  <i className="fas fa-thumbs-up text-blue-500"></i>
+                  <i className="fa-solid fa-thumbs-up text-blue-500"></i>
                   <span>{post?.likes.length}</span>
                 </>
               )}
@@ -232,8 +215,8 @@ export default function SinglePost({
                         {liker.userId === user?.id
                           ? `You${post?.likes.length > 1 ? "," : ""}`
                           : liker.user.name === null
-                          ? "Anonymous"
-                          : `${liker.user.name}`}
+                            ? "Anonymous"
+                            : `${liker.user.name}`}
                       </span>
                     ))}
                 {post?.likes.length - (isLiked ? 1 : 0) > 1 && (
@@ -265,7 +248,7 @@ export default function SinglePost({
               <button type="button">
                 {post?.comments.length > 0 && (
                   <span className="hover:border-b relative group border-gray-600 dark:border-gray-300">
-                    <i className="far fa-comment"></i>
+                    <i className="fa-solid fa-comment"></i>
                     <span className="ml-1">
                       {post?.comments.length}{" "}
                       {post?.comments.length === 1 ? "comment" : "comments"}
@@ -278,8 +261,8 @@ export default function SinglePost({
                               index ===
                               self.findIndex(
                                 (comment: any) =>
-                                  comment.userId === value.userId
-                              )
+                                  comment.userId === value.userId,
+                              ),
                           )
                           .sort((a: any, b: any) => {
                             if (a.userId === user?.id) {
@@ -295,10 +278,10 @@ export default function SinglePost({
                               {commenter?.userId === user?.id
                                 ? "You"
                                 : commenter?.user?.name === null
-                                ? "Anonymous"
-                                : commenter?.user === null
-                                ? "Deleted User"
-                                : commenter?.user?.name}
+                                  ? "Anonymous"
+                                  : commenter?.user === null
+                                    ? "Deleted User"
+                                    : commenter?.user?.name}
                             </li>
                           ))}
                       </ul>
@@ -308,7 +291,7 @@ export default function SinglePost({
               </button>
               <button type="button">
                 <span className="hover:border-b border-gray-600 dark:border-gray-300">
-                  <i className="far fa-share"></i>{" "}
+                  <i className="fa-solid fa-share"></i>{" "}
                   <span className="ml-1">10</span>
                 </span>
               </button>

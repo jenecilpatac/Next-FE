@@ -1,123 +1,79 @@
-const Pagination = ({
-  totalItems,
-  itemsPerPage,
-  currentPage,
-  onPageChange,
-}: any) => {
+const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: any) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  const handlePageClick = (page: number) => {
-    onPageChange(page);
-  };
-
-  const handleLastPage = () => {
-    onPageChange(totalPages);
-  }
-
-  const handleFirstPage = () => {
-    onPageChange(1);
-  }
-
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  if (totalPages <= 1) return null;
 
   const startIndex = (currentPage - 1) * itemsPerPage + 1;
   const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
 
+  // Build windowed page numbers with ellipsis
+  const getPages = (): (number | "...")[] => {
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    const pages: (number | "...")[] = [1];
+
+    if (currentPage > 3) pages.push("...");
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    if (currentPage < totalPages - 2) pages.push("...");
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const btnBase = "flex items-center justify-center w-9 h-9 rounded-xl text-sm font-medium transition-colors focus:outline-none";
+  const btnNav = `${btnBase} border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed`;
+  const btnPage = (active: boolean) =>
+    `${btnBase} ${active
+      ? "bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-none border border-blue-600"
+      : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-800"
+    }`;
+
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 bg-gray-100 dark:bg-gray-900">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-900 px-4 py-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-50 hover:dark:bg-gray-800 disabled:opacity-50"
-        >
-          Previous
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-100 dark:border-gray-800">
+      {/* Results info */}
+      <p className="text-xs text-gray-500 dark:text-gray-400 order-2 sm:order-1">
+        Showing <span className="font-semibold text-gray-700 dark:text-gray-200">{startIndex}</span>–<span className="font-semibold text-gray-700 dark:text-gray-200">{endIndex}</span> of <span className="font-semibold text-gray-700 dark:text-gray-200">{totalItems}</span> results
+      </p>
+
+      {/* Controls */}
+      <nav className="flex items-center gap-1 order-1 sm:order-2" aria-label="Pagination">
+        {/* First */}
+        <button onClick={() => onPageChange(1)} disabled={currentPage === 1} className={btnNav} title="First page">
+          <i className="fa-solid fa-angles-left text-xs"></i>
         </button>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-900 px-4 py-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-50 hover:dark:bg-gray-800 disabled:opacity-50"
-        >
-          Next
+
+        {/* Prev */}
+        <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} className={btnNav} title="Previous page">
+          <i className="fa-solid fa-chevron-left text-xs"></i>
         </button>
-      </div>
 
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700 dark:text-gray-400">
-            Showing <span className="font-medium">{startIndex}</span> to{" "}
-            <span className="font-medium">{endIndex}</span> of{" "}
-            <span className="font-medium">{totalItems}</span> results
-          </p>
-        </div>
+        {/* Page numbers */}
+        {getPages().map((page, i) =>
+          page === "..." ? (
+            <span key={`ellipsis-${i}`} className="w-9 h-9 flex items-center justify-center text-gray-400 dark:text-gray-600 text-sm select-none">
+              &hellip;
+            </span>
+          ) : (
+            <button key={page} onClick={() => onPageChange(page)} className={btnPage(page === currentPage)} aria-current={page === currentPage ? "page" : undefined}>
+              {page}
+            </button>
+          )
+        )}
 
-        <div>
-          <nav
-            aria-label="Pagination"
-            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-          >
-            <button
-              onClick={handleFirstPage}
-              disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
-            >
-              <i className="far fa-chevrons-left" aria-hidden="true" />
-            </button>
-            <button
-              onClick={handlePrevious}
-              disabled={currentPage === 1}
-              className="relative inline-flex items-center px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
-            >
-              <span className="sr-only">Previous</span>
-              <i className="far fa-chevron-left" aria-hidden="true" />
-            </button>
+        {/* Next */}
+        <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} className={btnNav} title="Next page">
+          <i className="fa-solid fa-chevron-right text-xs"></i>
+        </button>
 
-            {pageNumbers.map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageClick(page)}
-                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 hover:bg-blue-500 focus:z-20 focus:outline-offset-0 ${
-                  page === currentPage
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 hover:dark:bg-gray-800"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className="relative inline-flex items-center px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
-            >
-              <span className="sr-only">Next</span>
-              <i className="far fa-chevron-right" aria-hidden="true" />
-            </button>
-            <button
-              onClick={handleLastPage}
-              disabled={currentPage === totalPages}
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 dark:text-gray-200 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:dark:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
-            >
-              <i className="far fa-chevrons-right" aria-hidden="true" />
-            </button>
-          </nav>
-        </div>
-      </div>
+        {/* Last */}
+        <button onClick={() => onPageChange(totalPages)} disabled={currentPage === totalPages} className={btnNav} title="Last page">
+          <i className="fa-solid fa-angles-right text-xs"></i>
+        </button>
+      </nav>
     </div>
   );
 };

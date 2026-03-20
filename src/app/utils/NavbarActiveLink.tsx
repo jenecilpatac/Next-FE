@@ -11,23 +11,25 @@ const ActiveLink = ({
   target?: string;
 }) => {
   const pathname = usePathname();
-
-  const normalizePath = (path: string) => path.replace(/\/$/, "");
-
   const isActive =
-    href === "/"
-      ? pathname === href
-      : normalizePath(pathname).startsWith(normalizePath(href));
+    pathname.split("/")[pathname.split("/").length - 1] ===
+    href.split("/")[href.split("/").length - 1];
 
   return (
     <Link
       href={href}
       target={target}
-      className={`${
-        isActive
-          ? "text-white bg-gray-300 md:bg-transparent md:dark:bg-transparent dark:bg-gray-700 md:text-gray-700 md:dark:text-blue-500"
-          : ""
-      } block py-2 px-3 text-gray-900 rounded hover:text-gray-900 hover:bg-gray-300 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
+      className={`relative block md:inline-flex items-center px-3 py-2 md:py-1.5 text-sm font-medium rounded-md md:rounded-none transition-colors duration-200
+        ${
+          isActive
+            ? "text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 md:bg-transparent md:dark:bg-transparent border-l-2 md:border-l-0 border-blue-500 md:border-0"
+            : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 md:hover:bg-transparent md:dark:hover:bg-transparent"
+        }
+        after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-blue-500
+        after:transition-transform after:duration-200 after:origin-center
+        ${isActive ? "after:scale-x-100 md:after:scale-x-100" : "after:scale-x-0 md:hover:after:scale-x-100"}
+        after:hidden md:after:block
+      `}
     >
       {children}
     </Link>

@@ -1,13 +1,8 @@
-export default function Button({
-  children,
-  bgColor,
-  hoverBgColor,
-  ...props
-}: any) {
+export default function Button({ children, bgColor, hoverBgColor, ...props }: any) {
   return (
     <button
       {...props}
-      className={`bg-${bgColor} hover:bg-${hoverBgColor} text-white p-2 rounded-md hover:scale-105 transition-all duration-300 ease-in-out`}
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-colors bg-${bgColor} hover:bg-${hoverBgColor}`}
     >
       {children}
     </button>

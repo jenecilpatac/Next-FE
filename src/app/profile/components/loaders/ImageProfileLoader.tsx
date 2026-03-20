@@ -1,7 +1,5 @@
 export default function ImageProfileLoader() {
   return (
-    <div className="w-32 h-32 rounded-full border-2 flex justify-center items-center border-gray-300 dark:border-gray-600 bg-slate-300 dark:bg-gray-400">
-      <i className="far fa-spinner animate-spin"></i>
-    </div>
+    <div className="w-28 h-28 rounded-full border-4 border-white dark:border-gray-950 bg-gray-200 dark:bg-gray-700 animate-pulse" />
   );
 }

@@ -23,7 +23,7 @@ export default function MessageFileUpload({
         onClick={() => inputRef?.current?.click()}
         className="hover:scale-105"
       >
-        <i className="far fa-image text-2xl"></i>
+        <i className="fa-solid fa-image text-2xl"></i>
       </button>
       <input
         ref={inputRef}

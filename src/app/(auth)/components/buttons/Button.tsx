@@ -2,24 +2,21 @@ export default function Button({
   loadingText,
   label,
   isLoading,
-  hoverBgColor,
-  bgColor,
   ...props
 }: any) {
   return (
     <button
       {...props}
       disabled={isLoading}
-      className={`w-full py-3 text-white bg-${bgColor} rounded-lg shadow hover:bg-${hoverBgColor} transition-all hover:scale-105 duration-300 ease-in-out ${
-        isLoading ? "cursor-not-allowed" : ""
-      }`}
+      className={`w-full py-2.5 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2
+        ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
     >
       {isLoading ? (
-        <span>
-          <i className="fas fa-spinner fa-pulse"></i> {loadingText}
-        </span>
+        <>
+          <i className="fa-solid fa-spinner animate-spin" /> {loadingText}
+        </>
       ) : (
-        <>{label}</>
+        label
       )}
     </button>
   );

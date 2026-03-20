@@ -12,192 +12,170 @@ import publicAuth from "@/app/lib/publicAuth";
 import NotFound from "@/app/not-found";
 import { Storage } from "@/app/utils/StorageUtils";
 import ProfileLoader from "../../components/loaders/ProfileLoader";
-import Button from "../../components/buttons/Button";
 
 const UserProfile = () => {
   const { username } = useParams();
   const [isRefresh, setIsRefresh] = useState(false);
-  const { data, loading, error }: any = useFetch(
-    `users/profile/${username}`,
-    isRefresh
-  );
+  const { data, loading, error }: any = useFetch(`users/profile/${username}`, isRefresh);
   const [active, setActive] = useState("posts");
   const [isImageLoading, setIsImageLoading] = useState(true);
 
-  const handleActive = (data: string) => () => {
-    setActive(data);
-  };
+  const isSetProfile = data?.profile_pictures?.filter((avatar: any) => avatar?.isSet !== null);
 
-  const handleImageLoaded = () => {
-    setIsImageLoading(false);
-  };
-
-  const isSetProfile = data?.profile_pictures?.filter(
-    (avatar: any) => avatar?.isSet !== null
-  );
-
-  if (error?.status === 404) {
-    return <NotFound />;
-  }
+  if (error?.status === 404) return <NotFound />;
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 dark:bg-gray-700 my-3 rounded-md max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 max-w-5xl mx-auto">
       {loading ? (
-        <>
+        <div className="p-6">
           <ProfileLoader />
           <div className="w-full md:w-2/3 mx-auto mt-5">
             <PostLoader />
           </div>
-        </>
+        </div>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row items-center space-y-2 justify-between">
-            <div className="flex flex-col sm:flex-row items-center space-x-4">
-              <div className="relative">
-                {isImageLoading && <ImageProfileLoader />}
+          {/* Cover + Avatar */}
+          <div className="relative">
+            <div className="h-36 bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 rounded-b-2xl" />
+            <div className="px-6 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-14">
+                {/* Avatar */}
+                <div className="relative w-fit">
+                  {isImageLoading && <ImageProfileLoader />}
+                  <img
+                    onLoad={() => setIsImageLoading(false)}
+                    src={
+                      isSetProfile && isSetProfile?.length === 0
+                        ? "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+                        : Storage(isSetProfile && isSetProfile[0]?.avatar)
+                    }
+                    alt="User Avatar"
+                    className={`w-28 h-28 rounded-full border-4 border-white dark:border-gray-950 object-cover ${isImageLoading ? "hidden" : ""}`}
+                  />
+                </div>
 
-                <img
-                  onLoad={handleImageLoaded}
-                  src={
-                    isSetProfile && isSetProfile?.length === 0
-                      ? "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-                      : Storage(isSetProfile && isSetProfile[0]?.avatar)
-                  }
-                  alt="User Avatar"
-                  className={`w-32 h-32 rounded-full border-2 border-gray-300 dark:border-gray-600 ${
-                    isImageLoading ? "hidden" : ""
-                  }`}
-                />
-              </div>
-
-              <div className="justify-items-center sm:justify-items-start">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {data?.name}{" "}
-                  {data?.emailVerifiedAt !== null && (
-                    <i className="fas fa-badge-check text-blue-500 text-md"></i>
-                  )}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {data?.jobTitle}
-                </p>
-                <div className="flex gap-2 mt-5">
-                  <Button
+                {/* Action buttons */}
+                <div className="flex gap-2 self-start sm:self-auto mt-2 sm:mt-0">
+                  <button
                     type="button"
-                    bgColor="blue-500"
-                    hoverBgColor="blue-600"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
                   >
-                    <i className="far fa-user-plus"></i> Add Friend
-                  </Button>
-                  <Button
+                    <i className="fa-solid fa-user-plus" />
+                    Add Friend
+                  </button>
+                  <button
                     type="button"
-                    bgColor="gray-500"
-                    hoverBgColor="gray-600"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <i className="far fa-layer-plus"></i> Follow
-                  </Button>
+                    <i className="fa-solid fa-layer-plus" />
+                    Follow
+                  </button>
                 </div>
               </div>
+
+              {/* Name / job */}
+              <div className="mt-3">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
+                  {data?.name}
+                  {data?.emailVerifiedAt !== null && (
+                    <i className="fa-solid fa-badge-check text-blue-500 text-base" />
+                  )}
+                </h1>
+                {data?.jobTitle && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{data?.jobTitle}</p>
+                )}
+              </div>
+
+              {/* Bio */}
+              {data?.bio && (
+                <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 max-w-xl">{data?.bio}</p>
+              )}
+
+              {/* Personal details pills */}
+              {(data?.address || data?.phoneNumber || data?.dateOfBirth || data?.gender) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {data?.phoneNumber && (
+                    <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                      <i className="fa-solid fa-phone text-gray-400" />
+                      {data.phoneNumber}
+                    </span>
+                  )}
+                  {data?.address && (
+                    <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                      <i className="fa-solid fa-location-dot text-gray-400" />
+                      {data.address}
+                    </span>
+                  )}
+                  {data?.dateOfBirth && (
+                    <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                      <i className="fa-solid fa-cake-candles text-gray-400" />
+                      {formatDate(data.dateOfBirth, "MMMM dd, yyyy")}
+                    </span>
+                  )}
+                  {data?.gender && (
+                    <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                      <i className="fa-solid fa-venus-mars text-gray-400" />
+                      {data.gender}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="mt-8 justify-items-center sm:justify-items-start">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Bio
-            </h2>
-            <p className="mt-2 text-gray-700 dark:text-gray-300">
-              {data?.bio ? (
-                data?.bio
-              ) : (
-                <span className="mt-2 text-gray-700 dark:text-gray-300 italic text-sm">
-                  "You haven't posted your bio yet."
-                </span>
-              )}
-            </p>
-          </div>
-
-          <div className="mt-8 justify-items-center sm:justify-items-start">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Personal Details
-            </h2>
-            <ul
-              role="list"
-              className="marker:text-blue-300 list-disc pl-5 space-y-2 text-gray-500 dark:text-gray-400 mt-2"
-            >
-              {data?.address &&
-              data?.phoneNumber &&
-              data?.dateOfBirth &&
-              data?.gender ? (
-                <>
-                  <li>{data?.phoneNumber}</li>
-                  <li>{data?.address}</li>
-                  <li>
-                    {data?.dateOfBirth &&
-                      formatDate(data?.dateOfBirth, "MMMM dd, yyyy")}
-                  </li>
-                  <li>{data?.gender}</li>
-                </>
-              ) : (
-                <>
-                  <li className="italic text-sm">No data</li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          <div className="mt-8">
-            <div className="flex gap-5 border-b pb-2">
-              <button
-                onClick={handleActive("posts")}
-                type="button"
-                className={`px-2 py-1 text-gray-900 dark:text-white hover:bg-gray-200 hover:rounded-t-md dark:hover:bg-gray-600 ${
-                  active === "posts"
-                    ? "border-b-2 border-blue-400"
-                    : "hover:rounded-b-md"
-                }`}
-              >
-                <h2 className="text-md font-semibold">Posts</h2>
-              </button>
-              <button
-                onClick={handleActive("photos")}
-                type="button"
-                className={`px-2 py-1 text-gray-900 dark:text-white hover:bg-gray-200 hover:rounded-t-md dark:hover:bg-gray-600 ${
-                  active === "photos"
-                    ? "border-b-2 border-blue-400"
-                    : "hover:rounded-b-md"
-                }`}
-              >
-                <h2 className="text-md font-semibold">Photos</h2>
-              </button>
+          {/* Tabs */}
+          <div className="px-6 mt-2">
+            <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800">
+              {["posts", "photos"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActive(tab)}
+                  className={`px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                    active === tab
+                      ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  }`}
+                >
+                  {tab}
+                  {tab === "posts" && data?.posts?.length > 0 && (
+                    <span className="ml-1.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded-full">
+                      {data.posts.length}
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
-            {active === "posts" ? (
-              <>
-                <div className="w-full flex justify-center mt-5">
+
+            <div className="mt-4">
+              {active === "posts" ? (
+                <div className="w-full flex justify-center">
                   <div className="w-full md:w-2/3">
                     {data.posts?.length > 0 ? (
                       data.posts?.map((post: any, index: number) => (
                         <PostsList key={index} post={post} setIsRefresh={setIsRefresh} />
                       ))
                     ) : (
-                      <div className="flex items-center justify-center h-48 w-full">
-                        <p className="text-center font-bold">
-                          This user has no posts
-                        </p>
+                      <div className="flex flex-col items-center justify-center h-48 gap-2 text-gray-400 dark:text-gray-600">
+                        <i className="fa-solid fa-newspaper text-3xl" />
+                        <p className="text-sm font-medium">No posts yet</p>
                       </div>
                     )}
                   </div>
                 </div>
-              </>
-            ) : data?.profile_pictures.length === 0 ? (
-              <div className="flex items-center justify-center h-48 mt-5 w-full">
-                <p className="text-center font-bold">No photos added</p>
-              </div>
-            ) : (
-              <div className="mt-4 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-2">
-                {data?.profile_pictures.map((image: any, index: number) => (
-                  <AvatarList key={index} image={image} />
-                ))}
-              </div>
-            )}
+              ) : data?.profile_pictures.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-48 gap-2 text-gray-400 dark:text-gray-600">
+                  <i className="fa-solid fa-images text-3xl" />
+                  <p className="text-sm font-medium">No photos added</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  {data?.profile_pictures.map((image: any, index: number) => (
+                    <AvatarList key={index} image={image} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}

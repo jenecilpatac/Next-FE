@@ -1,29 +1,23 @@
-const SchedulesSkeleton = () => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-3 overflow-x-hidden">
-      {Array.from({ length: 20 }).map((_, index) => (
-        <div key={index}>
-          <div className="bg-white dark:bg-gray-800 shadow-md p-4 rounded-md hover:z-50 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-            <div className="h-6 bg-slate-300 dark:bg-slate-400 rounded mx-auto w-36 mb-4 animate-pulse"></div>
-
-            <div className="flex space-x-2 my-10 items-center justify-center">
-              <div className="w-24 h-24 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-              <h3 className="text-4xl font-semibold dark:text-white">
-                <strong>VS</strong>
-              </h3>
-              <div className="w-24 h-24 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-            </div>
-            <hr />
-            <div className="text-center my-5">
-            <div className="h-6 bg-slate-300 dark:bg-slate-400 rounded mx-auto w-36 mb-7 animate-pulse"></div>
-            <div className="h-3 bg-slate-300 dark:bg-slate-400 rounded mx-auto w-36 mb-4 animate-pulse"></div>
-            <div className="h-3 bg-slate-300 dark:bg-slate-400 rounded mx-auto w-20 mb-4 animate-pulse"></div>
-            <div className="h-3 bg-slate-300 dark:bg-slate-400 rounded mx-auto w-12 mb-4 animate-pulse"></div>
-            </div>
-          </div>
+const SchedulesSkeleton = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {Array.from({ length: 12 }).map((_, i) => (
+      <div key={i} className="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4 animate-pulse">
+        {/* Score */}
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-full w-32 mx-auto mb-4" />
+        {/* Logos */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full" />
+          <div className="w-6 h-3 bg-gray-200 dark:bg-gray-700 rounded" />
+          <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full" />
         </div>
-      ))}
-    </div>
-  );
-};
+        <div className="border-t border-gray-100 dark:border-gray-700 pt-3 space-y-2">
+          <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full w-24 mx-auto" />
+          <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full w-16 mx-auto" />
+          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded-full w-14 mx-auto" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export default SchedulesSkeleton;

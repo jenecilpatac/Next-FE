@@ -28,6 +28,7 @@ import { getAllPublicAttachments } from "@/services/message-attachments-service"
 import ViewImages from "../components/view-images";
 import isImage from "../utils/is-image";
 import isVideo from "../utils/is-video";
+import ChatHeader from "../components/loaders/ChatHeader";
 const MessageFilePreviewPage = memo(MessageFilePreview);
 const MessageFileSendingPreview = memo(MessageFileSending);
 
@@ -58,7 +59,7 @@ const Chats = () => {
     "chat-messages/public-messages",
     sentPublicMessage,
     true,
-    false
+    false,
   );
   const {
     data,
@@ -104,8 +105,8 @@ const Chats = () => {
             response?.data?.attachments?.filter(
               (pa: any) =>
                 isImage(pa?.value?.split(".")?.pop()) ||
-                isVideo(pa?.value?.split(".")?.pop())
-            )
+                isVideo(pa?.value?.split(".")?.pop()),
+            ),
           );
         }
       } catch (error) {
@@ -166,7 +167,7 @@ const Chats = () => {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     observer.observe(sentinelRef.current);
@@ -191,7 +192,7 @@ const Chats = () => {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     observer.observe(recentChatRef.current);
@@ -212,12 +213,12 @@ const Chats = () => {
 
     chatContentRef?.current?.addEventListener(
       "scroll",
-      handleBackToBottomOnScroll
+      handleBackToBottomOnScroll,
     );
     return () => {
       chatContentRef?.current?.removeEventListener(
         "scroll",
-        handleBackToBottomOnScroll
+        handleBackToBottomOnScroll,
       );
     };
   }, [chatContentRef]);
@@ -363,7 +364,7 @@ const Chats = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.status === 201) {
@@ -475,32 +476,29 @@ const Chats = () => {
   return (
     <div className="flex h-screen">
       <div
-        className={`bg-white dark:bg-gray-700 border border-r border-gray-200 dark:border-gray-600 flex flex-col md:w-80 ${
-          isOpenRecentChat ? "" : "w-0"
+        className={`bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col md:w-80 transition-all duration-300 ${
+          isOpenRecentChat ? "w-20" : "w-0 overflow-hidden"
         }`}
       >
-        <div className="p-4 border border-b border-gray-200 dark:border-gray-600">
-          <div>
-            <Link href="/chats">
-              <p className="text-2xl font-bold">Chats</p>
-            </Link>
-          </div>
+        <div className="px-4 pt-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+          <Link href="/chats">
+            <p className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Chats
+            </p>
+          </Link>
           <div
-            className={`w-20 md:w-full mt-2 rounded-3xl py-3 pl-10 pr-3 relative bg-gray-200 dark:bg-gray-500 ${
-              isOpenRecentChat ? "" : "hidden md:block"
-            }`}
+            className={`relative ${isOpenRecentChat ? "" : "hidden md:block"}`}
           >
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
             <input
               type="search"
-              className="focus:outline-none bg-transparent w-full"
-              placeholder="Search Chats"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white placeholder-gray-400"
+              placeholder="Search people..."
               onChange={handleSearchTerm}
             />
-            <i className="far fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
           </div>
         </div>
-        <div className="overflow-y-auto h-[calc(100vh-80px)]">
-          {/* Recent Chats */}
+        <div className="overflow-y-auto flex-1">
           {loading || loadingOnSearch ? (
             <RecentChat />
           ) : data?.users?.length > 0 ? (
@@ -515,11 +513,17 @@ const Chats = () => {
               />
             ))
           ) : (
-            <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
-              {searchTerm ? `No "${searchTerm}" found` : "No conversations yet"}
-            </p>
+            <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+              <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                <i className="fa-solid fa-comments text-gray-400"></i>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {searchTerm
+                  ? `No results for "${searchTerm}"`
+                  : "No conversations yet"}
+              </p>
+            </div>
           )}
-
           {loadingOnTakeUsers && <DoubleRecentChat />}
           <span ref={recentChatRef} className="p-2"></span>
         </div>
@@ -533,35 +537,39 @@ const Chats = () => {
         onDragEnter={onDragEnter}
       >
         {/* Chat Header */}
-        <div className="bg-sky-700 text-white p-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <button
-              type="button"
-              className="block md:hidden"
-              onClick={handleOpenRecentChat}
-            >
-              <i
-                className={`far ${
-                  isOpenRecentChat ? "fa-arrow-left" : "fa-arrow-right"
-                }`}
-              ></i>
-            </button>
-            <div className="ml-3">
-              <p className="text-lg font-semibold">Public Chats</p>
-              <p className="text-sm text-gray-200">
-                {data?.totalUsersChatted} people chatted
-              </p>
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between shadow-sm">
+          {publicMessagesDataLoading ? (
+            <ChatHeader />
+          ) : (
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="block md:hidden w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                onClick={handleOpenRecentChat}
+              >
+                <i
+                  className={`fa-solid ${isOpenRecentChat ? "fa-arrow-left" : "fa-bars"} text-gray-600 dark:text-gray-300 text-sm`}
+                ></i>
+              </button>
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shrink-0">
+                <i className="fa-solid fa-users text-white text-sm"></i>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-gray-900 dark:text-white">
+                  Public Chats
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {data?.totalUsersChatted ?? 0} people chatted
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="text-white">
-              <i className="fas fa-users" />
+          )}
+          <div className="flex items-center gap-1">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-users text-sm" />
             </button>
-            <button className="text-white">
-              <i className="fas fa-info-circle" />
-            </button>
-            <button className="text-white">
-              <i className="fas fa-cog" />
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-info-circle text-sm" />
             </button>
           </div>
         </div>
@@ -576,7 +584,7 @@ const Chats = () => {
         )}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse px-4 py-10 bg-white overflow-y-auto dark:bg-gray-600 gap-1 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse px-4 py-4 bg-gray-50 dark:bg-gray-950 overflow-y-auto gap-1 border-b border-gray-100 dark:border-gray-800"
         >
           <div ref={seenSentinelRef}></div>
           {isSending && (messageRef?.current || attachments?.length > 0) && (
@@ -588,7 +596,7 @@ const Chats = () => {
                 <div className="justify-center flex mr-1 items-center">
                   <div className="group-hover:block hidden">
                     <button className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full">
-                      <i className="far fa-ellipsis-vertical"></i>
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
                     </button>
                   </div>
                 </div>
@@ -615,7 +623,7 @@ const Chats = () => {
           {isTyping &&
             userTypingInfo &&
             Object.values(userTypingInfo)?.some(
-              (item: any) => item?.id !== user?.id
+              (item: any) => item?.id !== user?.id,
             ) && (
               <div className="relative pt-4">
                 <div className="text-start absolute left-0 -bottom-2 flex gap-1">
@@ -631,7 +639,7 @@ const Chats = () => {
                             <Image
                               avatar={
                                 userType?.profile_pictures?.filter(
-                                  (item: any) => item?.isSet
+                                  (item: any) => item?.isSet,
                                 )[0]?.avatar
                               }
                               alt={userType?.name}
@@ -640,7 +648,7 @@ const Chats = () => {
                               title={userType?.name}
                             />
                           </div>
-                        )
+                        ),
                     )}
                   <div className="text-xs flex gap-1 items-center">
                     {typingUsers?.length > 5 && (
@@ -696,7 +704,7 @@ const Chats = () => {
               const isLastInGroup = currentKey !== prevKey;
 
               const sameMinuteUserMessages = publicMessagesData.messages.filter(
-                (m: any) => getUserMinuteKey(m) === currentKey
+                (m: any) => getUserMinuteKey(m) === currentKey,
               );
 
               const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
@@ -741,7 +749,7 @@ const Chats = () => {
             <p className="text-center mb-20 items-center">
               Be the first to start a conversation in{" "}
               <strong>Public Chats</strong>. Say <strong>HI</strong>{" "}
-              <i className="fas fa-hand-wave text-xl"></i>{" "}
+              <i className="fa-solid fa-hands-bubbles text-xl"></i>{" "}
             </p>
           )}
           {loadingOnTake && (
@@ -756,7 +764,7 @@ const Chats = () => {
           selectedMessage={selectedMessage}
           setSelectedMessage={setSelectedMessage}
         />
-        <div className="bg-white dark:bg-gray-700 px-4 py-2 gap-2 flex items-center relative">
+        <div className="bg-white dark:bg-gray-900 px-3 py-2 gap-2 flex items-center relative border-t border-gray-100 dark:border-gray-800">
           <div
             className={`absolute left-1/2 bottom-4 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
               backToBottom ? "opacity-100 -top-20" : "opacity-0 -top-10"
@@ -767,7 +775,7 @@ const Chats = () => {
               className="py-3 px-3.5 text-white hover:bg-gray-400/75 hover:dark:bg-gray-500/75 dark:border-gray-400 border-gray-300 flex place-items-center rounded-full border bg-gray-400 dark:bg-gray-500"
               type="button"
             >
-              <i className="far fa-arrow-down"></i>
+              <i className="fa-solid fa-arrow-down"></i>
             </button>
           </div>
           <MessageFileUpload
@@ -775,7 +783,7 @@ const Chats = () => {
             isLoading={publicMessagesDataLoading}
             textareaRef={textareaRef}
           />
-          <div className="relative w-full max-w-[calc(100%-60px)] py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
+          <div className="relative w-full max-w-[calc(100%-60px)] py-2 bg-gray-100 dark:bg-gray-800 pr-10 rounded-2xl mx-9">
             {attachments?.length > 0 && (
               <MessageFilePreviewPage
                 attachments={attachments}
@@ -806,7 +814,7 @@ const Chats = () => {
               >
                 <button type="button" onClick={handleEmojiPickerOpen}>
                   <i
-                    className={`fas fa-smile ${
+                    className={`fa-solid fa-smile ${
                       isEmojiPickerOpen
                         ? "text-yellow-500"
                         : "dark:text-white text-gray-600 hover:dark:text-gray-400 hover:text-gray-500"
@@ -816,13 +824,13 @@ const Chats = () => {
               </Emoji>
             </div>
           </div>
-          <div className="bottom-4 absolute right-4">
+          <div className="bottom-2 absolute right-3">
             {formInput.content || attachments?.length > 0 ? (
               <Button
                 disabled={publicMessagesDataLoading || isSending}
                 onClick={handleSendMessage}
                 type="button"
-                icon="paper-plane-top"
+                icon="paper-plane"
                 color="blue-500"
                 hoverColor="blue-600"
               />

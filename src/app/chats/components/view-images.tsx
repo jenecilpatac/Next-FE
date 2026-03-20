@@ -39,7 +39,7 @@ export default function ViewImages({
           className="hover:bg-black/50 p-2 rounded-md"
           onClick={() => setIsOpenImage(false)}
         >
-          <i className="far fa-x"></i>
+          <i className="fa-solid fa-x"></i>
         </button>
       </div>
       <div className="flex flex-col h-full gap-6 w-full overflow-x-auto">
@@ -118,14 +118,14 @@ export default function ViewImages({
             onClick={prevImage}
             className="absolute top-1/2 left-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
           >
-            <i className="fas fa-chevron-left"></i>
+            <i className="fa-solid fa-chevron-left"></i>
           </button>
 
           <button
             onClick={nextImage}
             className="absolute top-1/2 right-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
           >
-            <i className="fas fa-chevron-right"></i>
+            <i className="fa-solid fa-chevron-right"></i>
           </button>
         </>
       )}

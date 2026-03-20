@@ -1,47 +1,25 @@
 export default function Content() {
+  const sent = [52, 72, 44];
+  const received = [72, 96, 60, 80];
   return (
     <>
-      {/* Sent Message */}
-      <div className="flex justify-end">
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs p-3 rounded-3xl bg-slate-300 dark:bg-slate-400 animate-pulse w-52 h-10 shadow-md"></div>
-      </div>
-      {/* Received Message */}
-      <div className="flex justify-start gap-2">
-        <div className="flex flex-col justify-end">
-          <div className="w-10 h-10 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full"></div>
+      {received.map((w, i) => (
+        <div key={`r${i}`} className="flex justify-start gap-2 items-end">
+          <div className="w-8 h-8 bg-slate-200 dark:bg-slate-700 animate-pulse rounded-full shrink-0" />
+          <div
+            className={`h-9 bg-slate-200 dark:bg-slate-700 animate-pulse rounded-2xl`}
+            style={{ width: `${w * 4}px`, maxWidth: "70%" }}
+          />
         </div>
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs bg-slate-300 dark:bg-slate-400 animate-pulse w-72 h-10 p-3 rounded-3xl shadow-md"></div>
-      </div>
-      <div className="flex justify-start gap-2">
-        <div className="flex flex-col justify-end">
-          <div className="w-10 h-10 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full"></div>
+      ))}
+      {sent.map((w, i) => (
+        <div key={`s${i}`} className="flex justify-end">
+          <div
+            className={`h-9 bg-blue-200 dark:bg-blue-900/40 animate-pulse rounded-2xl`}
+            style={{ width: `${w * 4}px`, maxWidth: "70%" }}
+          />
         </div>
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs bg-slate-300 dark:bg-slate-400 animate-pulse w-96 h-10 p-3 rounded-3xl shadow-md"></div>
-      </div>
-      <div className="flex justify-end">
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs p-3 rounded-3xl bg-slate-300 dark:bg-slate-400 animate-pulse w-44 h-10 shadow-md"></div>
-      </div>
-      <div className="flex justify-end">
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs p-3 rounded-3xl bg-slate-300 dark:bg-slate-400 animate-pulse w-72 h-10 shadow-md"></div>
-      </div>
-      <div className="flex justify-start gap-2">
-        <div className="flex flex-col justify-end">
-          <div className="w-10 h-10 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full"></div>
-        </div>
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs bg-slate-300 dark:bg-slate-400 animate-pulse w-72 h-10 p-3 rounded-3xl shadow-md"></div>
-      </div>
-      <div className="flex justify-start gap-2">
-        <div className="flex flex-col justify-end">
-          <div className="w-10 h-10 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full"></div>
-        </div>
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs bg-slate-300 dark:bg-slate-400 animate-pulse w-60 h-10 p-3 rounded-3xl shadow-md"></div>
-      </div>
-      <div className="flex justify-start gap-2">
-        <div className="flex flex-col justify-end">
-          <div className="w-10 h-10 bg-slate-300 dark:bg-slate-400 animate-pulse rounded-full"></div>
-        </div>
-        <div className="xl:max-w-4xl md:max-w-2xl max-w-xs bg-slate-300 dark:bg-slate-400 animate-pulse w-80 h-10 p-3 rounded-3xl shadow-md"></div>
-      </div>
+      ))}
     </>
   );
 }

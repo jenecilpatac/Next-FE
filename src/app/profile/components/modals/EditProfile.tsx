@@ -16,11 +16,11 @@ export default function EditProfile({
   const [isUpdateBio, setIsUpdateBio] = useState(false);
   const [isUpdatePersonalDetails, setIsUpdatePersonalDetails] = useState(false);
   const [error, setError] = useState<string | any>("");
-  const [dateOfBirth, setDateOfBirth] = useState<string | any>("");
-  const [address, setAddress] = useState<string | any>("");
-  const [phoneNumber, setPhoneNumber] = useState<string | any>("");
-  const [jobTitle, setJobTitle] = useState<string | any>("");
-  const [gender, setGender] = useState<string | any>("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [gender, setGender] = useState("");
   const maxLength = 101;
   const [bio, setBio] = useState("");
   const [isBioLoading, setIsBioLoading] = useState(false);
@@ -96,307 +96,286 @@ export default function EditProfile({
     }
   };
 
+  const fieldClass =
+    "block w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent";
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[50]">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[50] p-4">
       <div
         ref={editModalRef}
-        className="p-6 bg-white dark:bg-gray-700 shadow-md w-full rounded-lg m-3 md:w-1/2 relative max-h-screen overflow-y-auto"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col"
       >
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-2 text-white py-0.5 rounded-full bg-gray-400 bg-opacity-75 hover:scale-95 transition-all duration-300 ease-in-out hover:bg-gray-500 hover:bg-opacity-75 absolute top-2 right-2"
-        >
-          <i className="far fa-xmark"></i>
-        </button>
-        <h2 className="text-xl text-center font-bold mb-4">Edit Profile</h2>
-        <hr className="border-gray-500" />
-        <div>
-          <div className="my-2">
-            <div>
-              <h2 className="text-xl font-bold">Update profile picture</h2>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+              <i className="fa-solid fa-user-pen text-blue-600 dark:text-blue-400 text-sm" />
             </div>
-
-            <div className="flex justify-center items-center">
-              <button
-                type="button"
-                className="my-3 font-bold px-2 py-1 bg-blue-500 bg-opacity-65 hover:translate-x-1 hover:scale-95 text-white rounded-md hover:bg-opacity-75 transition-all duration-300 ease-in-out"
-                onClick={openAddProfileModal}
-              >
-                {isSetProfile?.length === 0 || isSetProfile === undefined ? (
-                  <>
-                    <i className="far fa-plus"></i> Upload profile picture
-                  </>
-                ) : (
-                  <>
-                    <i className="far fa-image"></i> Update Picture
-                  </>
-                )}
-              </button>
-            </div>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+              Edit Profile
+            </h2>
           </div>
-          <div className="my-2 justify-between flex">
-            <div>
-              <h2 className="text-xl font-bold">Bio</h2>
-            </div>
-            <button type="button" onClick={toggleUpdateBio}>
-              {!isUpdateBio ? (
-                <>
-                  {user?.bio === null ? (
-                    <>
-                      <i className="far fa-plus"></i> Add
-                    </>
-                  ) : (
-                    <>
-                      <i className="far fa-pen"></i> Edit
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  <i className="far fa-xmark"></i> Cancel
-                </>
-              )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <i className="fa-solid fa-xmark text-sm" />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1 p-5 space-y-4">
+          {/* Profile picture */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Profile Picture
+            </p>
+            <button
+              type="button"
+              onClick={openAddProfileModal}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+            >
+              <i
+                className={`fa-solid ${isSetProfile?.length === 0 || isSetProfile === undefined ? "fa-plus" : "fa-image"}`}
+              />
+              {isSetProfile?.length === 0 || isSetProfile === undefined
+                ? "Upload Picture"
+                : "Update Picture"}
             </button>
           </div>
-          <div className="mb-4">
-            {isUpdateBio ? (
-              <div className="flex flex-col justify-center items-center">
-                <div className="flex flex-col w-full justify-center items-center">
-                  <textarea
-                    rows={4}
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    className="w-full md:w-1/2 p-2 rounded-md text-center dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                    placeholder="Describe yourself in a few words so that others can get to
-                    know you"
-                    maxLength={101}
-                  ></textarea>
 
-                  {error?.bio && (
-                    <small className="text-red-500">{error?.bio.message}</small>
-                  )}
-                </div>
-                {maxLength - bio.length !== 0 ? (
-                  <p className="text-gray-500 text-sm">
+          {/* Bio */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Bio
+              </p>
+              <button
+                type="button"
+                onClick={toggleUpdateBio}
+                className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <i
+                  className={`fa-solid ${isUpdateBio ? "fa-xmark" : user?.bio ? "fa-pen" : "fa-plus"}`}
+                />
+                {isUpdateBio ? "Cancel" : user?.bio ? "Edit" : "Add"}
+              </button>
+            </div>
+            {isUpdateBio ? (
+              <div className="space-y-2">
+                <textarea
+                  rows={3}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  maxLength={101}
+                  placeholder="Describe yourself in a few words..."
+                  className={`${fieldClass} resize-none`}
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-400">
                     {maxLength - bio.length} characters remaining
-                  </p>
-                ) : (
-                  <p className="text-gray-500 text-sm">
-                    You have reached the maximum character limit.
-                  </p>
-                )}
-                <div className="flex gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={toggleUpdateBio}
-                    className="bg-gray-500 bg-opacity-75 hover:bg-gray-600 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
-                  >
-                    <i className="far fa-xmark"></i> Cancel
-                  </button>
+                  </span>
                   <button
                     disabled={!bio || isBioLoading}
                     onClick={handleUpdateBio}
-                    className={`bg-blue-600 hover:bg-blue-700 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm ${
-                      !bio ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {isBioLoading ? (
                       <>
-                        <i className="far fa-spinner animate-spin"></i>{" "}
+                        <i className="fa-solid fa-spinner animate-spin" />{" "}
                         Saving...
                       </>
                     ) : (
                       <>
-                        <i className="far fa-save"></i> Save
+                        <i className="fa-solid fa-floppy-disk" /> Save
                       </>
                     )}
                   </button>
                 </div>
+                {error?.bio && (
+                  <small className="text-red-500">{error?.bio.message}</small>
+                )}
               </div>
             ) : (
-              <p className="text-center text-gray-500 dark:text-gray-400">
-                {user?.bio ? (
-                  user?.bio
-                ) : (
-                  <>
-                    Describe yourself in a few words so that others can get to
-                    know you
-                  </>
-                )}
+              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                {user?.bio || "No bio yet. Add one to let others know you."}
               </p>
             )}
           </div>
-        </div>
-        <div className="mb-4">
-          <div className="my-2 justify-between flex">
-            <div>
-              <h2 className="text-xl font-bold">Personal Details</h2>
-            </div>
-            <button type="button" onClick={toggleUpdatePersonalDetails}>
-              {!isUpdatePersonalDetails ? (
-                <>
-                  {user?.phoneNumber ||
-                  user?.address ||
-                  user?.dateOfBirth ||
-                  user?.jobTitle ||
-                  user?.gender ? (
-                    <>
-                      <i className="far fa-pen"></i> Edit
-                    </>
-                  ) : (
-                    <>
-                      <i className="far fa-plus"></i> Add
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  <i className="far fa-xmark"></i> Cancel
-                </>
-              )}
-            </button>
-          </div>
-          {isUpdatePersonalDetails ? (
-            <form onSubmit={handleUpdatePersonalDetails}>
-              <div className="w-full flex justify-center">
-                <div className="flex-col flex -space-y-3 w-full md:w-2/3">
-                  <div className="p-2">
-                    <label htmlFor="date_of_birth" className="block mb-1">
-                      Date of birth
-                    </label>
-                    <input
-                      type="date"
-                      value={dateOfBirth}
-                      className="w-full rounded-md p-2 dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                      onChange={(e) => setDateOfBirth(e.target.value)}
-                    />
-                    {error?.dateOfBirth && (
-                      <small className="text-red-500">
-                        {error?.dateOfBirth.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="p-2">
-                    <label htmlFor="address" className="block mb-1">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      value={address}
-                      placeholder="Enter your address"
-                      className="w-full rounded-md p-2 dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                    {error?.address && (
-                      <small className="text-red-500">
-                        {error?.address.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="p-2">
-                    <label htmlFor="phoneNumber" className="block mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      value={phoneNumber}
-                      type="text"
-                      placeholder="Enter your phone number"
-                      className="w-full rounded-md p-2 dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                    {error?.phoneNumber && (
-                      <small className="text-red-500">
-                        {error?.phoneNumber.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="p-2">
-                    <label htmlFor="jobtitle" className="block mb-1">
-                      Job Title
-                    </label>
-                    <input
-                      type="text"
-                      value={jobTitle}
-                      placeholder="Enter your job title"
-                      className="w-full rounded-md p-2 dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                      onChange={(e) => setJobTitle(e.target.value)}
-                    />
-                    {error?.jobTitle && (
-                      <small className="text-red-500">
-                        {error?.jobTitle.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="p-2">
-                    <label htmlFor="gender" className="block mb-1">
-                      Select Gender
-                    </label>
-                    <select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      className="w-full rounded-md p-2 dark:bg-gray-600 shadow-md border border-gray-200 bg-gray-50 dark:border-gray-500 active:ring-1 active:ring-blue-300 focus:outline-none focus:border-blue-300 focus:ring-blue-300 focus:ring-1"
-                    >
-                      <option value="" hidden>
-                        Select gender
-                      </option>
-                      <option value="" disabled>
-                        Select gender
-                      </option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="NonBinary">Non binary</option>
-                      <option value="Other">Other</option>
-                      <option value="PreferNotToSay">Prefer not to say</option>
-                    </select>
-                    {error?.gender && (
-                      <small className="text-red-500">
-                        {error?.gender.message}
-                      </small>
-                    )}
-                  </div>
-                  <div className="p-4 justify-center flex gap-2">
-                    <button
-                      onClick={toggleUpdatePersonalDetails}
-                      type="button"
-                      className="bg-gray-500 bg-opacity-75 hover:bg-gray-600 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
-                    >
-                      <i className="far fa-xmark"></i> Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isPersonalDetailsLoading}
-                      className="bg-blue-600 hover:bg-blue-700 hover:scale-95 px-2 py-2 text-white rounded-lg text-sm"
-                    >
-                      {isPersonalDetailsLoading ? (
-                        <>
-                          <i className="far fa-spinner animate-spin"></i>{" "}
-                          Saving...
-                        </>
-                      ) : (
-                        <>
-                          <i className="far fa-save"></i> Save
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          ) : (
-            <div className="flex justify-center">
-              <ul
-                role="list"
-                className="marker:text-blue-300 list-disc pl-5 space-y-2 text-gray-500 dark:text-gray-400"
+
+          {/* Personal Details */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Personal Details
+              </p>
+              <button
+                type="button"
+                onClick={toggleUpdatePersonalDetails}
+                className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
               >
-                <li>{user?.address || "Add your address"}</li>
-                <li>{user?.phoneNumber || "Add your phone number"}</li>
-                <li>{user?.dateOfBirth || "Add your date of birth"}</li>
-                <li>{user?.jobTitle || "Add your job title"}</li>
-                <li>{user?.gender || "Add your gender"}</li>
-              </ul>
+                <i
+                  className={`fa-solid ${isUpdatePersonalDetails ? "fa-xmark" : user?.phoneNumber || user?.address ? "fa-pen" : "fa-plus"}`}
+                />
+                {isUpdatePersonalDetails
+                  ? "Cancel"
+                  : user?.phoneNumber || user?.address
+                    ? "Edit"
+                    : "Add"}
+              </button>
             </div>
-          )}
+            {isUpdatePersonalDetails ? (
+              <form
+                onSubmit={handleUpdatePersonalDetails}
+                className="space-y-3"
+              >
+                {[
+                  {
+                    label: "Date of Birth",
+                    type: "date",
+                    value: dateOfBirth,
+                    onChange: setDateOfBirth,
+                    error: error?.dateOfBirth,
+                  },
+                  {
+                    label: "Address",
+                    type: "text",
+                    value: address,
+                    onChange: setAddress,
+                    placeholder: "Enter your address",
+                    error: error?.address,
+                  },
+                  {
+                    label: "Phone Number",
+                    type: "text",
+                    value: phoneNumber,
+                    onChange: setPhoneNumber,
+                    placeholder: "Enter your phone number",
+                    error: error?.phoneNumber,
+                  },
+                  {
+                    label: "Job Title",
+                    type: "text",
+                    value: jobTitle,
+                    onChange: setJobTitle,
+                    placeholder: "Enter your job title",
+                    error: error?.jobTitle,
+                  },
+                ].map(
+                  ({
+                    label,
+                    type,
+                    value,
+                    onChange,
+                    placeholder,
+                    error: fieldError,
+                  }: any) => (
+                    <div key={label}>
+                      <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                        {label}
+                      </label>
+                      <input
+                        type={type}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        placeholder={placeholder}
+                        className={fieldClass}
+                      />
+                      {fieldError && (
+                        <small className="text-red-500">
+                          {fieldError.message}
+                        </small>
+                      )}
+                    </div>
+                  ),
+                )}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    Gender
+                  </label>
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className={fieldClass}
+                  >
+                    <option value="" hidden>
+                      Select gender
+                    </option>
+                    <option value="" disabled>
+                      Select gender
+                    </option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="NonBinary">Non binary</option>
+                    <option value="Other">Other</option>
+                    <option value="PreferNotToSay">Prefer not to say</option>
+                  </select>
+                  {error?.gender && (
+                    <small className="text-red-500">
+                      {error?.gender.message}
+                    </small>
+                  )}
+                </div>
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="submit"
+                    disabled={isPersonalDetailsLoading}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isPersonalDetailsLoading ? (
+                      <>
+                        <i className="fa-solid fa-spinner animate-spin" />{" "}
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-solid fa-floppy-disk" /> Save
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {[
+                  {
+                    icon: "fa-location-dot",
+                    value: user?.address,
+                    fallback: "No address",
+                  },
+                  {
+                    icon: "fa-phone",
+                    value: user?.phoneNumber,
+                    fallback: "No phone",
+                  },
+                  {
+                    icon: "fa-cake-candles",
+                    value: user?.dateOfBirth,
+                    fallback: "No birthday",
+                  },
+                  {
+                    icon: "fa-briefcase",
+                    value: user?.jobTitle,
+                    fallback: "No job title",
+                  },
+                  {
+                    icon: "fa-venus-mars",
+                    value: user?.gender,
+                    fallback: "No gender",
+                  },
+                ].map(({ icon, value, fallback }) => (
+                  <span
+                    key={fallback}
+                    className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full ${value ? "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700" : "text-gray-400 dark:text-gray-600 italic"}`}
+                  >
+                    <i className={`fa-solid ${icon} text-gray-400`} />
+                    {value || fallback}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

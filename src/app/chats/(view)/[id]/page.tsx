@@ -31,6 +31,7 @@ import isImage from "../../utils/is-image";
 import isVideo from "../../utils/is-video";
 import { getAllPrivateAttachments } from "@/services/message-attachments-service";
 import ViewImages from "../../components/view-images";
+import { formatDistanceToNowStrict } from "date-fns";
 const MessageFilePreviewPage = memo(MessageFilePreview);
 const MessageFileSendingPreview = memo(MessageFileSending);
 
@@ -48,7 +49,7 @@ const Chats = () => {
     id && `/users/for/seo/${id}`,
     false,
     false,
-    false
+    false,
   );
   const { user }: any = useAuth();
   const [error, setError] = useState<any>("");
@@ -83,7 +84,7 @@ const Chats = () => {
     id && `/chat-messages/private/${id}/messages`,
     sentMessage,
     true,
-    false
+    false,
   );
   const displayPrivateMessages = privateMessages?.messages[0]?.messages ?? [];
   const loadingOnTakeRef = useRef(loadingOnTake);
@@ -119,6 +120,8 @@ const Chats = () => {
   let firstUnreadIndex: any = null;
 
   useEffect(() => {
+    if (!user || !id) return;
+
     const privateAttachments = async () => {
       try {
         const response = await getAllPrivateAttachments(user?.id, id);
@@ -127,8 +130,8 @@ const Chats = () => {
             response?.data?.attachments?.filter(
               (pa: any) =>
                 isImage(pa?.value?.split(".")?.pop()) ||
-                isVideo(pa?.value?.split(".")?.pop())
-            )
+                isVideo(pa?.value?.split(".")?.pop()),
+            ),
           );
         }
       } catch (error) {
@@ -137,7 +140,7 @@ const Chats = () => {
     };
 
     privateAttachments();
-  }, [sentMessage]);
+  }, [sentMessage, user, id]);
 
   useEffect(() => {
     if (!formInput.content || !user) return;
@@ -182,7 +185,7 @@ const Chats = () => {
       }
       try {
         const response = await api.patch(
-          `chat-messages/seen-message/${receiverId}/${chatId}`
+          `chat-messages/seen-message/${receiverId}/${chatId}`,
         );
         if (response.status === 200) {
           setMessageDetails({
@@ -223,7 +226,7 @@ const Chats = () => {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     observer.observe(sentinelRef.current);
@@ -249,7 +252,7 @@ const Chats = () => {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     observer.observe(unreadMessageRef.current);
@@ -297,12 +300,12 @@ const Chats = () => {
 
     chatContentRef?.current?.addEventListener(
       "scroll",
-      handleBackToBottomOnScroll
+      handleBackToBottomOnScroll,
     );
     return () => {
       chatContentRef?.current?.removeEventListener(
         "scroll",
-        handleBackToBottomOnScroll
+        handleBackToBottomOnScroll,
       );
     };
   }, [chatContentRef]);
@@ -492,7 +495,7 @@ const Chats = () => {
   };
 
   firstUnreadIndex = displayPrivateMessages.findLastIndex(
-    (msg: any) => msg.userId !== user.id && !msg.isSeen
+    (msg: any) => msg.userId !== user.id && !msg.isSeen,
   );
 
   useEffect(() => {
@@ -559,34 +562,29 @@ const Chats = () => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <div
-        className={`bg-white dark:bg-gray-700 border border-r border-gray-200 dark:border-gray-600 flex flex-col md:w-80 ${
-          isOpenRecentChat ? "" : "w-0"
+        className={`bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col md:w-80 transition-all duration-300 ${
+          isOpenRecentChat ? "w-20" : "w-0 overflow-hidden"
         }`}
       >
-        {/* Profile Header */}
-        <div className="border p-4 border-b border-gray-200 dark:border-gray-600">
-          <div>
-            <Link href="/chats">
-              <p className="text-2xl font-bold">Chats</p>
-            </Link>
-          </div>
+        <div className="px-4 pt-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+          <Link href="/chats">
+            <p className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Chats
+            </p>
+          </Link>
           <div
-            className={`w-20 md:w-full mt-2 rounded-3xl py-3 pl-10 pr-3 relative bg-gray-200 dark:bg-gray-500 ${
-              isOpenRecentChat ? "" : "hidden md:block"
-            }`}
+            className={`relative ${isOpenRecentChat ? "" : "hidden md:block"}`}
           >
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
             <input
               type="search"
-              className="focus:outline-none bg-transparent w-full"
-              placeholder="Search Chats"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white placeholder-gray-400"
+              placeholder="Search people..."
               onChange={handleSearchTerm}
             />
-            <i className="far fa-magnifying-glass text-gray-300 absolute left-3 top-3.5 text-xl"></i>
           </div>
         </div>
-        {/* Recent Chats */}
-
-        <div className="overflow-y-auto h-[calc(100vh-80px)]">
+        <div className="overflow-y-auto flex-1">
           {loadingConvos || loadingOnSearch ? (
             <RecentChat />
           ) : !searchTerm &&
@@ -630,9 +628,16 @@ const Chats = () => {
               />
             ))
           ) : (
-            <p className="text-center font-bold text-lg mt-5 break-words px-10 w-20 md:w-full">
-              {searchTerm ? `No "${searchTerm}" found` : "No conversations yet"}
-            </p>
+            <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+              <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                <i className="fa-solid fa-comments text-gray-400"></i>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {searchTerm
+                  ? `No results for "${searchTerm}"`
+                  : "No conversations yet"}
+              </p>
+            </div>
           )}
 
           {loadingOnTake && <DoubleRecentChat />}
@@ -648,21 +653,19 @@ const Chats = () => {
         onDragEnter={onDragEnter}
       >
         {/* Chat Header */}
-        <div className="bg-blue-600 text-white p-4 flex items-center justify-between shadow-md">
-          <div className="flex items-center">
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-3">
             {loading ? (
               <ChatHeader />
             ) : (
               <>
                 <button
                   type="button"
-                  className="mr-3 block md:hidden"
+                  className="mr-1 block md:hidden w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   onClick={handleOpenRecentChat}
                 >
                   <i
-                    className={`far ${
-                      isOpenRecentChat ? "fa-arrow-left" : "fa-arrow-right"
-                    }`}
+                    className={`fa-solid ${isOpenRecentChat ? "fa-arrow-left" : "fa-bars"} text-gray-600 dark:text-gray-300 text-sm`}
                   ></i>
                 </button>
                 <Image
@@ -671,25 +674,37 @@ const Chats = () => {
                   height={10}
                   alt={data?.user?.name}
                 />
-                <div className="ml-3">
-                  <p className="text-lg font-semibold">
+                <div>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">
                     {data?.user?.name || "Anonymous"}
                   </p>
-
-                  <p className="text-sm text-gray-200">Online</p>
+                  {!data?.user?.status ? (
+                    <p className="text-xs text-green-500 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
+                      Online
+                    </p>
+                  ) : (
+                    <p className="text-xs text-red-500 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-red-500 rounded-full inline-block"></span>
+                      Offline about{" "}
+                      {formatDistanceToNowStrict(data?.user?.status, {
+                        addSuffix: true,
+                      })}
+                    </p>
+                  )}
                 </div>
               </>
             )}
           </div>
-          <div className="flex items-center space-x-4">
-            <button className="text-white">
-              <i className="fas fa-phone-alt" />
+          <div className="flex items-center gap-1">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-phone-alt text-sm" />
             </button>
-            <button className="text-white">
-              <i className="fas fa-video" />
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-video text-sm" />
             </button>
-            <button className="text-white">
-              <i className="fas fa-cog" />
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-cog text-sm" />
             </button>
           </div>
         </div>
@@ -704,7 +719,7 @@ const Chats = () => {
         )}
         <div
           ref={chatContentRef}
-          className="flex-1 flex flex-col-reverse gap-1 p-4 overflow-y-auto bg-white dark:bg-gray-600 border-b border-gray-200 dark:border-gray-600"
+          className="flex-1 flex flex-col-reverse gap-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800"
         >
           {isSending && (messageRef?.current || attachments?.length > 0) && (
             <div className="relative opacity-60">
@@ -715,7 +730,7 @@ const Chats = () => {
                 <div className="justify-center flex mr-1 items-center">
                   <div className="group-hover:block hidden">
                     <button className="px-3.5 py-1 hover:dark:bg-gray-600 hover:bg-gray-200 rounded-full">
-                      <i className="far fa-ellipsis-vertical"></i>
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
                     </button>
                   </div>
                 </div>
@@ -750,7 +765,7 @@ const Chats = () => {
                     <Image
                       avatar={
                         userTypingInfoPrivate?.profile_pictures?.filter(
-                          (item: any) => item?.isSet
+                          (item: any) => item?.isSet,
                         )[0]?.avatar
                       }
                       alt={userTypingInfoPrivate?.name}
@@ -807,7 +822,7 @@ const Chats = () => {
               const isLastInGroup = currentKey !== prevKey;
 
               const sameMinuteUserMessages = displayPrivateMessages.filter(
-                (m: any) => getUserMinuteKey(m) === currentKey
+                (m: any) => getUserMinuteKey(m) === currentKey,
               );
 
               const isOnlyInMinuteUser = sameMinuteUserMessages.length === 1;
@@ -866,7 +881,7 @@ const Chats = () => {
             <p className="text-center mb-20 items-center">
               Start an conversation with <strong>{data?.user?.name}</strong>.{" "}
               Say <strong>HI</strong>{" "}
-              <i className="fas fa-hand-wave text-xl"></i>{" "}
+              <i className="fa-solid fa-hands-bubbles text-xl"></i>
             </p>
           )}
 
@@ -882,7 +897,7 @@ const Chats = () => {
           selectedMessage={selectedMessage}
           setSelectedMessage={setSelectedMessage}
         />
-        <div className="bg-white dark:bg-gray-700 px-4 py-2 gap-2 flex items-center relative">
+        <div className="bg-white dark:bg-gray-900 px-3 py-2 gap-2 flex items-center relative border-t border-gray-100 dark:border-gray-800">
           <div
             className={`absolute left-1/2 bottom-4 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
               backToBottom ? "opacity-100 -top-20" : "opacity-0 -top-10"
@@ -893,7 +908,7 @@ const Chats = () => {
               className="py-3 px-3.5 text-white hover:bg-gray-400/75 hover:dark:bg-gray-500/75 dark:border-gray-400 border-gray-300 flex place-items-center rounded-full border bg-gray-400 dark:bg-gray-500"
               type="button"
             >
-              <i className="far fa-arrow-down"></i>
+              <i className="fa-solid fa-arrow-down"></i>
             </button>
           </div>
           <MessageFileUpload
@@ -901,7 +916,7 @@ const Chats = () => {
             isLoading={isLoadingPrivateMessages}
             textareaRef={textareaRef}
           />
-          <div className="relative w-full py-2 bg-gray-100 dark:bg-gray-500 pr-10 rounded-3xl mx-9">
+          <div className="relative w-full py-2 bg-gray-100 dark:bg-gray-800 pr-10 rounded-2xl mx-9">
             {attachments?.length > 0 && (
               <MessageFilePreviewPage
                 attachments={attachments}
@@ -933,7 +948,7 @@ const Chats = () => {
               >
                 <button type="button" onClick={handleEmojiPickerOpen}>
                   <i
-                    className={`fas fa-smile ${
+                    className={`fa-solid fa-smile ${
                       isEmojiPickerOpen
                         ? "text-yellow-500"
                         : "dark:text-white text-gray-600 hover:dark:text-gray-400 hover:text-gray-500"
@@ -943,13 +958,13 @@ const Chats = () => {
               </Emoji>
             </div>
           </div>
-          <div className="bottom-4 absolute right-4">
+          <div className="bottom-2 absolute right-3">
             {formInput.content || attachments?.length > 0 ? (
               <Button
                 disabled={isLoadingPrivateMessages || isSending}
-                type="button"
                 onClick={handleSendMessage}
-                icon="paper-plane-top"
+                type="button"
+                icon="paper-plane"
                 color="blue-500"
                 hoverColor="blue-600"
               />

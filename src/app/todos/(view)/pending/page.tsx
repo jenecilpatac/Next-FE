@@ -14,93 +14,85 @@ import withAuth from "@/app/lib/withAuth";
 
 const Pending = () => {
   const [isRefresh, setIsRefresh] = useState(false);
-  const { data, loading, error }: any = useFetch(
-    `/todos/status/pending`,
-    isRefresh
-  );
+  const { data, loading }: any = useFetch(`/todos/status/pending`, isRefresh);
   const {
     hasHigherRole,
     isAuthenticated,
     loading: authLoading,
     isLogout,
   }: any = useAuth();
-  const { showSuccess }: any = useToastr();
+  const { showSuccess, showError }: any = useToastr();
   const router: any = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated && !authLoading) {
-      router.push("/login");
-    }
+    if (!isAuthenticated && !authLoading) router.push("/login");
   }, [isAuthenticated, authLoading, router]);
 
   if (authLoading) return <LoadingLoaders />;
-
-  if (!isAuthenticated && !isLogout) {
-    return <UnauthorizedPage />;
-  }
+  if (!isAuthenticated && !isLogout) return <UnauthorizedPage />;
 
   const handleStatusUpdate = async (id: number, status: any) => {
     setIsRefresh(true);
     try {
-      const response = await api.post(`/todos/change-status/${id}`, {
-        status,
-      });
-      if (response.status === 201) {
-        showSuccess(response.data.message, "Todo Status Updated");
-      }
+      const response = await api.post(`/todos/change-status/${id}`, { status });
+      if (response.data.statusCode === 200)
+        showSuccess(response.data.message, "Status Updated");
+      if (response.data.statusCode === 400)
+        showError(response.data.message, "Error");
     } catch (e: any) {
       console.error(e);
     } finally {
       setIsRefresh(false);
     }
   };
+
+  const gridClass = `grid grid-cols-1 sm:grid-cols-2 gap-3 ${hasHigherRole ? "lg:grid-cols-3 xl:grid-cols-4" : "lg:grid-cols-4 xl:grid-cols-5"}`;
+
   return (
-    <div className="w-full p-5">
-      <h2 className="text-2xl font-bold my-3">All Pending Todos</h2>
-      <hr />
-      {loading ? (
-        <div className="w-full">
-          <div
-            className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3 ${
-              hasHigherRole
-                ? "lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                : "lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-            }`}
-          >
-            <AllTodosLoader />
+    <div className="p-5 dark:bg-black min-h-screen">
+      <div className="mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+            <i className="fa-solid fa-clock text-orange-600 dark:text-orange-400 text-sm"></i>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              Pending Todos
+            </h1>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {data?.todo?.length ?? 0} task(s)
+            </p>
           </div>
         </div>
+        <hr className="mt-4 border-gray-200 dark:border-gray-800" />
+      </div>
+
+      {loading ? (
+        <div className={gridClass}>
+          <AllTodosLoader />
+        </div>
+      ) : data?.todo?.length > 0 ? (
+        <div className={gridClass}>
+          {data.todo.map((item: any, index: number) => (
+            <PendingStatusTodoList
+              key={index}
+              item={item}
+              handleStatusUpdate={handleStatusUpdate}
+            />
+          ))}
+        </div>
       ) : (
-        <div className="w-full mt-5">
-          {data?.todo?.length > 0 ? (
-            <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3 ${
-                hasHigherRole
-                  ? "lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                  : "lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
-              }`}
-            >
-              {data.todo.map((item: any, index: number) => (
-                <div key={index}>
-                  <PendingStatusTodoList
-                    item={item}
-                    handleStatusUpdate={handleStatusUpdate}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center flex flex-col items-center justify-center h-full">
-              <p className="text-[70px] mb-3">
-                <i className="far fa-memo-circle-info text-[70px]"></i>
-              </p>
-              <p className="text-2xl">You have no posted/pending todo yet.</p>
-            </div>
-          )}
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-full flex items-center justify-center mb-3">
+            <i className="fa-solid fa-clock text-2xl text-orange-300 dark:text-orange-700"></i>
+          </div>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+            No pending todos
+          </p>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default withAuth(Pending);

@@ -39,103 +39,66 @@ export default function PostsList({ post, setIsRefresh }: any) {
         setIsViewCommentOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const nextImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % post.image.length);
-  };
-
-  const prevImage = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + post.image.length) % post.image.length
-    );
-  };
-
-  const imageIndex = (index: number) => {
-    setCurrentIndex(index);
-  };
+  const nextImage = () => setCurrentIndex((p) => (p + 1) % post.image.length);
+  const prevImage = () =>
+    setCurrentIndex((p) => (p - 1 + post.image.length) % post.image.length);
+  const imageIndex = (i: number) => setCurrentIndex(i);
 
   const handleLike = (postId: number) => async () => {
     setIsRefresh(true);
     try {
       await api.post(`/posts/like/${postId}`, {});
-    } catch (error: any) {
-      console.error(error);
+    } catch (e: any) {
+      console.error(e);
     } finally {
       setIsRefresh(false);
     }
   };
 
   const handleOpenComment = (postId: number) => async () => {
-    setIsCommentOpen((isCommentOpen: any) => ({
-      ...isCommentOpen,
-      [postId]: true,
-    }));
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
+    setIsCommentOpen((p: any) => ({ ...p, [postId]: true }));
+    if (textareaRef.current) textareaRef.current.focus();
     setIsOpen(true);
   };
 
-  const handleNavigate = () => {
-    router.push("/login");
-  };
+  const handleNavigate = () => router.push("/login");
 
   const handleSubmitComment = (postId: any) => async () => {
     setIsRefresh(true);
     textareaRef.current.focus();
     try {
-      const response = await api.post(`/comments/${postId}`, {
-        comment,
-      });
-
+      const response = await api.post(`/comments/${postId}`, { comment });
       if (textareaRef.current && response.status === 201) {
         textareaRef.current.style.height = "auto";
         setComment("");
         setError("");
       }
-    } catch (error: any) {
-      console.error(error);
-      setError(error.response.data);
+    } catch (e: any) {
+      console.error(e);
+      setError(e.response.data);
     } finally {
       setIsRefresh(false);
     }
   };
 
   const handleKeyDown = (postId: any) => (e: any) => {
-    if (window.innerWidth > 640) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        if (comment) {
-          handleSubmitComment(postId)();
-        }
-      }
+    if (window.innerWidth > 640 && e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (comment) handleSubmitComment(postId)();
     }
-  };
-
-  const handleInputChange = (e: any) => {
-    setComment(e.target.value);
   };
 
   const handleInput = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      textareaRef.current.style.overflowY =
+        textareaRef.current.scrollHeight > 200 ? "auto" : "hidden";
     }
-    if (textareaRef.current.scrollHeight > 200) {
-      textareaRef.current.style.overflowY = "auto";
-    } else {
-      textareaRef.current.style.overflowY = "hidden";
-    }
-  };
-
-  const handleClickOpen = () => {
-    setIsOpen(true);
   };
 
   const handleViewComment = (postId: number) => () => {
@@ -143,318 +106,241 @@ export default function PostsList({ post, setIsRefresh }: any) {
     setIsViewCommentOpen(!isViewCommentOpen);
   };
 
-  const handleSeeMore = () => {
-    setSeeMore(!seeMore);
+  const statusIcon: any = {
+    public: "fa-earth-americas",
+    private: "fa-lock",
+    friends: "fa-user-group",
   };
 
   return (
-    <div className="mb-5">
+    <div className="mb-6">
       <div
-        className="bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 shadow-md rounded-lg overflow-hidden transition-all duration-300 ease-in-out"
+        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden"
         data-aos="fade-up"
       >
-        <div className="bg-blue-500 text-white px-4 py-2 rounded-t-md text-center text-sm font-semibold uppercase tracking-wide">
+        {/* Category Banner */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-center">
           <Link
-            className="hover:underline"
             href={`/blog/posts/${post.category.slug}`}
+            className="text-white text-xs font-bold uppercase tracking-widest hover:opacity-80 transition-opacity"
           >
             {post.category.categoryName}
           </Link>
         </div>
 
-        <div className="shadow-sm p-2">
-          {post.image.length !== 0 && (
-            <>
-              <div className="relative w-full h-auto overflow-hidden rounded-lg">
-                <div
-                  className="w-full h-full flex transition-transform duration-300"
-                  style={{
-                    transform: `translateX(-${currentIndex * 100}%)`,
-                  }}
+        {/* Author Row */}
+        <div className="flex items-center gap-3 px-4 pt-3 pb-2">
+          <Image
+            avatar={post?.user?.profile_pictures[0]?.avatar}
+            alt={post?.user?.name}
+            h={10}
+            w={10}
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+              {post?.user ? (
+                <Link
+                  href={`/${post?.user?.username}`}
+                  className="hover:underline"
                 >
-                  {post.image.map((image: any, index: number) => (
-                    <div
-                      key={index}
-                      className="flex-shrink-0 w-full h-full relative"
-                    >
-                      <img
-                        className="w-full h-full object-cover hover:scale-105 transition-all duration-300 ease-in-out"
-                        src={Storage(image)}
-                        alt={`Post Image ${index + 1}`}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                {post.image.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute top-1/2 left-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
-                    >
-                      <i className="fas fa-chevron-left"></i>
-                    </button>
-
-                    <button
-                      onClick={nextImage}
-                      className="absolute top-1/2 right-2 transform -translate-y-1/2 dark:bg-black dark:bg-opacity-50 p-2 bg-gray-200 rounded hover:bg-opacity-75"
-                    >
-                      <i className="fas fa-chevron-right"></i>
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {post.image.length > 1 && (
-                <div className="flex justify-center mt-2">
-                  {post.image.map((_: any, index: any) => (
-                    <div
-                      onClick={() => imageIndex(index)}
-                      key={index}
-                      className={`w-2.5 h-2.5 mx-1 rounded-full cursor-pointer hover:bg-blue-500 ${
-                        currentIndex === index ? "bg-blue-500" : "bg-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
+                  {post?.user?.id === user?.id
+                    ? "You"
+                    : (post?.user?.name ?? "Anonymous")}
+                </Link>
+              ) : (
+                <span>
+                  {post?.user === null ? "Deleted User" : "Anonymous"}
+                </span>
               )}
-            </>
-          )}
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 mt-0.5">
+              <i
+                className={`fa-solid ${statusIcon[post.publishedAs] ?? "fa-signs-posts"} text-[10px]`}
+              ></i>
+              <span>{dateFormat(post.createdAt)}</span>
+            </p>
+          </div>
         </div>
 
-        <div className="px-4 py-2">
+        {/* Description */}
+        <div className="px-4 pb-3">
           <p
-            className={`${
-              post.description.length < 100
-                ? "text-4xl font-bold"
-                : post.description.length > 150 && !seeMore
-                ? "line-clamp-[10] text-md"
-                : "text-md"
-            } text-gray-700 dark:text-gray-300 whitespace-break-spaces break-words`}
+            className={`text-gray-800 dark:text-gray-200 whitespace-break-spaces break-words leading-relaxed ${post.description.length < 80 ? "text-xl font-bold" : "text-sm"} ${post.description.length > 150 && !seeMore ? "line-clamp-[8]" : ""}`}
           >
             {post.description.trim()}
           </p>
           {post.description.length > 150 && !seeMore && (
             <button
-              onClick={handleSeeMore}
-              type="button"
-              className="text-gray-400 font-bold hover:underline dark:text-gray-500"
+              onClick={() => setSeeMore(true)}
+              className="text-xs text-blue-500 hover:underline mt-1 font-medium"
             >
-              See more...
+              See more
             </button>
           )}
         </div>
 
-        <div className="p-3 flex justify-between gap-2 items-center border-t border-gray-200 dark:border-gray-700">
-          <div className="text-sm text-gray-900 dark:text-gray-300 flex items-center relative">
-            <span className="absolute top-1 font-bold left-2 px-2 py-1 rounded-md text-xs bg-gray-300 text-gray-700 dark:text-gray-100 dark:bg-gray-600">
-              <i className="far fa-microphone-stand text-xs"></i> Author
-            </span>
-            <span className="px-2 pb-2 pt-8 bg-gray-100 text-gray-900 dark:text-gray-200 min-w-24 dark:bg-gray-700 rounded-lg font-bold">
-              {post?.user ? (
-                <Link
-                  href={`/${post?.user?.username}`}
-                  className="text-xs flex gap-1 items-center"
+        {/* Images */}
+        {post.image.length > 0 && (
+          <div className="relative w-full overflow-hidden bg-black">
+            <div
+              className="flex transition-transform duration-300 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {post.image.map((image: any, index: number) => (
+                <div key={index} className="flex-shrink-0 w-full">
+                  <img
+                    className="w-full max-h-[420px] object-cover"
+                    src={Storage(image)}
+                    alt={`Post Image ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+            {post.image.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute top-1/2 left-3 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors"
                 >
-                  <Image
-                    avatar={post?.user?.profile_pictures[0]?.avatar}
-                    alt={post?.user?.name}
-                    h={5}
-                    w={5}
-                  />{" "}
-                  <span className="truncate" title={post?.user?.name}>
-                    {post?.user?.id === user?.id
-                      ? "You"
-                      : post?.user === null
-                      ? "Deleted User"
-                      : post?.user?.name === null
-                      ? "Anonymous"
-                      : post?.user?.name}
-                  </span>
-                </Link>
-              ) : (
-                <span className="text-xs flex gap-1 items-center">
-                  <Image
-                    avatar={post?.user?.profile_pictures[0]?.avatar}
-                    alt={post?.user?.name}
-                    h={5}
-                    w={5}
-                  />{" "}
-                  <span className="truncate" title={post?.user?.name}>
-                    {post?.user?.id === user?.id
-                      ? "You"
-                      : post?.user === null
-                      ? "Deleted User"
-                      : post?.user?.name === null
-                      ? "Anonymous"
-                      : post?.user?.name}
-                  </span>
-                </span>
-              )}
-            </span>
+                  <i className="fa-solid fa-chevron-left text-xs"></i>
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                >
+                  <i className="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {post.image.map((_: any, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => imageIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-colors ${currentIndex === i ? "bg-white" : "bg-white/40"}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-300 truncate">
-            <span>
-              {post.publishedAs === "public" ? (
-                <>
-                  <i className="far fa-earth-americas"></i>
-                </>
-              ) : post.publishedAs === "private" ? (
-                <>
-                  <i className="far fa-lock"></i>
-                </>
-              ) : post.publishedAs === "friends" ? (
-                <>
-                  <i className="far fa-user-group"></i>
-                </>
-              ) : (
-                <>
-                  <i className="far fa-signs-posts"></i>
-                </>
-              )}{" "}
-              •{" "}
-              <small title={dateFormat(post.createdAt)}>
-                {dateFormat(post.createdAt)}
-              </small>
-            </span>
-          </div>
-        </div>
-        {(post.likes.length || post.comments.length) > 0 && (
-          <div className="flex justify-between text-center p-2 border-t border-gray-200 dark:border-gray-700">
-            <div className="cursor-pointer flex gap-2 items-center">
+        )}
+
+        {/* Likes & Comments count row */}
+        {(post.likes.length > 0 || post.comments.length > 0) && (
+          <div className="flex justify-between items-center px-4 py-2 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1.5">
               {post.likes.length > 0 && (
                 <>
-                  <i className="fas fa-thumbs-up text-blue-500"></i>
-                  <span>{post.likes.length}</span>
-                </>
-              )}
-              <div className="flex gap-1 items-center">
-                {post.likes.length > 0 &&
-                  post.likes
-                    .sort((a: any, b: any) => {
-                      if (a.userId === user?.id) {
-                        return -1;
-                      }
-                      if (b.userId === user?.id) {
-                        return 1;
-                      }
-                      return 0;
-                    })
-                    .slice(0, isLiked ? 2 : 1)
-                    .map((liker: any, index: number) => (
-                      <Link key={index} href={`/${liker?.user?.username}`} className="truncate sm:max-w-full max-w-[100px]">
-                        <span
-                          title={liker.user.name}
+                  <span className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                    <i className="fa-solid fa-thumbs-up text-white text-[9px]"></i>
+                  </span>
+                  <span className="text-xs">{post.likes.length}</span>
+                  <div className="flex gap-1 items-center text-xs">
+                    {post.likes
+                      .sort((a: any, b: any) =>
+                        a.userId === user?.id
+                          ? -1
+                          : b.userId === user?.id
+                            ? 1
+                            : 0,
+                      )
+                      .slice(0, isLiked ? 2 : 1)
+                      .map((liker: any, i: number) => (
+                        <Link
+                          key={i}
+                          href={`/${liker?.user?.username}`}
+                          className="hover:underline truncate max-w-[80px]"
                         >
                           {liker.userId === user?.id
                             ? `You${post.likes.length > 1 ? "," : ""}`
-                            : liker.user.name === null
-                            ? "Anonymous"
-                            : `${liker.user.name}`}
-                        </span>
-                      </Link>
-                    ))}
-                {post.likes.length - (isLiked ? 1 : 0) > 1 && (
-                  <span className="sm:max-w-full max-w-[100px] relative group hover:underline cursor-pointer">
-                    and others
-                    <div className="hidden group-hover:block absolute w-auto max-h-[300px] overflow-y-auto  min-w-60 rounded-lg z-50 text-start text-sm text-gray-100 dark:bg-black/75 bg-black/50 px-4 py-2 left-0 bottom-full">
-                      <ul>
-                        {post.likes
-                          .sort((a: any, b: any) => {
-                            if (a.userId === user?.id) {
-                              return -1;
-                            }
-                            if (b.userId === user?.id) {
-                              return 1;
-                            }
-                            return 0;
-                          })
-                          .slice(isLiked ? 2 : 1)
-                          .map((liker: any, index: number) => (
-                            <li key={index}>
-                              <Link href={`/${liker?.user?.username}`}>
-                                {liker.user.name}
-                              </Link>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </span>
-                )}
-              </div>
+                            : (liker.user.name ?? "Anonymous")}
+                        </Link>
+                      ))}
+                    {post.likes.length - (isLiked ? 1 : 0) > 1 && (
+                      <span className="relative group cursor-pointer hover:underline">
+                        and others
+                        <div className="hidden group-hover:block absolute bottom-full left-0 mb-1 w-48 max-h-60 overflow-y-auto bg-gray-900/90 text-white text-xs rounded-xl px-3 py-2 z-50 shadow-xl">
+                          <ul className="space-y-1">
+                            {post.likes
+                              .sort((a: any, b: any) =>
+                                a.userId === user?.id
+                                  ? -1
+                                  : b.userId === user?.id
+                                    ? 1
+                                    : 0,
+                              )
+                              .slice(isLiked ? 2 : 1)
+                              .map((liker: any, i: number) => (
+                                <li key={i}>
+                                  <Link
+                                    href={`/${liker?.user?.username}`}
+                                    className="hover:underline"
+                                  >
+                                    {liker.user.name}
+                                  </Link>
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
-            <div className="flex gap-3">
-              <div className="relative group">
+            <div className="flex items-center gap-3 text-xs">
+              {post.comments.length > 0 && (
                 <button
+                  ref={buttonRef}
                   type="button"
                   onClick={user ? handleViewComment(post.id) : handleNavigate}
-                  ref={buttonRef}
+                  className="hover:underline relative group flex gap-1 items-center"
                 >
-                  {post.comments.length > 0 && (
-                    <span className="hover:border-b border-gray-600 dark:border-gray-300">
-                      <i className="far fa-comment"></i>
-                      <span className="ml-1">
-                        {post.comments.length}{" "}
-                        {post.comments.length === 1 ? "comment" : "comments"}
-                      </span>
-                    </span>
-                  )}
+                  <i className="fa-solid fa-comment"></i>
+                  {post.comments.length}{" "}
+                  {post.comments.length === 1 ? "comment" : "comments"}
+                  <div className="hidden group-hover:block absolute bottom-full right-0 mb-1 w-48 max-h-60 overflow-y-auto bg-gray-900/90 text-white text-xs rounded-xl px-3 py-2 z-50 shadow-xl">
+                    <ul className="space-y-1">
+                      {post.comments
+                        .filter(
+                          (v: any, i: any, s: any) =>
+                            i ===
+                            s.findIndex((c: any) => c.userId === v.userId),
+                        )
+                        .sort((a: any, b: any) =>
+                          a.userId === user?.id
+                            ? -1
+                            : b.userId === user?.id
+                              ? 1
+                              : 0,
+                        )
+                        .map((c: any, i: number) => (
+                          <li key={i}>
+                            {c?.user ? (
+                              <Link
+                                href={`/${c?.user?.username}`}
+                                className="hover:underline"
+                              >
+                                {c.userId === user?.id
+                                  ? "You"
+                                  : (c.user.name ?? "Anonymous")}
+                              </Link>
+                            ) : c.userId === user?.id ? (
+                              "You"
+                            ) : (
+                              "Deleted User"
+                            )}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 </button>
-                <div className="hidden group-hover:block absolute max-h-[300px] overflow-y-auto w-auto min-w-60 rounded-lg z-50 text-start text-sm text-gray-100 dark:bg-black/75 bg-black/50 px-4 py-2 right-0 bottom-full">
-                  <ul>
-                    {post.comments
-                      .filter(
-                        (value: any, index: any, self: any) =>
-                          index ===
-                          self.findIndex(
-                            (comment: any) => comment.userId === value.userId
-                          )
-                      )
-                      .sort((a: any, b: any) => {
-                        if (a.userId === user?.id) {
-                          return -1;
-                        }
-                        if (b.userId === user?.id) {
-                          return 1;
-                        }
-                        return 0;
-                      })
-                      .map((commenter: any, index: number) => (
-                        <li key={index}>
-                          {commenter?.user ? (
-                            <Link href={`/${commenter?.user?.username}`}>
-                              {commenter?.userId === user?.id
-                                ? "You"
-                                : commenter?.user?.name === null
-                                ? "Anonymous"
-                                : commenter?.user === null
-                                ? "Deleted User"
-                                : commenter?.user?.name}
-                            </Link>
-                          ) : commenter?.userId === user?.id ? (
-                            "You"
-                          ) : commenter?.user?.name === null ? (
-                            "Anonymous"
-                          ) : commenter?.user === null ? (
-                            "Deleted User"
-                          ) : (
-                            commenter?.user?.name
-                          )}
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              </div>
-              <button type="button">
-                <span className="hover:border-b border-gray-600 dark:border-gray-300">
-                  <i className="far fa-share"></i>{" "}
-                  <span className="ml-1">10</span>
-                </span>
-              </button>
+              )}
             </div>
           </div>
         )}
-        <div className="border-t flex justify-between items-center border-gray-200 dark:border-gray-700 py-1">
+
+        {/* Action Buttons */}
+        <div className="border-t border-gray-100 dark:border-gray-800 flex">
           <PostButton
             type="button"
             onClick={user ? handleLike(post.id) : handleNavigate}
@@ -470,66 +356,51 @@ export default function PostsList({ post, setIsRefresh }: any) {
           />
           <PostButton type="button" icon="share" label="Share" />
         </div>
+
+        {/* Comments Section */}
         {(isCommentOpen[post.id] || post.comments.length > 0) && (
-          <div className="border-t flex justify-between items-center flex-col gap-2 border-gray-200 dark:border-gray-700 py-5">
-            {post.comments.length > 0 &&
-              post.comments
-                .slice(0, 1)
-                .map((comment: any, index: number) => (
-                  <CommentsList
-                    key={index}
-                    comment={comment}
-                    author={comment.userId === post.userId}
-                    commentOwner={comment.userId === user?.id}
-                  />
-                ))}
-            {(isCommentOpen[post.id] || post.comments.length > 0) && user && (
-              <div className="flex gap-2 w-full px-3">
+          <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-3 space-y-3">
+            {post.comments.slice(0, 1).map((c: any, i: number) => (
+              <CommentsList
+                key={i}
+                comment={c}
+                author={c.userId === post.userId}
+                commentOwner={c.userId === user?.id}
+              />
+            ))}
+            {user && (
+              <div className="flex gap-2 items-start pt-1">
                 <Image
                   avatar={user?.profile_pictures[0]?.avatar}
                   alt={user?.name}
                   h={8}
                   w={8}
                 />
-                <div className="w-full px-3 pt-2 dark:bg-gray-700 bg-gray-200 mx-2 rounded-3xl relative">
+                <div className="flex-1 bg-gray-100 dark:bg-gray-800 rounded-2xl px-3 pt-2 relative">
                   <TextAreaComment
                     ref={textareaRef}
-                    onClick={handleClickOpen}
+                    onClick={() => setIsOpen(true)}
                     value={comment}
                     error={error.comment?.message}
                     onKeyDown={handleKeyDown(post.id)}
-                    onChange={handleInputChange}
+                    onChange={(e: any) => setComment(e.target.value)}
                     onInput={handleInput}
-                    placeholder={`Comment as ${user?.name}`}
+                    placeholder={`Comment as ${user?.name ?? "Anonymous"}`}
                     rows={1}
                   />
-                  {!isOpen && (
-                    <div className="absolute top-2 right-3">
-                      <i className="far fa-smile"></i>
-                    </div>
-                  )}
-
                   {isOpen && (
-                    <div className="flex justify-between pb-2 items-center transition-all duration-300 ease-in-out">
-                      <div>
-                        <i className="far fa-smile"></i>
-                      </div>
-                      <div>
-                        <button
-                          type="button"
-                          disabled={!comment}
-                          onClick={
-                            comment ? handleSubmitComment(post.id) : undefined
-                          }
-                          className={`${
-                            !comment
-                              ? "cursor-not-allowed text-gray-400 dark:text-gray-500"
-                              : "text-blue-500 dark:text-blue-300 hover:dark:bg-gray-600 hover:bg-gray-300"
-                          } rounded-full px-2 py-1`}
-                        >
-                          <i className="far fa-paper-plane-top"></i>
-                        </button>
-                      </div>
+                    <div className="flex justify-between pb-2 items-center">
+                      <i className="fa-regular fa-face-smile text-gray-400 cursor-pointer hover:text-yellow-400 transition-colors"></i>
+                      <button
+                        type="button"
+                        disabled={!comment}
+                        onClick={
+                          comment ? handleSubmitComment(post.id) : undefined
+                        }
+                        className={`rounded-full w-8 h-8 flex items-center justify-center transition-colors ${!comment ? "text-gray-300 dark:text-gray-600 cursor-not-allowed" : "text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700"}`}
+                      >
+                        <i className="fa-solid fa-paper-plane-top text-sm"></i>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -538,6 +409,7 @@ export default function PostsList({ post, setIsRefresh }: any) {
           </div>
         )}
       </div>
+
       <ViewPostComments
         modalRef={modalRef}
         isOpen={isViewCommentOpen}

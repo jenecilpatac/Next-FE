@@ -1,21 +1,21 @@
-const TeamsSkeleton = () => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-3 overflow-x-hidden">
-      {Array.from({ length: 20 }).map((_, index) => (
-        <div key={index}>
-          <div className="bg-white dark:bg-gray-800 dark:hover:bg-gray-600 shadow-md p-4 rounded-md transition relative">
-            <div className="absolute top-2 left-2 w-8 h-8 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-
-            <div className="flex justify-center my-10">
-              <div className="w-32 h-32 bg-slate-300 dark:bg-slate-400 rounded-full animate-pulse"></div>
-            </div>
-
-            <div className="h-4 bg-slate-300 dark:bg-slate-400 rounded w-3/6 mb-3 mx-auto animate-pulse"></div>
-            <div className="h-4 bg-slate-300 dark:bg-slate-400 rounded w-12 mx-auto animate-pulse"></div>
-          </div>
+const TeamsSkeleton = () => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    {Array.from({ length: 15 }).map((_, i) => (
+      <div key={i} className="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4 animate-pulse relative">
+        {/* Conference badge */}
+        <div className="absolute top-2.5 right-2.5 w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full" />
+        {/* Logo */}
+        <div className="flex justify-center my-4">
+          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full" />
         </div>
-      ))}
-    </div>
-  );
-};
+        {/* Name + abbr */}
+        <div className="space-y-2 text-center">
+          <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full w-3/4 mx-auto" />
+          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded-full w-10 mx-auto" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export default TeamsSkeleton;
