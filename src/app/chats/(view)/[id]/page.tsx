@@ -31,6 +31,7 @@ import isImage from "../../utils/is-image";
 import isVideo from "../../utils/is-video";
 import { getAllPrivateAttachments } from "@/services/message-attachments-service";
 import ViewImages from "../../components/view-images";
+import { formatDistanceToNowStrict } from "date-fns";
 const MessageFilePreviewPage = memo(MessageFilePreview);
 const MessageFileSendingPreview = memo(MessageFileSending);
 
@@ -119,6 +120,8 @@ const Chats = () => {
   let firstUnreadIndex: any = null;
 
   useEffect(() => {
+    if (!user || !id) return;
+
     const privateAttachments = async () => {
       try {
         const response = await getAllPrivateAttachments(user?.id, id);
@@ -137,7 +140,7 @@ const Chats = () => {
     };
 
     privateAttachments();
-  }, [sentMessage]);
+  }, [sentMessage, user, id]);
 
   useEffect(() => {
     if (!formInput.content || !user) return;
@@ -675,10 +678,20 @@ const Chats = () => {
                   <p className="text-sm font-bold text-gray-900 dark:text-white">
                     {data?.user?.name || "Anonymous"}
                   </p>
-                  <p className="text-xs text-green-500 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
-                    Online
-                  </p>
+                  {!data?.user?.status ? (
+                    <p className="text-xs text-green-500 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
+                      Online
+                    </p>
+                  ) : (
+                    <p className="text-xs text-red-500 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-red-500 rounded-full inline-block"></span>
+                      Offline about{" "}
+                      {formatDistanceToNowStrict(data?.user?.status, {
+                        addSuffix: true,
+                      })}
+                    </p>
+                  )}
                 </div>
               </>
             )}

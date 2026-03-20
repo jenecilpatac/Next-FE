@@ -5,6 +5,7 @@ import { PayloadInterface } from "../types/PayloadInterface";
 import { PrivateChatIds } from "../utils/chatConstants";
 import { useAuth } from "@/app/context/AuthContext";
 import PlayMessageTone from "../utils/playMessageTone";
+import api from "@/app/lib/axiosCall";
 
 const useSocket = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -37,12 +38,18 @@ const useSocket = () => {
         token: `${token}:${rememberToken}`,
       },
     });
+
+    const handleSetStatus = async (status: string) => {
+      await api.post("auth/status", { status });
+    };
+
     socketInstance.on("connect_error", (error) => {
       console.log("Socket connection error:", error);
     });
 
     socketInstance.on("connect", () => {
       setSocket(socketInstance);
+      handleSetStatus("visible");
     });
 
     socketInstance.on("sentMessage", (toRefresh: boolean) => {
@@ -57,7 +64,7 @@ const useSocket = () => {
       "isSeenForSentMessage",
       (isSeenForSentMessage: boolean) => {
         setIsSeenSentMessage(isSeenForSentMessage);
-      }
+      },
     );
 
     socketInstance.on("sentPublicMessage", (toRefresh: boolean) => {
@@ -121,8 +128,17 @@ const useSocket = () => {
           setUserTypingInfoPrivate("");
           setPrivateChatIds(PrivateChatIds);
         }, 1000);
-      }
+      },
     );
+
+    socketInstance.on("disconnect", () => {
+      console.log("Socket disconnected");
+      handleSetStatus("hidden");
+    });
+
+    window.addEventListener("beforeunload", () => {
+      socketInstance.disconnect();
+    });
 
     return () => {
       socketInstance.disconnect();
