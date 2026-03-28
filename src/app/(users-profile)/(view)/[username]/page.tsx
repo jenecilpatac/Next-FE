@@ -16,11 +16,16 @@ import ProfileLoader from "../../components/loaders/ProfileLoader";
 const UserProfile = () => {
   const { username } = useParams();
   const [isRefresh, setIsRefresh] = useState(false);
-  const { data, loading, error }: any = useFetch(`users/profile/${username}`, isRefresh);
+  const { data, loading, error }: any = useFetch(
+    `users/profile/${username}`,
+    isRefresh,
+  );
   const [active, setActive] = useState("posts");
   const [isImageLoading, setIsImageLoading] = useState(true);
 
-  const isSetProfile = data?.profile_pictures?.filter((avatar: any) => avatar?.isSet !== null);
+  const isSetProfile = data?.profile_pictures?.filter(
+    (avatar: any) => avatar?.isSet !== null,
+  );
 
   if (error?.status === 404) return <NotFound />;
 
@@ -83,17 +88,24 @@ const UserProfile = () => {
                   )}
                 </h1>
                 {data?.jobTitle && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{data?.jobTitle}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    {data?.jobTitle}
+                  </p>
                 )}
               </div>
 
               {/* Bio */}
               {data?.bio && (
-                <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 max-w-xl">{data?.bio}</p>
+                <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 max-w-xl">
+                  {data?.bio}
+                </p>
               )}
 
               {/* Personal details pills */}
-              {(data?.address || data?.phoneNumber || data?.dateOfBirth || data?.gender) && (
+              {(data?.address ||
+                data?.phoneNumber ||
+                data?.dateOfBirth ||
+                data?.gender) && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {data?.phoneNumber && (
                     <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
@@ -153,7 +165,11 @@ const UserProfile = () => {
                   <div className="w-full md:w-2/3">
                     {data.posts?.length > 0 ? (
                       data.posts?.map((post: any, index: number) => (
-                        <PostsList key={index} post={post} setIsRefresh={setIsRefresh} />
+                        <PostsList
+                          key={index}
+                          post={post}
+                          setIsRefresh={setIsRefresh}
+                        />
                       ))
                     ) : (
                       <div className="flex flex-col items-center justify-center h-48 gap-2 text-gray-400 dark:text-gray-600">
