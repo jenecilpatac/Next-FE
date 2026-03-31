@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
-
-const navLinks = [
-  { href: "/about", label: "About", icon: "fa-circle-info" },
-  { href: "/services", label: "Services", icon: "fa-briefcase" },
-  { href: "/tallies", label: "Tallies", icon: "fa-chart-bar" },
-  { href: "/blog", label: "Blogs", icon: "fa-newspaper" },
-  { href: "/blog/posts", label: "Posts", icon: "fa-pen-nib" },
-  { href: "/todos", label: "Todos", icon: "fa-list-check" },
-];
+import navItems from "@/data/navbar.json";
+import { NavItem } from "../types/navbar-tyoe";
 
 const socialLinks = [
   {
@@ -86,30 +79,23 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-3">
-              <li>
-                <Link
-                  href={isAuthenticated ? "/dashboard" : "/"}
-                  className="flex items-center gap-2 text-sm hover:text-blue-400 hover:translate-x-1.5 transition-all duration-200 group"
-                >
-                  <i
-                    className={`fa-solid fa-gauge text-blue-500/60 group-hover:text-blue-400 text-xs w-4`}
-                  />
-                  {isAuthenticated ? "Dashboard" : "Home"}
-                </Link>
-              </li>
-              {navLinks.map(({ href, label, icon }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="flex items-center gap-2 text-sm hover:text-blue-400 hover:translate-x-1.5 transition-all duration-200 group"
-                  >
-                    <i
-                      className={`fa-solid ${icon} text-blue-500/60 group-hover:text-blue-400 text-xs w-4`}
-                    />
-                    {label}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map(
+                (item: NavItem) =>
+                  (item.is_always_display ||
+                    item.show_on_auth === isAuthenticated) && (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className="flex items-center gap-2 text-sm hover:text-blue-400 hover:translate-x-1.5 transition-all duration-200 group"
+                      >
+                        <i
+                          className={`fa-solid ${item.icon} text-blue-500/60 group-hover:text-blue-400 text-xs w-4`}
+                        />
+                        {item.label}
+                      </Link>
+                    </li>
+                  ),
+              )}
             </ul>
           </div>
 
