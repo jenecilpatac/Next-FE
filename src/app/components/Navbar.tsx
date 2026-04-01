@@ -5,6 +5,8 @@ import ActiveLink from "../utils/NavbarActiveLink";
 import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
 import Image from "./images/Image";
+import navItems from "@/data/navbar.json";
+import { NavItem } from "../types/navbar-tyoe";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,35 +89,17 @@ const Navbar = () => {
           id="navbar-user"
         >
           <ul className="flex flex-col md:flex-row md:items-center md:gap-1 w-full md:w-auto mt-3 md:mt-0">
-            <li onClick={() => setMenuOpen(false)}>
-              {isAuthenticated ? (
-                <ActiveLink href="/dashboard">Dashboard</ActiveLink>
-              ) : (
-                <ActiveLink href="/">Home</ActiveLink>
-              )}
-            </li>
-            {[
-              { href: "/about", label: "About" },
-              { href: "/services", label: "Services" },
-              { href: "/tallies", label: "Tallies" },
-              { href: "/blog", label: "Blogs" },
-              { href: "/blog/posts", label: "Posts" },
-            ].map(({ href, label }) => (
-              <li key={href} onClick={() => setMenuOpen(false)}>
-                <ActiveLink href={href}>{label}</ActiveLink>
-              </li>
-            ))}
-            {isAuthenticated && (
-              <>
-                <li onClick={() => setMenuOpen(false)}>
-                  <ActiveLink href="/todos">Todos</ActiveLink>
-                </li>
-                <li onClick={() => setMenuOpen(false)}>
-                  <ActiveLink href="/chats" target="_blank">
-                    Chats
-                  </ActiveLink>
-                </li>
-              </>
+            {navItems.map(
+              (item: NavItem) =>
+                (item.is_always_display ||
+                  item.show_on_auth === isAuthenticated) && (
+                  <li key={item.href} onClick={() => setMenuOpen(false)}>
+                    <ActiveLink href={item.href} target={item.target}>
+                      <i className={`fa ${item.icon}`}></i>{" "}
+                      <span>{item.label}</span>
+                    </ActiveLink>
+                  </li>
+                ),
             )}
           </ul>
         </div>
