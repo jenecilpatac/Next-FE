@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
 import Image from "./images/Image";
 import navItems from "@/data/navbar.json";
-import { NavItem } from "../types/navbar-tyoe";
+import { NavItem } from "../types/navbar-type";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
