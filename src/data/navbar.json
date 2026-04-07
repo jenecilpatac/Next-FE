@@ -1,0 +1,57 @@
+[
+  {
+    "href": "/dashboard",
+    "label": "Dashboard",
+    "icon": "fa-gauge",
+    "show_on_auth": true
+  },
+  {
+    "href": "/",
+    "label": "Home",
+    "icon": "fa-home",
+    "show_on_auth": false
+  },
+  {
+    "href": "/about",
+    "label": "About",
+    "icon": "fa-circle-info",
+    "is_always_display": true
+  },
+  {
+    "href": "/services",
+    "label": "Services",
+    "icon": "fa-briefcase",
+    "is_always_display": true
+  },
+  {
+    "href": "/tallies",
+    "label": "Tallies",
+    "icon": "fa-calendar",
+    "is_always_display": true
+  },
+  {
+    "href": "/blog",
+    "label": "Blogs",
+    "icon": "fa-newspaper",
+    "is_always_display": true
+  },
+  {
+    "href": "/blog/posts",
+    "label": "Posts",
+    "icon": "fa-pen-nib",
+    "is_always_display": true
+  },
+  {
+    "href": "/chats",
+    "label": "Chats",
+    "icon": "fa-comments",
+    "show_on_auth": true,
+    "target": "_blank"
+  },
+  {
+    "href": "/todos",
+    "label": "Todos",
+    "icon": "fa-list-check",
+    "show_on_auth": true
+  }
+]

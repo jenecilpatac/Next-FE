@@ -19,7 +19,7 @@ const ActiveLink = ({
     <Link
       href={href}
       target={target}
-      className={`relative block md:inline-flex items-center px-3 py-2 md:py-1.5 text-sm font-medium rounded-md md:rounded-none transition-colors duration-200
+      className={`gap-2 relative block md:inline-flex items-center px-3 py-2 md:py-1.5 text-sm font-medium rounded-md md:rounded-none transition-colors duration-200
         ${
           isActive
             ? "text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 md:bg-transparent md:dark:bg-transparent border-l-2 md:border-l-0 border-blue-500 md:border-0"
