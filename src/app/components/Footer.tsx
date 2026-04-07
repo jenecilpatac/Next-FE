@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import navItems from "@/data/navbar.json";
-import { NavItem } from "../types/navbar-tyoe";
+import { NavItem } from "../types/navbar-type";
 
 const socialLinks = [
   {
